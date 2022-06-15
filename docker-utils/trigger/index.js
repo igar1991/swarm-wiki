@@ -2,14 +2,22 @@ import fetch from 'node-fetch';
 
 const baseUrl = process.env.WIKI_BASE
 let zimsCheck = process.env.WIKI_ZIMS_CHECK
+let downloaderUrl = process.env.WIKI_DOWNLOADER_URL
+
 console.log(`WIKI_BASE`, baseUrl)
 console.log(`WIKI_ZIMS_CHECK`, zimsCheck)
+console.log(`WIKI_DOWNLOADER_URL`, downloaderUrl)
+
 if (!baseUrl) {
     throw new Error('WIKI_BASE is not set')
 }
 
 if (!zimsCheck) {
     throw new Error('WIKI_ZIMS_CHECK is not set')
+}
+
+if (!downloaderUrl) {
+    throw new Error('WIKI_DOWNLOADER_URL is not set')
 }
 
 zimsCheck = zimsCheck.split(',').map(item => item.trim())
@@ -19,12 +27,11 @@ if (zimsCheck.length === 0) {
 }
 
 /**
- * Fins all passed ZIM archives in the wiki
+ * Parse html to an array of ZIM archives info
  */
-async function run() {
-    const html = await (await fetch(baseUrl)).text()
+function parseData(html){
     const lines = html.split('\n').filter(item => item.startsWith('<a href="'))
-    const urlsInfo = lines.map(line => {
+    return lines.map(line => {
         const name = line.split('">')[1].split('</a>')[0]
         const a = `<a href="${name}">${name}</a>`
         const withoutA = line.replace(a, '').trim().split(' ')
@@ -37,6 +44,14 @@ async function run() {
             size,
         }
     })
+}
+
+/**
+ * Fins all passed ZIM archives in the wiki
+ */
+async function run() {
+    const html = await (await fetch(baseUrl)).text()
+    const urlsInfo = parseData(html)
 
     console.log(`Total ${urlsInfo.length} ZIM archives`)
     let found = []
@@ -54,7 +69,17 @@ async function run() {
     if (found.length === 0) {
         throw new Error('No ZIMS found')
     }
+
+    console.log('found', found)
+    const urls = found.map(item => `${baseUrl}${item.name}`)
+    await fetch(downloaderUrl + 'download', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({urls}),
+    })
 }
 
-// todo implement infinite loop? or it should be implemented in docker? docker-composer auto-restart-delay or smth like that
 run().then()

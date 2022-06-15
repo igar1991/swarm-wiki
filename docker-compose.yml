@@ -1,10 +1,19 @@
 version: '3'
 services:
+  downloader:
+    image: swarm-wiki-downloader
+    environment:
+      - WIKI_DOWNLOADER_PORT
+
   trigger:
     image: swarm-wiki-trigger
     environment:
       - WIKI_BASE
       - WIKI_ZIMS_CHECK
+      - WIKI_DOWNLOADER_URL=http://downloader:3100/
+    depends_on:
+      - downloader
+
   restarter:
     image: docker
     volumes: [ "/var/run/docker.sock:/var/run/docker.sock" ]
