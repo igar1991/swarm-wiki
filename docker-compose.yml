@@ -1,0 +1,12 @@
+version: '3'
+services:
+  trigger:
+    image: swarm-wiki-trigger
+    environment:
+      - WIKI_BASE
+      - WIKI_ZIMS_CHECK
+  restarter:
+    image: docker
+    volumes: [ "/var/run/docker.sock:/var/run/docker.sock" ]
+    command: [ "/bin/sh", "-c", "while true; do sleep 5; docker restart swarm-wiki_trigger_1; done" ]
+    restart: unless-stopped
