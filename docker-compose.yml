@@ -4,6 +4,10 @@ services:
     image: swarm-wiki-downloader
     environment:
       - WIKI_DOWNLOADER_PORT
+      - WIKI_DOWNLOADER_OUTPUT_DIR=/app/data/
+      - WIKI_DOWNLOAD_LOCAL_DIR
+    volumes:
+      - ${WIKI_DOWNLOAD_LOCAL_DIR}:/app/data
 
   trigger:
     image: swarm-wiki-trigger

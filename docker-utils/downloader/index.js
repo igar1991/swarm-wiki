@@ -1,23 +1,51 @@
 import express from 'express';
 import cors from "cors";
+import fs from "fs";
+import {DownloaderHelper} from "node-downloader-helper";
 
 const app = express();
 
 const port = process.env.WIKI_DOWNLOADER_PORT;
-// todo get destination directory
+const outputDirectory = process.env.WIKI_DOWNLOADER_OUTPUT_DIR;
+
 if (!port) {
     throw new Error('WIKI_DOWNLOADER_PORT is not set');
 }
 
+if (!outputDirectory) {
+    throw new Error('WIKI_DOWNLOADER_OUTPUT_DIR is not set');
+}
+
+/**
+ * Downloads file from url to filesystem
+ */
+function download(url, outputDirectory, filename) {
+    return new Promise((resolve, reject) => {
+        const dl = new DownloaderHelper(url, outputDirectory, {
+            fileName: filename,
+        });
+        dl.on('end', () => resolve());
+        dl.on('error', (err) => reject(err));
+        dl.start().catch(err => reject(err));
+    })
+}
+
 app.use(cors());
 app.use(express.json());
-
 app.post('/download', async (req, res) => {
     const {urls} = req.body;
     console.log(urls);
-    // todo run server that accept POST requests with zim file and save it to disk
+    for (const url of urls) {
+        const name = url.split('/').pop()
+        const fullPath = outputDirectory + name
+        if (fs.existsSync(fullPath)) {
+            console.log('File already exists:', name)
+            continue
+        }
+
+        await download(url, outputDirectory, name);
+    }
     // todo send message to extractor
-    // todo check for big files (write directly to disk)
     // todo custom callback after download (for copy file and etc)
     res.send({result: 'ok'});
 });
