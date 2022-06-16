@@ -5,16 +5,24 @@ services:
     environment:
       - WIKI_UPLOADER_PORT
 
+  enhancer:
+    image: swarm-wiki-enhancer
+    environment:
+      - WIKI_ENHANCER_PORT
+      - WIKI_UPLOADER_URL=http://uploader:${WIKI_UPLOADER_PORT}/
+    depends_on:
+      - uploader
+
   extractor:
     image: swarm-wiki-extractor
     environment:
       - WIKI_EXTRACTOR_PORT
-      - WIKI_UPLOADER_URL=http://uploader:${WIKI_UPLOADER_PORT}/
+      - WIKI_ENHANCER_URL=http://enhancer:${WIKI_ENHANCER_PORT}/
       - WIKI_DOWNLOADER_OUTPUT_DIR=/app/data/
     volumes:
       - ${WIKI_DOWNLOAD_LOCAL_DIR}:/app/data
     depends_on:
-      - uploader
+      - enhancer
 
   downloader:
     image: swarm-wiki-downloader

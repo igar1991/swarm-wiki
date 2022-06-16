@@ -7,12 +7,12 @@ import cors from 'cors';
 const app = express();
 const exec = util.promisify(exec0);
 
-const uploaderUrl = process.env.WIKI_UPLOADER_URL;
+const enhancerUrl = process.env.WIKI_ENHANCER_URL;
 const port = process.env.WIKI_EXTRACTOR_PORT;
 const outputDir = process.env.WIKI_DOWNLOADER_OUTPUT_DIR;
 
-if (!uploaderUrl) {
-    throw new Error('WIKI_UPLOADER_URL is not set');
+if (!enhancerUrl) {
+    throw new Error('WIKI_ENHANCER_URL is not set');
 }
 
 if (!port) {
@@ -24,7 +24,7 @@ if (!outputDir) {
 }
 
 console.log('WIKI_EXTRACTOR_PORT', port);
-console.log('WIKI_UPLOADER_URL', uploaderUrl);
+console.log('WIKI_ENHANCER_URL', enhancerUrl);
 console.log('WIKI_DOWNLOADER_OUTPUT_DIR', outputDir);
 
 function parseList(data) {
@@ -96,7 +96,7 @@ app.post('/extract', async (req, res) => {
             continue
         }
 
-        await fetch(uploaderUrl + 'upload-page', {
+        await fetch(enhancerUrl + 'enhance', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
