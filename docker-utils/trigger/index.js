@@ -1,12 +1,16 @@
 import fetch from 'node-fetch';
+import express from 'express';
+import cors from 'cors';
 
 const baseUrl = process.env.WIKI_BASE
 let zimsCheck = process.env.WIKI_ZIMS_CHECK
 let downloaderUrl = process.env.WIKI_DOWNLOADER_URL
+let port = process.env.WIKI_TRIGGER_PORT
 
 console.log(`WIKI_BASE`, baseUrl)
 console.log(`WIKI_ZIMS_CHECK`, zimsCheck)
 console.log(`WIKI_DOWNLOADER_URL`, downloaderUrl)
+console.log(`WIKI_TRIGGER_PORT`, port)
 
 if (!baseUrl) {
     throw new Error('WIKI_BASE is not set')
@@ -29,7 +33,7 @@ if (zimsCheck.length === 0) {
 /**
  * Parse html to an array of ZIM archives info
  */
-function parseData(html){
+function parseData(html) {
     const lines = html.split('\n').filter(item => item.startsWith('<a href="'))
     return lines.map(line => {
         const name = line.split('">')[1].split('</a>')[0]
@@ -82,4 +86,17 @@ async function run() {
     })
 }
 
-run().then()
+if (!port) {
+    throw new Error('WIKI_TRIGGER_PORT is not set')
+}
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.post('/run', async (req, res) => {
+    console.log('Trigger started by web command')
+    run().then()
+
+    res.send({result: 'ok'});
+});
+app.listen(port, () => console.log(`Started trigger server at http://localhost:${port}`));
