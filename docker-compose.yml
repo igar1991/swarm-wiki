@@ -1,25 +1,44 @@
 version: '3'
 services:
+  uploader:
+    image: swarm-wiki-uploader
+    environment:
+      - WIKI_UPLOADER_PORT
+
+  extractor:
+    image: swarm-wiki-extractor
+    environment:
+      - WIKI_EXTRACTOR_PORT
+      - WIKI_UPLOADER_URL=http://uploader:${WIKI_UPLOADER_PORT}/
+      - WIKI_DOWNLOADER_OUTPUT_DIR=/app/data/
+    volumes:
+      - ${WIKI_DOWNLOAD_LOCAL_DIR}:/app/data
+    depends_on:
+      - uploader
+
   downloader:
     image: swarm-wiki-downloader
     environment:
       - WIKI_DOWNLOADER_PORT
       - WIKI_DOWNLOADER_OUTPUT_DIR=/app/data/
       - WIKI_DOWNLOAD_LOCAL_DIR
+      - WIKI_EXTRACTOR_URL=http://extractor:${WIKI_EXTRACTOR_PORT}/
     volumes:
       - ${WIKI_DOWNLOAD_LOCAL_DIR}:/app/data
+    depends_on:
+      - extractor
 
   trigger:
     image: swarm-wiki-trigger
     environment:
       - WIKI_BASE
       - WIKI_ZIMS_CHECK
-      - WIKI_DOWNLOADER_URL=http://downloader:3100/
+      - WIKI_DOWNLOADER_URL=http://downloader:${WIKI_DOWNLOADER_PORT}/
     depends_on:
       - downloader
 
   restarter:
     image: docker
     volumes: [ "/var/run/docker.sock:/var/run/docker.sock" ]
-    command: [ "/bin/sh", "-c", "while true; do sleep 5; docker restart swarm-wiki_trigger_1; done" ]
+    command: [ "/bin/sh", "-c", "while true; do sleep 60; docker restart swarm-wiki_trigger_1; done" ]
     restart: unless-stopped

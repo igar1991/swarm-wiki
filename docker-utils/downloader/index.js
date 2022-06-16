@@ -1,12 +1,14 @@
 import express from 'express';
-import cors from "cors";
-import fs from "fs";
+import cors from 'cors';
+import fs from 'fs';
+import fetch from 'node-fetch';
 import {DownloaderHelper} from "node-downloader-helper";
 
 const app = express();
 
 const port = process.env.WIKI_DOWNLOADER_PORT;
 const outputDirectory = process.env.WIKI_DOWNLOADER_OUTPUT_DIR;
+const extractorUrl = process.env.WIKI_EXTRACTOR_URL;
 
 if (!port) {
     throw new Error('WIKI_DOWNLOADER_PORT is not set');
@@ -14,6 +16,10 @@ if (!port) {
 
 if (!outputDirectory) {
     throw new Error('WIKI_DOWNLOADER_OUTPUT_DIR is not set');
+}
+
+if (!extractorUrl) {
+    throw new Error('WIKI_EXTRACTOR_URL is not set');
 }
 
 /**
@@ -34,7 +40,7 @@ app.use(cors());
 app.use(express.json());
 app.post('/download', async (req, res) => {
     const {urls} = req.body;
-    console.log(urls);
+    console.log('Received urls', urls);
     for (const url of urls) {
         const name = url.split('/').pop()
         const fullPath = outputDirectory + name
@@ -44,10 +50,19 @@ app.post('/download', async (req, res) => {
         }
 
         await download(url, outputDirectory, name);
+        await fetch(extractorUrl + 'extract', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                fileName: name
+            }),
+        })
     }
     // todo send message to extractor
     // todo custom callback after download (for copy file and etc)
     res.send({result: 'ok'});
 });
 
-app.listen(port, () => console.log(`Started server at http://localhost:${port}`));
+app.listen(port, () => console.log(`Started downloader server at http://localhost:${port}`));

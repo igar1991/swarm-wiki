@@ -1,5 +1,5 @@
 {
-  "name": "downloader",
+  "name": "uploader",
   "type": "module",
   "version": "1.0.0",
   "description": "",
@@ -12,8 +12,6 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.1",
-    "fs": "^0.0.1-security",
-    "node-downloader-helper": "^2.1.1",
-    "node-fetch": "^3.2.6"
+    "fs": "^0.0.1-security"
   }
 }
