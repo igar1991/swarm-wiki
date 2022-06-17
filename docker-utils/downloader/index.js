@@ -9,6 +9,7 @@ const app = express();
 const port = process.env.WIKI_DOWNLOADER_PORT;
 const outputDirectory = process.env.WIKI_DOWNLOADER_OUTPUT_DIR;
 const extractorUrl = process.env.WIKI_EXTRACTOR_URL;
+const indexerUrl = process.env.WIKI_INDEXER_URL;
 
 if (!port) {
     throw new Error('WIKI_DOWNLOADER_PORT is not set');
@@ -20,6 +21,10 @@ if (!outputDirectory) {
 
 if (!extractorUrl) {
     throw new Error('WIKI_EXTRACTOR_URL is not set');
+}
+
+if (!indexerUrl) {
+    throw new Error('WIKI_INDEXER_URL is not set');
 }
 
 /**
@@ -51,6 +56,15 @@ app.post('/download', async (req, res) => {
 
         await download(url, outputDirectory, name);
         await fetch(extractorUrl + 'extract', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                fileName: name
+            }),
+        })
+        await fetch(indexerUrl + 'index', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

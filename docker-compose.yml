@@ -78,8 +78,10 @@ services:
     environment:
       - WIKI_ENHANCER_PORT
       - WIKI_UPLOADER_URL=http://uploader:${WIKI_UPLOADER_PORT}/
+      - WIKI_INDEXER_URL=http://indexer:${WIKI_INDEXER_PORT}/
     depends_on:
       - uploader
+      - indexer
 
   extractor:
     image: swarm-wiki-extractor
@@ -100,11 +102,17 @@ services:
       - WIKI_DOWNLOADER_OUTPUT_DIR=/app/data/
       - WIKI_DOWNLOAD_LOCAL_DIR
       - WIKI_EXTRACTOR_URL=http://extractor:${WIKI_EXTRACTOR_PORT}/
+      - WIKI_INDEXER_URL=http://indexer:${WIKI_INDEXER_PORT}/
     volumes:
       - ${WIKI_DOWNLOAD_LOCAL_DIR}:/app/data
     depends_on:
       - extractor
       - uploader
+
+  indexer:
+    image: swarm-wiki-indexer
+    environment:
+      - WIKI_INDEXER_PORT
 
   trigger:
     image: swarm-wiki-trigger
