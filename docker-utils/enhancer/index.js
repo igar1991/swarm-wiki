@@ -24,17 +24,18 @@ app.post('/enhance', async (req, res) => {
     const {key, page} = req.body;
     console.log('/enhance', key, 'page length', page.length);
 
-    await fetch(uploaderUrl + 'upload-page', {
+    const response = await (await fetch(uploaderUrl + 'upload-page', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        // todo concat key from env
         body: JSON.stringify({
             key,
             page
         })
-    })
+    })).json()
+
+    console.log('response', response);
 
     res.send({result: 'ok'});
 });

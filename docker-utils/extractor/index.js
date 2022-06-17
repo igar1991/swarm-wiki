@@ -6,10 +6,12 @@ import cors from 'cors';
 
 const app = express();
 const exec = util.promisify(exec0);
+const MIDDLE_PREFIX_PAGE = 'page_'
 
 const enhancerUrl = process.env.WIKI_ENHANCER_URL;
 const port = process.env.WIKI_EXTRACTOR_PORT;
 const outputDir = process.env.WIKI_DOWNLOADER_OUTPUT_DIR;
+const keyPrefix = process.env.WIKI_SWARM_PREFIX;
 
 if (!enhancerUrl) {
     throw new Error('WIKI_ENHANCER_URL is not set');
@@ -21,6 +23,10 @@ if (!port) {
 
 if (!outputDir) {
     throw new Error('WIKI_DOWNLOADER_OUTPUT_DIR is not set');
+}
+
+if (!keyPrefix) {
+    throw new Error('WIKI_SWARM_PREFIX is not set');
 }
 
 console.log('WIKI_EXTRACTOR_PORT', port);
@@ -47,7 +53,9 @@ function parseList(data) {
             }
 
             const type = path.startsWith('-/') ? 'file' : (path.startsWith('A/') ? 'page' : 'unknown')
+            const key = type === 'page' ? path.substring(2) : path
             currentItem = {
+                key,
                 path,
                 type
             }
@@ -89,6 +97,7 @@ app.post('/extract', async (req, res) => {
     const zims = parseList(stdout)
     const withContent = zims.filter(item => item.type === 'page').filter(item => item.internal_type !== 'redirect');
 
+    let counter = 0
     for (const item of withContent) {
         const {stdout, stderr} = await exec(`zimdump show --idx ${item.index} ${filePath}`);
         if (stderr) {
@@ -96,20 +105,24 @@ app.post('/extract', async (req, res) => {
             continue
         }
 
-        await fetch(enhancerUrl + 'enhance', {
+        const fullKey = keyPrefix + MIDDLE_PREFIX_PAGE + item.key
+        console.log('key', fullKey);
+        const response = await(await fetch(enhancerUrl + 'enhance', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            // todo concat key from env
             body: JSON.stringify({
-                key: item.title,
+                key: fullKey,
                 page: stdout
             })
-        })
+        })).json();
 
-        // todo remove this blocker for one page
-        return
+        // todo remove this blocker
+        counter++
+        if (counter >= 5) {
+            break
+        }
     }
 
     // todo upload other files and redirects

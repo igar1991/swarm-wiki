@@ -94,6 +94,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.post('/run', async (req, res) => {
+    // todo implement auto-restart in N hours/days
     console.log('Trigger started by web command')
     run().then()
 
