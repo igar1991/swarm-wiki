@@ -4,6 +4,7 @@ import fetch from 'node-fetch';
 import express from 'express';
 import cors from 'cors';
 import fs from 'fs';
+import {parseList} from './utils.js';
 
 const app = express();
 const exec = util.promisify(exec0);
@@ -36,10 +37,18 @@ const error = (res, text) => {
 app.use(cors());
 app.use(express.json());
 app.post('/extract', async (req, res, next) => {
-    const {fileName, limit} = req.body;
+    const {fileName, lang, limit} = req.body;
 
     if (!fileName) {
         return error(res, `File param is empty`);
+    }
+
+    if (!lang) {
+        return error(res, `Lang is empty`);
+    }
+
+    if (limit) {
+        console.log(`Limit is ${limit}`);
     }
 
     const filePath = outputDir + fileName
@@ -74,8 +83,10 @@ app.post('/extract', async (req, res, next) => {
             continue
         }
 
-        const fullKey = keyPrefix + MIDDLE_PREFIX_PAGE + item.key
-        console.log('KEY', fullKey);
+        const fullKey = keyPrefix + MIDDLE_PREFIX_PAGE + lang.toLowerCase() + '_' + item.key
+        console.log('Key', fullKey);
+        console.log('Page size', stdout.length);
+        console.log(`Page ${counter + 1}/${withContent.length}`)
         try {
             await fetch(enhancerUrl + 'enhance', {
                 method: 'POST',
@@ -92,7 +103,7 @@ app.post('/extract', async (req, res, next) => {
         }
 
         counter++;
-        if (limit && counter >= limit) {
+        if (limit && counter >= limit - 1) {
             break;
         }
     }

@@ -20,6 +20,12 @@ Build any docker package from the root of the project (because it requires some 
 
 `docker run --env-file .env swarm-wiki-trigger`
 
+## Data management
+
+Redis database management tool
+
+`http://localhost:8001/redis-stack/browser`
+
 ## Testing
 
 First you need to prepare a docker image with utilities for working with ZIM files.

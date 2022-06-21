@@ -1,5 +1,13 @@
 version: '3'
 services:
+  redis:
+    image: redis/redis-stack:latest
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    volumes:
+      - ${REDIS_DIR}:/data
+
   bee:
     image: ethersphere/bee:stable
     restart: unless-stopped
@@ -66,12 +74,14 @@ services:
   uploader:
     image: swarm-wiki-uploader
     environment:
+      - WIKI_UPLOADER_REDIS
       - WIKI_BEE_URL=http://bee:1633/
       - WIKI_BEE_DEBUG_URL=http://bee:1635/
       - WIKI_UPLOADER_PORT
       - WIKI_UPLOADER_PRIVATE_KEY
     depends_on:
       - trigger
+      - redis
 
   enhancer:
     image: swarm-wiki-enhancer

@@ -34,6 +34,11 @@ function download(url, outputDirectory, filename) {
     return new Promise((resolve, reject) => {
         const dl = new DownloaderHelper(url, outputDirectory, {
             fileName: filename,
+            resumeIfFileExists: true,
+            retry: {
+                maxRetries: 5,
+                delay: 5000
+            }
         });
         dl.on('end', () => resolve());
         dl.on('error', (err) => reject(err));
@@ -49,24 +54,25 @@ app.post('/download', async (req, res) => {
     res.set('Connection', 'close');
     res.send({result: 'ok'});
 
-    for (const url of urls) {
+    for (const {url, lang} of urls) {
         const name = url.split('/').pop()
         const fullPath = outputDirectory + name
         if (fs.existsSync(fullPath)) {
             console.log('File already exists:', name)
-            continue
+        } else {
+            console.log('Downloading...')
+            await download(url, outputDirectory, name);
+            console.log('Downloaded!')
         }
 
-        console.log('Downloading...')
-        await download(url, outputDirectory, name);
-        console.log('Downloaded!')
         fetch(extractorUrl + 'extract', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                fileName: name
+                fileName: name,
+                lang
             }),
         }).then()
         fetch(indexerUrl + 'index', {
@@ -79,8 +85,6 @@ app.post('/download', async (req, res) => {
             }),
         }).then()
     }
-    // todo send message to extractor
-    // todo custom callback after download (for copy file and etc)
 });
 
 app.listen(port, () => console.log(`Started downloader server at http://localhost:${port}`));

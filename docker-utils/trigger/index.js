@@ -54,19 +54,26 @@ function parseData(html) {
  * Fins all passed ZIM archives in the wiki
  */
 async function run() {
+    console.log(`Loading ${baseUrl}`)
     const html = await (await fetch(baseUrl)).text()
+    console.log('Loaded!')
     const urlsInfo = parseData(html)
 
     console.log(`Total ${urlsInfo.length} ZIM archives`)
     let found = []
-    zimsCheck.forEach(zimSearch => {
+    zimsCheck.forEach(item => {
+        const [zimSearch, lang] = item.split('|')
+        if (!lang) {
+            throw new Error('Language is not defined, use format "name|lang" for packages')
+        }
+
         const zims = urlsInfo.filter(item => item.name.startsWith(zimSearch))
         if (zims.length === 1) {
-            found.push(zims[0])
+            found.push({zim: zims[0], lang})
         } else if (zims.length > 1) {
             // find with the latest date
             const item = zims.sort((a, b) => b.date - a.date)[0]
-            found.push(item)
+            found.push({zim: item, lang})
         }
     })
     console.log(`Found ${found.length} ZIM archives`)
@@ -75,7 +82,10 @@ async function run() {
     }
 
     console.log('found', found)
-    const urls = found.map(item => `${baseUrl}${item.name}`)
+    const urls = found.map(item => ({
+        url: `${baseUrl}${item.zim.name}`,
+        lang: item.lang
+    }))
     fetch(downloaderUrl + 'download', {
         method: 'POST',
         headers: {
@@ -98,6 +108,10 @@ app.post('/run', async (req, res) => {
     console.log('Trigger started by web command')
     res.send({result: 'ok'});
 
-    await run()
+    try {
+        await run()
+    } catch (e) {
+        console.log('error', e)
+    }
 });
 app.listen(port, () => console.log(`Started trigger server at http://localhost:${port}`));
