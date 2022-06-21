@@ -62,9 +62,9 @@ async function downloadPage(key){
     console.log('content', content)
 }
 
-(async function(){
-    await downloadPage('wiki_page_Atimw')
-})()
+// (async function(){
+//     await downloadPage('wiki_page_Atimw')
+// })()
 
 app.use(cors());
 app.use(express.json());

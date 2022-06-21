@@ -76,14 +76,14 @@ async function run() {
 
     console.log('found', found)
     const urls = found.map(item => `${baseUrl}${item.name}`)
-    await fetch(downloaderUrl + 'download', {
+    fetch(downloaderUrl + 'download', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({urls}),
-    })
+    }).then()
 }
 
 if (!port) {
@@ -96,8 +96,8 @@ app.use(express.json());
 app.post('/run', async (req, res) => {
     // todo implement auto-restart in N hours/days
     console.log('Trigger started by web command')
-    run().then()
-
     res.send({result: 'ok'});
+
+    await run()
 });
 app.listen(port, () => console.log(`Started trigger server at http://localhost:${port}`));

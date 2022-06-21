@@ -10,7 +10,7 @@ services:
       - BEE_BOOTNODE_MODE
       - BEE_CLEF_SIGNER_ENABLE=false
       - BEE_CONFIG
-      - BEE_CORS_ALLOWED_ORIGINS
+      - BEE_CORS_ALLOWED_ORIGINS=*
       - BEE_DATA_DIR
       - BEE_CACHE_CAPACITY
       - BEE_DB_OPEN_FILES_LIMIT
@@ -113,6 +113,8 @@ services:
     image: swarm-wiki-indexer
     environment:
       - WIKI_INDEXER_PORT
+      - WIKI_SWARM_PREFIX
+      - WIKI_UPLOADER_URL=http://uploader:${WIKI_UPLOADER_PORT}/
 
   trigger:
     image: swarm-wiki-trigger

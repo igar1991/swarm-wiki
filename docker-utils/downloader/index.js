@@ -46,6 +46,9 @@ app.use(express.json());
 app.post('/download', async (req, res) => {
     const {urls} = req.body;
     console.log('Received urls', urls);
+    res.set('Connection', 'close');
+    res.send({result: 'ok'});
+
     for (const url of urls) {
         const name = url.split('/').pop()
         const fullPath = outputDirectory + name
@@ -54,8 +57,10 @@ app.post('/download', async (req, res) => {
             continue
         }
 
+        console.log('Downloading...')
         await download(url, outputDirectory, name);
-        await fetch(extractorUrl + 'extract', {
+        console.log('Downloaded!')
+        fetch(extractorUrl + 'extract', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -63,8 +68,8 @@ app.post('/download', async (req, res) => {
             body: JSON.stringify({
                 fileName: name
             }),
-        })
-        await fetch(indexerUrl + 'index', {
+        }).then()
+        fetch(indexerUrl + 'index', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -72,11 +77,10 @@ app.post('/download', async (req, res) => {
             body: JSON.stringify({
                 fileName: name
             }),
-        })
+        }).then()
     }
     // todo send message to extractor
     // todo custom callback after download (for copy file and etc)
-    res.send({result: 'ok'});
 });
 
 app.listen(port, () => console.log(`Started downloader server at http://localhost:${port}`));

@@ -20,9 +20,24 @@ Build any docker package from the root of the project (because it requires some 
 
 `docker run --env-file .env swarm-wiki-trigger`
 
-# Old
+## Testing
+
+First you need to prepare a docker image with utilities for working with ZIM files.
+
+Go to `test` directory
+
+`cd test`
+
+Build Dockerfile with ZIM utilities.
 
 `docker build - < Dockerfile`
 
 `docker build -t zimdump .`
 
+Return to the root folder
+
+`cd ..`
+
+And run tests
+
+`...`
