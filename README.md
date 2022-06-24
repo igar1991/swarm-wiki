@@ -20,6 +20,10 @@ Build any docker package from the root of the project (because it requires some 
 
 `docker run --env-file .env swarm-wiki-trigger`
 
+## Using stamps
+
+!!! Show examples for specific amount of data
+
 ## Data management
 
 Redis database management tool

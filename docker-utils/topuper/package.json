@@ -1,0 +1,20 @@
+{
+  "name": "topuper",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ethersphere/bee-js": "^4.1.1"
+  },
+  "devDependencies": {
+    "expect": "^28.1.1",
+    "mocha": "^10.0.0",
+    "supertest": "^6.2.3"
+  }
+}

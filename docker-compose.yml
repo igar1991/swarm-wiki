@@ -96,14 +96,17 @@ services:
   extractor:
     image: swarm-wiki-extractor
     environment:
+      - WIKI_UPLOADER_REDIS
       - WIKI_EXTRACTOR_PORT
       - WIKI_SWARM_PREFIX
+      - WIKI_UPLOADER_URL=http://uploader:${WIKI_UPLOADER_PORT}/
       - WIKI_ENHANCER_URL=http://enhancer:${WIKI_ENHANCER_PORT}/
       - WIKI_DOWNLOADER_OUTPUT_DIR=/app/data/
     volumes:
       - ${WIKI_DOWNLOAD_LOCAL_DIR}:/app/data
     depends_on:
       - enhancer
+      - redis
 
   downloader:
     image: swarm-wiki-downloader
@@ -134,6 +137,15 @@ services:
       - WIKI_BASE
       - WIKI_ZIMS_CHECK
       - WIKI_DOWNLOADER_URL=http://downloader:${WIKI_DOWNLOADER_PORT}/
+
+  topuper:
+    image: swarm-wiki-topuper
+    environment:
+      - WIKI_BEE_DEBUG_URL=http://bee:1635/
+      - WIKI_TOPUPER_TTL_LIMIT
+      - WIKI_TOPUPER_TARGET_BATCHES
+      - WIKI_TOPUPER_AMOUNT
+      - WIKI_TOPUPER_SLEEP_SECONDS
 
 #  restarter:
 #    image: docker
