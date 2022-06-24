@@ -1,6 +1,5 @@
 import fetch from 'node-fetch';
-
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+import {sleep} from './utils.js';
 
 const beeDebugUrl = process.env.WIKI_BEE_DEBUG;
 const triggerUrl = process.env.WIKI_TRIGGER_URL;
@@ -30,6 +29,7 @@ if (!triggerUrl) {
 
         console.log('Bee waiter: node is not ready')
 
-        await delay(3000);
+        // todo move to config?
+        await sleep(3000);
     }
 })()
