@@ -5,6 +5,8 @@ import express from 'express';
 import cors from 'cors';
 import fs from 'fs';
 import {parseList} from './utils.js';
+import {getUnixTimestamp, sleep} from '../utils/utils.js';
+import {createClient} from 'redis';
 
 const app = express();
 const exec = util.promisify(exec0);
@@ -14,6 +16,8 @@ const enhancerUrl = process.env.WIKI_ENHANCER_URL;
 const outputDir = process.env.WIKI_DOWNLOADER_OUTPUT_DIR;
 const keyPrefix = process.env.WIKI_SWARM_PREFIX;
 const zimdumpCustom = process.env.WIKI_ZIMDUMP_CUSTOM ?? 'zimdump';
+const redisUrl = process.env.WIKI_UPLOADER_REDIS;
+const uploaderUrl = process.env.WIKI_UPLOADER_URL;
 
 if (!enhancerUrl) {
     throw new Error('WIKI_ENHANCER_URL is not set');
@@ -27,13 +31,42 @@ if (!keyPrefix) {
     throw new Error('WIKI_SWARM_PREFIX is not set');
 }
 
+if (!redisUrl) {
+    throw new Error('WIKI_UPLOADER_REDIS is not set')
+}
+
+if (!uploaderUrl) {
+    throw new Error('WIKI_UPLOADER_URL is not set')
+}
+
 console.log('WIKI_ENHANCER_URL', enhancerUrl);
 console.log('WIKI_DOWNLOADER_OUTPUT_DIR', outputDir);
+console.log('WIKI_SWARM_PREFIX', keyPrefix);
+console.log('WIKI_ZIMDUMP_CUSTOM', zimdumpCustom);
+console.log('WIKI_UPLOADER_REDIS', redisUrl);
+console.log('WIKI_UPLOADER_URL', uploaderUrl);
+
+const client = createClient({
+    url: redisUrl
+});
+client.on('error', (err) => {
+    // console.log('Redis Client Error', err)
+});
 
 const error = (res, text) => {
     return res.status(500).json({result: 'error', text});
 }
 
+/**
+ * Gets uploader status
+ *
+ * @returns {Promise<string>}
+ */
+async function getUploaderStatus() {
+    return (await (await fetch(uploaderUrl + 'status')).json()).status
+}
+
+let status = 'ok'
 app.use(cors());
 app.use(express.json());
 app.post('/extract', async (req, res, next) => {
@@ -52,7 +85,7 @@ app.post('/extract', async (req, res, next) => {
     }
 
     const filePath = outputDir + fileName
-    console.log('Received fileName', fileName, 'filePath', filePath);
+    console.log('received fileName', fileName, 'filePath', filePath);
 
     if (!fs.existsSync(filePath)) {
         const message = `File ${filePath} not found`
@@ -61,12 +94,13 @@ app.post('/extract', async (req, res, next) => {
     }
 
     res.send({result: 'ok'});
+    // todo move config to const, reuse
     const {stdout, stderr} = await exec(`${zimdumpCustom} list --details ${filePath}`, {
         maxBuffer: 1024 * 1024 * 500,
     });
 
     if (stderr) {
-        console.error('ERROR', stderr);
+        console.error('stderr list error', stderr);
         return
     }
 
@@ -75,38 +109,81 @@ app.post('/extract', async (req, res, next) => {
 
     console.log('Zims count', zims.length, 'withContent count', withContent.length);
 
-    let counter = 0;
-    for (const item of withContent) {
-        const {stdout, stderr} = await exec(`${zimdumpCustom} show --idx ${item.index} ${filePath}`);
-        if (stderr) {
-            console.error('ERROR', stderr);
+    for (const [i, item] of withContent.entries()) {
+        if (limit && i >= limit) {
+            break;
+        }
+
+        console.log(`Page ${i}/${withContent.length}`)
+        const key = keyPrefix + MIDDLE_PREFIX_PAGE + lang.toLowerCase() + '_' + item.key
+        console.log('Key', key);
+        let storedInfo = await client.get(key)
+        storedInfo = storedInfo ? JSON.parse(storedInfo) : {}
+        console.log('storedInfo', storedInfo)
+
+        // todo remove this temp lifehack for setting time
+        if (storedInfo.uploadedData && storedInfo.uploadedData.reference && !storedInfo.updated_at) {
+            await client.set(key, JSON.stringify({
+                ...storedInfo,
+                updated_at: getUnixTimestamp()
+            }))
+
+            console.log('Reference found, but date is not set, date updated')
             continue
         }
 
-        const fullKey = keyPrefix + MIDDLE_PREFIX_PAGE + lang.toLowerCase() + '_' + item.key
-        console.log('Key', fullKey);
+        if (storedInfo.updated_at) {
+            console.log('Reference and update time found, skip')
+            continue
+        }
+
+        while (true) {
+            let uploaderStatus = ''
+            try {
+                uploaderStatus = await getUploaderStatus()
+                if (uploaderStatus === 'ok') {
+                    break
+                }
+            } catch (e) {
+
+            }
+
+            console.log('uploader status is not ok -', uploaderStatus, '- sleep')
+            // todo move to config
+            await sleep(5000)
+        }
+
+
+        const {stdout, stderr} = await exec(`${zimdumpCustom} show --idx ${item.index} ${filePath}`, {
+            maxBuffer: 1024 * 1024 * 500,
+        });
+        if (stderr) {
+            console.error('stderr show error', stderr);
+            continue
+        }
+
         console.log('Page size', stdout.length);
-        console.log(`Page ${counter + 1}/${withContent.length}`)
+
         try {
-            await fetch(enhancerUrl + 'enhance', {
+            const response = await (await fetch(enhancerUrl + 'enhance', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    key: fullKey,
+                    key,
                     page: stdout
                 })
-            })
+            })).json()
+            status = response.status
         } catch (e) {
-            console.log('ERROR enhance', e.message);
-        }
-
-        counter++;
-        if (limit && counter >= limit - 1) {
-            break;
+            console.log('error', e.message);
         }
     }
 });
+
+client.connect().then(async () => {
+    await client.configSet('save', '5 1');
+})
 
 export default app;

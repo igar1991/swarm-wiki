@@ -1,8 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import {Wallet} from 'ethers';
-import {Bee, BeeDebug} from '@ethersphere/bee-js';
+import {Bee} from '@ethersphere/bee-js';
 import {createClient} from 'redis';
+import {uploadData} from './utils.js';
+import {getUnixTimestamp} from "../utils/utils.js";
 
 const app = express();
 
@@ -38,34 +40,14 @@ console.log('WIKI_BEE_URL', beeUrl);
 console.log('WIKI_BEE_DEBUG_URL', beeDebugUrl);
 console.log('WIKI_UPLOADER_REDIS', redisUrl);
 
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 const client = createClient({
     url: redisUrl
 });
 client.on('error', (err) => {
     // console.log('Redis Client Error', err)
 });
-
-async function uploadData(privateKey, key, data, reference) {
-    const beeDebug = new BeeDebug(beeDebugUrl)
-    const allBatch = await beeDebug.getAllPostageBatch()
-    const usableBatch = allBatch.filter(batch => batch.usable)
-    if (allBatch.length === 0 || usableBatch.length === 0) {
-        console.error('No batch found or no usable batch found')
-        return
-    }
-
-    const batchId = usableBatch[0].batchID
-    const bee = new Bee(beeUrl)
-    const topic = bee.makeFeedTopic(key)
-    const feedWriter = bee.makeFeedWriter('sequence', topic, privateKey)
-    const uploadedData = await bee.uploadData(batchId, data)
-    const feedReference = await feedWriter.upload(batchId, uploadedData.reference)
-
-    return {
-        feedReference,
-        uploadedData
-    }
-}
 
 async function downloadFeedData(privateKey, key) {
     const wallet = new Wallet(privateKey)
@@ -75,62 +57,72 @@ async function downloadFeedData(privateKey, key) {
     return feedReader.download()
 }
 
-// async function downloadPage(key) {
-//     const bee = new Bee(beeUrl)
-//     const data = await downloadFeedData(key)
-//     console.log('feed data', data)
-//     const content = (await bee.downloadData(data.reference)).text()
-//     console.log('content', content)
-// }
+// ok, overissued
+let status = 'ok'
 
 app.use(cors());
 app.use(express.json({limit: 1024 * 1024 * 20}));
+app.get('/status', async (req, res) => {
+    res.send({result: 'ok', status});
+});
 app.post('/upload-page', async (req, res) => {
     const {key, page} = req.body;
     console.log('/upload-page', key, 'page length', page.length);
-    res.send({result: 'ok'});
-    try {
-        // todo get date of saving and compare it with allowed date. For download feed info if record older than 1 day
-        let storedInfo = await client.get(key)
-        storedInfo = storedInfo ? JSON.parse(storedInfo) : {}
-        console.log('storedInfo', storedInfo)
-        let feedData = null
+    res.send({result: 'ok', status});
+    if (status !== 'ok') {
+        console.log('status', status, 'skip')
+        return
+    }
+
+    while (true) {
+        console.log('uploading...')
         try {
-            feedData = await downloadFeedData(privateKey, key)
-        } catch (e) {
-
-        }
-
-        console.log('feedData', feedData)
-        if (feedData && feedData.reference && storedInfo.uploadedData && storedInfo.uploadedData.reference === feedData.reference) {
-            console.log('feed reference the same as in db, skipping', 'key', key)
-        } else {
-            console.log('uploading...')
-            const data = await uploadData(privateKey, key, page)
+            let data = null
+            try {
+                data = await uploadData(beeUrl, beeDebugUrl, privateKey, key, page)
+            } catch (e) {
+                if (e.message.startsWith('Conflict: chunk already exists')) {
+                    // todo handle it
+                }
+            }
             console.log('uploaded data result', data)
-            // todo save date of saving
+            if (!data) {
+                console.log('empty uploaded data, skip saving')
+            }
+
             await client.set(key, JSON.stringify({
                 ...data,
+                updated_at: getUnixTimestamp()
             }))
+            status = 'ok'
+        } catch (e) {
+            if (e.message.startsWith('Payment Required: batch is overissued')) {
+                status = 'overissued'
+            }
         }
-    } catch (error) {
-        console.log('error', error)
+
+        if (status === 'ok') {
+            break
+        }
+
+        // todo move to config
+        await sleep(5000)
     }
 });
 
-app.post('/upload-redirect', async (req, res) => {
-    const {key, reference} = req.body;
-    console.log('Received', 'key', key, 'reference', reference);
-    // todo implement
-    res.send({result: 'ok'});
-});
-
-app.post('/upload-file', async (req, res) => {
-    const {urls} = req.body;
-    console.log('Received', urls);
-    // todo implement
-    res.send({result: 'ok'});
-});
+// app.post('/upload-redirect', async (req, res) => {
+//     const {key, reference} = req.body;
+//     console.log('Received', 'key', key, 'reference', reference);
+//     // todo implement
+//     res.send({result: 'ok'});
+// });
+//
+// app.post('/upload-file', async (req, res) => {
+//     const {urls} = req.body;
+//     console.log('Received', urls);
+//     // todo implement
+//     res.send({result: 'ok'});
+// });
 
 client.connect().then(async () => {
     await client.configSet('save', '5 1');

@@ -1,5 +1,6 @@
-import {detectIssues, prepareBatchesArray, resolveIssue, sleep} from './utils.js';
+import {detectIssues, prepareBatchesArray, resolveIssue} from './utils.js';
 import {BeeDebug} from '@ethersphere/bee-js';
+import {sleep} from "../utils/utils.js";
 
 let ttlLimit = process.env.WIKI_TOPUPER_TTL_LIMIT;
 let targetBatches = process.env.WIKI_TOPUPER_TARGET_BATCHES ?? '';

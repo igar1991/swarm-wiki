@@ -42,13 +42,6 @@ export async function resolveIssue(beeDebug, issue, options) {
 }
 
 /**
- * Sleeps for a given time
- */
-export function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-/**
  * Parses batches array from string
  */
 export function prepareBatchesArray(targetBatches) {

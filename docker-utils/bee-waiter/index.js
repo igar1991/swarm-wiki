@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import {sleep} from './utils.js';
+import {sleep} from '../utils/utils.js';
 
 const beeDebugUrl = process.env.WIKI_BEE_DEBUG;
 const triggerUrl = process.env.WIKI_TRIGGER_URL;
