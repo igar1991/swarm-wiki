@@ -7,6 +7,7 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
 RUN apk update && apk add libzim zim-tools
 
 COPY ./docker-utils/extractor .
+COPY ./docker-utils/utils ./utils
 RUN npm ci
 
 ENTRYPOINT ["node", "index.js"]
