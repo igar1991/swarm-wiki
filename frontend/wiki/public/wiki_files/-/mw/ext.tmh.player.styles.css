@@ -1,0 +1,161 @@
+/**
+ * Styles-only module, added to all pages which include videojs mode
+ * Both click to load and inline page modes.
+ * This CSS should work both with and without JS and determines sizing etc
+ */
+/* Shrink videos to fit rather than overflowing containers */
+video {
+  height: auto;
+  max-width: 100%;
+}
+/* Force a fixed size for audio to reduce FOUC */
+audio,
+.mw-tmh-player.audio {
+  height: 30px;
+  --inline-controls-bar-height: 30px;
+  width: 300px;
+}
+video.thumbimage,
+audio.thumbimage,
+.thumb .mw-tmh-player.audio {
+  border: 0;
+  margin: 1px;
+}
+/* Galleryboxes are usually smaller than 220px, but can be different sizes. (T258622) */
+.gallerybox .mw-tmh-player.audio {
+  width: 90%;
+}
+/* Added by the ext.tmh.player after transforming the player */
+.mw-tmh-player {
+  display: inline-block;
+  position: relative;
+  /* fix height of inline-block T259549 */
+  line-height: 0;
+}
+.mw-tmh-player .mw-tmh-play {
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+/* Labels on top of the placeholder */
+.mw-tmh-label {
+  display: inline-block;
+  line-height: 1;
+  position: absolute;
+  /* @noflip */
+  right: 1em;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 0.3em;
+  padding: 0.5em;
+  cursor: pointer;
+}
+.mw-tmh-player.video .mw-tmh-label.mw-tmh-duration {
+  bottom: 1em;
+}
+.mw-tmh-player.video .mw-tmh-label.mw-tmh-cc {
+  font-size: 110%;
+  top: 1em;
+}
+.mw-tmh-player.audio .mw-tmh-label {
+  font-size: 80%;
+  top: 0.35em;
+}
+.mw-tmh-player.audio .mw-tmh-label.mw-tmh-cc {
+  /* @noflip */
+  right: 5em;
+}
+/* Play button to load and play the video and audio file in a media dialog */
+.mw-tmh-player.video .mw-tmh-play .mw-tmh-play-icon {
+  background: rgba(0, 0, 0, 0.8) url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22%3E %3Ctitle%3Eplay%3C/title%3E %3Cpath fill=%22%23fff%22 d=%22M4.55 19A1 1 0 0 1 3 18.13V1.87A1 1 0 0 1 4.55 1l12.2 8.13a1 1 0 0 1 0 1.7z%22/%3E %3C/svg%3E") center no-repeat;
+  display: block;
+  margin: auto;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 120ms ease-out, background-color 120ms ease-out;
+}
+.mw-tmh-player.audio .mw-tmh-play .mw-tmh-play-icon {
+  background: rgba(0, 0, 0, 0.5) url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22%3E %3Ctitle%3Eplay%3C/title%3E %3Cpath fill=%22%23fff%22 d=%22M4.55 19A1 1 0 0 1 3 18.13V1.87A1 1 0 0 1 4.55 1l12.2 8.13a1 1 0 0 1 0 1.7z%22/%3E %3C/svg%3E") no-repeat 10px;
+  transition: background-color 120ms ease-out;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+.mw-tmh-player.video .mw-tmh-play:hover .mw-tmh-play-icon,
+.mw-tmh-player.video .mw-tmh-play:focus .mw-tmh-play-icon,
+.mw-tmh-player.video .mw-tmh-play:active .mw-tmh-play-icon {
+  background-color: rgba(0, 0, 0, 0.8);
+  transform: translate(-50%, -50%) scale(1.1);
+}
+.mw-tmh-player.audio .mw-tmh-play:hover .mw-tmh-play-icon,
+.mw-tmh-player.audio .mw-tmh-play:focus .mw-tmh-play-icon,
+.mw-tmh-player.audio .mw-tmh-play:active .mw-tmh-play-icon {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+@supports ( aspect-ratio: 1 / 1 ) {
+  .mw-tmh-player.video > .mw-tmh-play .mw-tmh-play-icon {
+    width: auto;
+    height: min( 50px, 70% );
+    aspect-ratio: 1;
+  }
+}
+/* All interstitial and progress loading is for the
+   load phase between click and opening of the MediaDialog */
+.mw-tmh-player-interstitial {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+}
+.mw-tmh-player-progress {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  background-color: #fff;
+  border: 1px solid #a2a9b1;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.mw-tmh-player-progress-bar {
+  height: 1em;
+  -webkit-transition: width 100ms;
+  transition: width 100ms;
+  -webkit-animation: mw-tmh-player-progress-bar-slide 2s infinite linear;
+  animation: mw-tmh-player-progress-bar-slide 2s infinite linear;
+  width: 40%;
+  -webkit-transform: translate(-25%);
+  -ms-transform: translate(-25%);
+  transform: translate(-25%);
+  background-color: #36c;
+}
+@-webkit-keyframes mw-tmh-player-progress-bar-slide {
+  from {
+    -webkit-transform: translate(-100%);
+  }
+  to {
+    -webkit-transform: translate(350%);
+  }
+}
+@keyframes mw-tmh-player-progress-bar-slide {
+  from {
+    -webkit-transform: translate(-100%);
+    -ms-transform: translate(-100%);
+    transform: translate(-100%);
+  }
+  to {
+    -webkit-transform: translate(350%);
+    -ms-transform: translate(350%);
+    transform: translate(350%);
+  }
+}

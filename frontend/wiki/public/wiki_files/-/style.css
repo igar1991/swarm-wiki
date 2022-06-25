@@ -1,0 +1,117 @@
+/**
+ * Custom style meant to match the design of mwoffliner mobile version to the mobile version of wikipedia
+ */
+
+.mw-body-content {
+    font-family: 'Helvetica Neue', 'Helvetica', 'Nimbus Sans L', 'Arial', 'Liberation Sans', sans-serif;
+    font-size: 16px;
+    line-height: 26px;
+}
+
+.mw-body-content p {
+    margin: 0.5em 0 1em 0;
+}
+
+.mw-body h1,
+.mw-body summary {
+	outline: none;
+}
+
+.mw-body h2,
+.mw-body h3,
+.mw-body h4,
+.mw-body h5,
+.mw-body h6 {
+    padding: 0.5em 0;
+}
+
+.mw-body h3,
+.mw-body h2 {
+    clear: both;
+    width: 100%;
+    margin-bottom: 0.5em;
+    border-bottom: solid 1px #eaecf0;
+    font-family: 'Linux Libertine', 'Georgia', 'Times', serif;
+}
+
+
+.mw-body h3 {
+    border-bottom: 0px solid #eaecf0;
+    font-weight: initial;
+}
+
+.mw-body h4 {
+    border-bottom: 0px solid #eaecf0;
+}
+
+.mw-body h1.article-header {
+    border-bottom: 1px solid #eaecf0;
+}
+
+@media (max-width: 720px) {
+    .content .thumb .thumbinner>.thumbcaption {
+        flex: 1 1 auto !important;
+    }
+}
+
+.mwo-catlinks {
+    border: 1px solid #a2a9b1;
+    background-color: #f8f9fa;
+    padding: 5px;
+    margin-top: 1em;
+    clear: both;
+}
+
+.mwo-catlinks ul {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    list-style: none none;
+}
+
+.mwo-catlinks li {
+    display: inline-block;
+    line-height: 1.25em;
+    border-left: 1px solid #a2a9b1;
+    margin: 0.125em 0;
+    padding: 0 0.5em;
+    zoom: 1;
+}
+
+.mwo-catlinks li:first-child {
+    padding-left: 0.25em;
+    border-left: 0;
+}
+
+.mwo-groups {
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+    -webkit-column-width: 24em;
+    -moz-column-width: 24em;
+    column-width: 24em;
+}
+
+.mwo-groups h3 {
+    line-height: 1.6;
+    margin-top: 0.3em;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+summary.section-heading {
+    display: list-item !important;
+    cursor: pointer;
+}
+
+.section-heading>h1,
+.section-heading>h2,
+.section-heading>h3,
+.section-heading>h4 {
+    display: inline;
+    border: none;
+}
+
+body[data-useragent*='KAIOS'] h1 {
+    display: none !important;
+}

@@ -1,0 +1,33 @@
+/* stylelint-disable selector-class-pattern */
+/* stylelint-disable selector-no-vendor-prefix */
+/* stylelint-enable selector-no-vendor-prefix */
+.mw-graph {
+  display: inline-block;
+  position: relative;
+  background-image: url(/w/extensions/Graph/includes/ajax-loader.gif?b3af8);
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  border: 1px solid transparent;
+  opacity: 0;
+  -webkit-animation: spinnerDelay 0.5s ease-out 0.5s forwards;
+  animation: spinnerDelay 0.5s ease-out 0.5s forwards;
+}
+.mw-graph canvas {
+  display: inline-block;
+  vertical-align: middle;
+  background: #fff;
+}
+@keyframes spinnerDelay {
+  90% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.client-nojs .mw-graph {
+  background-image: unset;
+}
+.client-nojs .mw-graph-nofallback {
+  display: none;
+}

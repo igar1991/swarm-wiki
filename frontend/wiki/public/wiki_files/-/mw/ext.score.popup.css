@@ -1,0 +1,72 @@
+.mw-ext-score {
+	position: relative;
+	display: inline-block;
+}
+
+.mw-ext-score img {
+	cursor: pointer;
+}
+
+.mw-ext-score-popup {
+	box-sizing: border-box;
+	position: absolute;
+	bottom: calc( 100% + 9px );
+	left: 0;
+	right: 0;
+	width: 300px;
+	width: -webkit-fit-content;
+	width: -moz-fit-content;
+	width: fit-content;
+	max-width: 100%;
+	margin: 0 auto;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	padding: 15px;
+	background: #fff;
+	box-shadow: 0 3px 15px rgba( 0, 0, 0, 0.2 );
+	text-align: center;
+	transform: translateY( -20px );
+	opacity: 0;
+}
+
+.mw-ext-score-popup-open {
+	-webkit-transition: transform 100ms, opacity 100ms;
+	-moz-transition: transform 100ms, opacity 100ms;
+	transition: transform 100ms, opacity 100ms;
+	transform: translateY( 0 );
+	opacity: 1;
+}
+
+/* Triangle on the bottom of popup */
+.mw-ext-score-popup:after {
+	content: '';
+	position: absolute;
+	bottom: -9px;
+	right: 0;
+	left: 0;
+	margin: auto;
+	width: 15px;
+	height: 15px;
+	border: 1px solid #ccc;
+	border-width: 0 1px 1px 0;
+	background: #fff;
+	transform: rotate( 45deg );
+}
+
+.mw-ext-score-popup a {
+	pointer-events: none;
+}
+
+.mw-ext-score-popup a span {
+	pointer-events: all;
+}
+
+.mw-ext-score-popup a:not( :first-child ) {
+	margin-left: 0.5em;
+}
+
+.mw-ext-score-popup a:not( :first-child ):before {
+	content: '•';
+	display: inline-block;
+	margin-right: 0.5em;
+}

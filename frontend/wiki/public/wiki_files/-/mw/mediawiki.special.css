@@ -1,0 +1,457 @@
+/*!
+ * Styles shared across various special pages.
+ */
+/**
+ * This file is a LESS import match for "mediawiki.skin.variables.less"
+ * when Vector is the active skin.
+ */
+/**
+ * Deprecated variables
+ */
+/* stylelint-disable selector-class-pattern */
+/* stylelint-disable selector-no-vendor-prefix */
+/* stylelint-enable selector-no-vendor-prefix */
+/* Special:AllMessages */
+/* Visually hide repeating text, but leave in for better form navigation on screen readers */
+.mw-special-Allmessages .mw-htmlform-ooui .oo-ui-fieldsetLayout:first-child .oo-ui-fieldsetLayout-header {
+  display: block;
+  position: absolute !important;
+  /* stylelint-disable-line declaration-no-important */
+  clip: rect(1px, 1px, 1px, 1px);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  overflow: hidden;
+}
+#mw-allmessagestable {
+  /* stylelint-disable-next-line selector-class-pattern */
+  /* stylelint-disable-next-line selector-class-pattern */
+  /* stylelint-disable-next-line selector-class-pattern */
+  /* stylelint-disable-next-line selector-class-pattern */
+}
+#mw-allmessagestable tbody:hover td {
+  /* Duplicate of `.mw-datatable tr:hover td` from shared.css,
+		 * so that it also applies when hovering a lower cell
+		 * within the same rowspan */
+  background-color: #eaf3ff;
+}
+#mw-allmessagestable .am_default {
+  background-color: #fcffc4;
+}
+#mw-allmessagestable tbody:hover .am_default {
+  background-color: #faff90;
+}
+#mw-allmessagestable .am_actual {
+  background-color: #e2ffe2;
+}
+#mw-allmessagestable tbody:hover .am_actual {
+  background-color: #b1ffb1;
+}
+/* Common for Special:Allpages and Special:PrefixIndex */
+.mw-allpages-body,
+.mw-prefixindex-body {
+  columns: 22em 3;
+  -moz-columns: 22em 3;
+  -webkit-columns: 22em 3;
+  break-inside: avoid-column;
+  page-break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+}
+.mw-allpages-body li,
+.mw-prefixindex-body li {
+  break-inside: avoid;
+}
+.mw-allpages-chunk,
+.mw-prefixindex-list {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+/* stylelint-disable-next-line selector-class-pattern */
+.allpagesredirect {
+  font-style: italic;
+}
+/* Special:Block */
+.mw-ipb-conveniencelinks {
+  font-size: 90%;
+  text-align: right;
+}
+.mw-block-hideuser,
+.mw-block-confirm {
+  font-weight: bold;
+}
+#mw-input-wpReason .oo-ui-dropdownInputWidget,
+#mw-input-wpReason .oo-ui-textInputWidget {
+  display: block;
+  max-width: 50em;
+}
+#mw-input-wpReason .oo-ui-textInputWidget {
+  margin-top: 0.5em;
+}
+/* Special:BlockList */
+.mw-blocklist .mw-usertoollinks,
+.mw-blocklist-actions {
+  white-space: nowrap;
+  font-size: 90%;
+}
+/* Special:Contributions */
+.mw-uctop {
+  font-weight: bold;
+}
+/* Special:EditWatchlist */
+/* stylelint-disable-next-line selector-class-pattern */
+.watchlistredir {
+  font-style: italic;
+}
+/* Special:EditWatchlist */
+.mw-watchlistexpiry-msg {
+  margin-left: 0.3em;
+  color: #72777d;
+}
+/* Special:EmailUser */
+#mw-emailuser-sender,
+#mw-emailuser-recipient {
+  font-weight: bold;
+}
+/* Special:FileDuplicateSearch */
+#mw-fileduplicatesearch-icon {
+  float: right;
+}
+/* Special:ListGroupRights */
+.mw-listgrouprights-table tr {
+  vertical-align: top;
+}
+/* stylelint-disable-next-line selector-class-pattern */
+.listgrouprights-revoked {
+  text-decoration: line-through;
+}
+/* Special:RevisionDelete */
+.mw-revdel-editreasons {
+  font-size: 90%;
+  text-align: right;
+}
+td.mw-revdel-checkbox,
+th.mw-revdel-checkbox {
+  padding-right: 10px;
+  text-align: center;
+}
+/* Special:Specialpages */
+.mw-specialpagerestricted {
+  font-weight: bold;
+}
+.mw-specialpages-list {
+  -webkit-columns: 16em 2;
+  -moz-columns: 16em 2;
+  columns: 16em 2;
+}
+.mw-specialpages-list ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+/* Special:Statistics */
+.mw-statistics-numbers {
+  text-align: right;
+}
+/* Special:ProtectedPages */
+.mw-protectedpages .mw-usertoollinks,
+.mw-protectedpages-length,
+.mw-protectedpages-actions {
+  white-space: nowrap;
+  font-size: 90%;
+}
+.mw-protectedpages-unknown {
+  color: #72777d;
+  font-size: 90%;
+}
+/* Special:PasswordPolicies */
+.mw-passwordpolicies-table tr {
+  vertical-align: top;
+}
+/* stylelint-disable-next-line selector-class-pattern */
+.passwordpolicies-policy-flags {
+  font-size: 90%;
+}
+
+/*!
+ * Styles for Special:ApiSandbox
+ */
+.client-js .mw-apisandbox-nojs {
+	display: none;
+}
+
+/*!
+ * Styles for Special:ComparePages
+ */
+.mw-special-ComparePages .mw-htmlform-ooui-wrapper {
+  width: 100%;
+}
+.mw-special-ComparePages .oo-ui-layout.oo-ui-panelLayout.oo-ui-panelLayout-padded.oo-ui-panelLayout-framed {
+  float: left;
+  width: 49%;
+  box-sizing: border-box;
+}
+.mw-special-ComparePages .oo-ui-layout.oo-ui-panelLayout.oo-ui-panelLayout-padded.oo-ui-panelLayout-framed + .oo-ui-layout.oo-ui-panelLayout.oo-ui-panelLayout-padded.oo-ui-panelLayout-framed {
+  margin-left: 2%;
+}
+.mw-special-ComparePages .mw-htmlform-submit-buttons {
+  clear: both;
+}
+
+/*!
+ * Styling for Special:Contributions
+ */
+/**
+ * This file is a LESS import match for "mediawiki.skin.variables.less"
+ * when Vector is the active skin.
+ */
+/**
+ * Deprecated variables
+ */
+.mw-special-Contributions .oo-ui-fieldsetLayout-group {
+  max-width: 50em;
+}
+.mw-special-Contributions .oo-ui-fieldsetLayout-group .oo-ui-panelLayout-padded.oo-ui-panelLayout-framed {
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+.mw-special-Contributions .oo-ui-fieldsetLayout-group .oo-ui-fieldsetLayout.oo-ui-labelElement > .oo-ui-fieldsetLayout-header {
+  display: none;
+}
+.mw-special-Contributions .mw-autocomplete-user.oo-ui-fieldLayout {
+  margin-top: 0.57142857em;
+}
+.mw-special-Contributions .mw-htmlform-field-HTMLMultiSelectField.mw-htmlform-flatlist.oo-ui-fieldLayout {
+  margin-top: 0.57142857em;
+}
+.mw-special-Contributions .mw-htmlform-field-HTMLTagFilter ~ .mw-htmlform-field-HTMLCheckField.oo-ui-fieldLayout {
+  display: inline-block;
+  padding-right: 1.14285714em;
+}
+.mw-special-Contributions #mw-htmlform-contribs-date:after {
+  content: '';
+  clear: both;
+  display: block;
+}
+.mw-special-Contributions .mw-htmlform-field-HTMLDateTimeField {
+  margin-right: 1.14285714em;
+  margin-bottom: 0.57142857em;
+}
+.mw-special-Contributions .oo-ui-fieldLayout.oo-ui-labelElement.mw-htmlform-field-HTMLDateTimeField:first-child {
+  margin-top: 0.85714286em;
+}
+@media all and (min-width: 720px) {
+  .mw-special-Contributions .mw-htmlform-field-HTMLDateTimeField {
+    float: left;
+    width: 21em;
+  }
+}
+
+/*!
+ * Styles for Special:EditTags and action=editchangetags
+ */
+#mw-edittags-tags-selector td {
+	vertical-align: top;
+}
+
+#mw-edittags-tags-selector-multi td {
+	vertical-align: top;
+	padding-right: 1.5em;
+}
+
+#mw-edittags-tag-list {
+	min-width: 20em;
+}
+
+/*!
+ * Styles for Special:MovePage
+ */
+
+/* stylelint-disable-next-line selector-class-pattern */
+.movepage-wrapper {
+	max-width: 50em;
+}
+
+/* stylelint-disable selector-class-pattern */
+/*!
+ * Styles for Special:NewPages
+ */
+.mw-htmlform-ooui .mw-htmlform-submit-buttons + div {
+  margin-top: 0.85714286em;
+}
+.not-patrolled {
+  background-color: #ffa;
+}
+
+/*!
+ * Styles for Special:PagesWithProp
+ */
+
+/* Distinguish actual data from information about it being hidden visually. */
+/* stylelint-disable-next-line selector-class-pattern */
+.prop-value-hidden {
+	font-style: italic;
+}
+
+/*!
+ * Styles for Special:Upload
+ */
+.mw-destfile-warning {
+	border: 1px solid #fde29b;
+	padding: 0.5em 1em;
+	margin-bottom: 1em;
+	color: #705000;
+	background-color: #fdf1d1;
+}
+
+.mw-destfile-warning:after {
+	content: '';
+	clear: both;
+	display: block;
+}
+
+p.mw-upload-editlicenses {
+	font-size: 90%;
+	text-align: right;
+}
+
+/*!
+ * Styles for Special:UserRights
+ */
+.mw-userrights-nested {
+	margin-left: 1.2em;
+}
+
+.mw-userrights-nested span {
+	margin-left: 0.3em;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.mw-userrights-disabled {
+	color: #72777d;
+}
+
+.mw-userrights-groups * td,
+.mw-userrights-groups * th {
+	padding-right: 1.5em;
+}
+
+.mw-userrights-groups * th {
+	text-align: left;
+}
+
+/* Dynamically show/hide the expiry selection underneath each checkbox */
+input.mw-userrights-groupcheckbox:not( :checked ) ~ .mw-userrights-nested {
+	display: none;
+}
+
+/* Initial hide the expiry fields to prevent a FOUC on loading */
+/* The input fields gets unhidden by JavaScript when needed */
+.client-js .mw-userrights-expiryfield {
+	display: none;
+}
+
+/*!
+ * Styles for elements generated by JavaScript on Special:Watchlist
+ */
+.mw-changelist-line-inner-unwatched {
+	text-decoration: line-through;
+	opacity: 0.5;
+}
+
+span.mw-changeslist-line-prefix {
+	display: inline-block;
+}
+/* This can be either a span or a table cell */
+.mw-changeslist-line-prefix {
+	width: 1.25em;
+}
+
+/*!
+ * Styles for Special:Block
+ */
+.mw-block-editing-restriction.oo-ui-fieldLayout,
+.mw-block-action-restriction .oo-ui-checkboxMultioptionWidget,
+.mw-block-restriction.oo-ui-labelElement {
+  margin-top: 12px;
+}
+.mw-block-restriction.oo-ui-fieldLayout .oo-ui-tagMultiselectWidget,
+.mw-block-restriction.oo-ui-fieldLayout .oo-ui-textInputWidget {
+  max-width: 46.28571429em;
+}
+.mw-block-partial-restriction.oo-ui-fieldLayout {
+  margin-left: 1.85714286em;
+}
+.mw-block-partial-restriction.oo-ui-fieldLayout .oo-ui-checkboxMultioptionWidget {
+  padding: 0;
+}
+.mw-special-Block .mw-htmlform > .oo-ui-panelLayout-framed {
+  border: 0;
+}
+.mw-special-Block .mw-htmlform > .oo-ui-panelLayout-padded {
+  padding: 0;
+}
+
+/**
+ * This file is a LESS import match for "mediawiki.skin.variables.less"
+ * when Vector is the active skin.
+ */
+/**
+ * Deprecated variables
+ */
+@media all and (max-width: 720px) {
+  .mw-special-Listfiles thead,
+  .mw-special-Listfiles .TablePager_col_count,
+  .mw-special-Listfiles .TablePager_col_img_size,
+  .mw-special-Listfiles .TablePager_col_top,
+  .mw-special-Listfiles .TablePager_col_img_timestamp {
+    display: none;
+  }
+  .mw-special-Listfiles tbody,
+  .mw-special-Listfiles tr,
+  .mw-special-Listfiles td,
+  .mw-special-Listfiles .mw-datatable,
+  .mw-special-Listfiles .TablePager_col_img_description,
+  .mw-special-Listfiles .TablePager_col_thumb {
+    display: block;
+  }
+  .mw-special-Listfiles .mw-datatable,
+  .mw-special-Listfiles .mw-datatable th,
+  .mw-special-Listfiles .mw-datatable td {
+    border: 0;
+  }
+  .mw-special-Listfiles .TablePager_col_img_user_text,
+  .mw-special-Listfiles .TablePager_col_img_description {
+    color: #54595d;
+    margin: 0.5em 0 0;
+    padding-bottom: 40px;
+    line-height: 1.5;
+  }
+  .mw-special-Listfiles .TablePager_col_img_user_text {
+    padding: 0;
+  }
+}
+
+.mw-special-BlockList .oo-ui-fieldsetLayout-group {
+  max-width: 50em;
+}
+.mw-special-BlockList .oo-ui-layout.mw-field-block-type,
+.mw-special-BlockList .oo-ui-layout.mw-field-limit.mw-has-field-block-type {
+  display: inline-block;
+  width: 50%;
+  box-sizing: border-box;
+  margin-top: 0;
+}
+.mw-special-BlockList .oo-ui-layout.mw-field-block-type {
+  padding-right: 1em;
+}
+
+/**
+ * Adjusts for decreased margin-bottom for h2 elements inside #content div
+ * introduced in March / April 2014 typography update.
+ */
+table.mw-specialpages-table {
+  margin-top: 0;
+}

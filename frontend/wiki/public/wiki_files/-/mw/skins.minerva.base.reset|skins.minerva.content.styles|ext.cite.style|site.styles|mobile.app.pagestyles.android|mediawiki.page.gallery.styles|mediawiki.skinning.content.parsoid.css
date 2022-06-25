@@ -1,0 +1,2214 @@
+/*
+Problematic modules: {
+    "skins.minerva.base.reset": "missing",
+    "skins.minerva.content.styles": "missing",
+    "mobile.app.pagestyles.android": "missing"
+}
+*/
+/* CSS for Parsoid Cite extension */
+
+/* Style for <ref>s */
+.mw-ref {
+	vertical-align: super;
+	line-height: 1;
+	font-size: smaller;
+	/* Do not inherit bold or italic */
+	font-weight: normal;
+	font-style: normal;
+	/* Isolation to fix references in case of RTL words at the end of a reference */
+	unicode-bidi: -moz-isolate;
+	unicode-bidi: -webkit-isolate;
+	unicode-bidi: isolate;
+}
+
+.mw-ref-follow {
+	display: none;
+}
+
+/* Upstream bug in stylelint makes it complain aboout the case of 'mw-Ref' */
+/* stylelint-disable value-keyword-case */
+
+/* With a group set */
+.mw-ref a[ data-mw-group ]:after {
+	content: '[' attr( data-mw-group ) ' ' counter( mw-Ref, decimal ) ']';
+}
+
+/* Groups with special appearance */
+.mw-ref a[ data-mw-group='decimal' ]:after {
+	content: '[' counter( mw-Ref, decimal ) ']';
+}
+
+.mw-ref a[ data-mw-group='lower-alpha' ]:after {
+	content: '[' counter( mw-Ref, lower-alpha ) ']';
+}
+
+.mw-ref a[ data-mw-group='upper-alpha' ]:after {
+	content: '[' counter( mw-Ref, upper-alpha ) ']';
+}
+
+.mw-ref a[ data-mw-group='lower-greek' ]:after {
+	content: '[' counter( mw-Ref, lower-greek ) ']';
+}
+
+.mw-ref a[ data-mw-group='lower-roman' ]:after {
+	content: '[' counter( mw-Ref, lower-roman ) ']';
+}
+
+.mw-ref a[ data-mw-group='upper-roman' ]:after {
+	content: '[' counter( mw-Ref, upper-roman ) ']';
+}
+
+.mw-ref a[ data-mw-group='error-test' ]:after {
+	content: '[' counter( mw-Ref, symbols( cyclic 'first' 'second' 'last!' ) ) ']';
+}
+
+/* Without a group */
+.mw-ref a:after {
+	content: '[' counter( mw-Ref, decimal ) ']';
+}
+
+/* Hide the default rendering in browsers that support content
+ * generation by selecting for :after pseudo-element. */
+/* stylelint-disable-next-line selector-type-no-unknown */
+x-thereisnoelementwiththisname:after,
+span.mw-reflink-text {
+	display: none;
+}
+
+/* Style for linkbacks from <references> to <ref>s */
+ol.mw-references {
+	/* Resetting *any* counter on an <ol> element messes the build-in numbering in Firefox up.
+	   Explicitely resetting the build-in "list-item" counter fixes this. */
+	counter-reset: mw-ref-linkback list-item;
+}
+
+ol.mw-references > li {
+	counter-increment: mw-ref-linkback;
+}
+
+[ rel='mw:referencedBy' ] {
+	counter-reset: mw-ref-linkback -1;
+}
+
+[ rel='mw:referencedBy' ]:before {
+	content: '↑ ';
+}
+
+span[ rel='mw:referencedBy' ] a:before {
+	counter-increment: mw-ref-linkback;
+	content: counters( mw-ref-linkback, '.', decimal );
+	vertical-align: super;
+	line-height: 1;
+	font-size: smaller;
+}
+
+span[ rel='mw:referencedBy' ] a:after {
+	content: ' ';
+}
+
+/* Hide the default rendering in browsers that support content
+ * generation by selecting for :after pseudo-element. */
+/* stylelint-disable-next-line selector-type-no-unknown */
+x-thereisnoelementwiththisname[ rel='mw:referencedBy' ]:before,
+span.mw-linkback-text {
+	display: none;
+}
+/*
+MediaWiki:Common.css
+*/
+/**
+ *  [Содержание]
+ *
+ *  1. Интерфейс
+ *  1.1 Теги
+ *  1.2 Классы
+ *  1.3 Расширения
+ *  1.4 Редакторы
+ *  2. Служебные классы
+ *  3. Общие классы
+ *  3.1 Списки
+ *  3.2 Примечания
+ *  3.3 Колонки
+ *  3.4 Таблицы
+ *  4. Шаблоны
+ *  5. Страницы
+ *
+ *  При добавлении правил, которые должны также действовать в мобильной версии,
+ *  не забудьте добавить аналогичные правила в [[MediaWiki:Mobile.css]].
+ */
+
+/* ================================================
+   ИНТЕРФЕЙС
+   ================================================ */
+
+/* ТЕГИ ------------------------------------------- */
+
+/* Избавляемся от дважды жирного шрифта (2019-09-08) */
+b {
+	font-weight: 700;
+}
+
+/* Сбрасываем курсивное оформление, применяемое браузером */
+cite, dfn {
+	font-style: inherit;
+}
+
+/* Добавление горизонтального скролла для <pre>,
+   для избежания бага с очень длинными строками */
+pre {
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+/* Размер таба для обычного редактора и для тега <code> */
+pre,
+textarea {
+	tab-size: 4;
+}
+
+/* Consistent size for <small>, <sub> and <sup> */
+small {
+	font-size: 85%;
+}
+.mw-body-content sub,
+.mw-body-content sup,
+span.reference /* for Parsoid */ {
+	font-size: 80%;
+}
+
+/* fix for line-breaking references */
+sub,
+sup {
+	line-height: 1em;
+}
+
+blockquote {
+	background: #f8f9fa;
+	overflow: hidden;
+}
+
+/* КЛАССЫ ----------------------------------------- */
+
+/* Уточнение ширины логотипа на экранах с большей плотностью пикселей (сами
+   изображения задаются в файле стилей, не изменяемом локально; помогает
+   избежать сглаживания? 136 = 204 / 1,5; 204px — ширина картинки) */
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
+	#p-logo a {
+		background-size: 136px auto;
+	}
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+	#p-logo a {
+		background-size: 135px auto;
+	}
+}
+
+.filehistory a img,
+#file img {
+	background: url(//upload.wikimedia.org/wikipedia/commons/5/5d/Checker-16x16.png) repeat;
+}
+
+/* Remove "external" icon from links to WP */
+body.ns-talk a.external[href*="//ru.wikipedia.org/"],
+body.ns-4 a.external[href*="//ru.wikipedia.org/"],
+body.ns-104 a.external[href*="//ru.wikipedia.org/"],
+body.ns-106 a.external[href*="//ru.wikipedia.org/"] {
+	background: none !important;
+	padding-right: 0 !important;
+}
+
+/* PDF icon next to external PDF link for Mozilla and Opera and for {PDFlink} template */
+a[href$=".pdf"].external,
+a[href*=".pdf?"].external,
+a[href*=".pdf#"].external,
+a[href$=".PDF"].external,
+a[href*=".PDF?"].external,
+a[href*=".PDF#"].external,
+span.PDFlink a {
+	background: url(//upload.wikimedia.org/wikipedia/commons/2/23/Icons-mini-file_acrobat.gif) center right no-repeat !important;
+	padding-right: 18px !important;
+}
+
+.hatnote {
+	font-style: italic;
+	padding-left: 1.6em;
+}
+
+.allpagesredirect,
+span.redirect-in-category a {
+	font-style: italic;
+}
+
+/* Clickable speaker in {Audio} ... */
+.audiolink a {
+	background: url(//upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Loudspeaker.svg/11px-Loudspeaker.svg.png) center left no-repeat !important;
+	padding-left: 16px !important;
+	padding-right: 0 !important;
+}
+
+.clickable-image a:hover {
+	text-decoration: none;
+}
+
+#mw-subcategories,
+#mw-pages {
+	clear: both;
+}
+
+/* Лечим растягивание СН, страниц истории и вклада, если текст описания правки
+   негде перенести. Удалить при добавлении этого правила на глобальном уровне. */
+.comment {
+	overflow-wrap: break-word;
+	word-break: break-word;
+}
+
+/* Не отображать множественные уведомления о запрете редактирования списком */
+.permissions-errors {
+	list-style: none;
+	margin: 0;
+}
+
+.sitedir-ltr .mw-dismissable-notice-body {
+	margin-right: 5em !important; /* was 20% */
+}
+
+/* Fix of default <maplink> display */
+.mw-kartographer-maplink {
+	margin-left: 0 !important;
+	padding: 2px 0 2px 20px !important;
+}
+
+/* Временный фикс [[Обсуждение MediaWiki:Common.css#Для чего .catlinks li параметр margin: 0.125em 0;?]],
+   пока не исправят в нативных стилях */
+.mediawiki .catlinks li {
+	margin: 2px 0;
+}
+
+.mw-tag-markers {
+	font: italic 90% sans-serif;
+}
+
+.printonly {
+	display: none;
+}
+
+/* Фикс выравнивания галереи при заданном параметре perrow (2019-10-03) */
+.mw-gallery-traditional.center,
+.mw-gallery-nolines.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* Блок «Это старая/текущая версия этой страницы». Надо предложить это в движок */
+.mw-revision,
+#mw-revision-nav {
+	margin-top: 0.5em;
+}
+
+/* Кнопки [показать]/[скрыть], создаваемые mw-collapsible */
+.mw-collapsible-toggle {
+	font-weight: normal;
+}
+
+/* Кнопки [показать]/[скрыть], создаваемые динамически функцией collapsibleTables()
+   в [[MediaWiki:Common.js]] */
+.collapseButton {
+	/* @noflip */
+	float: right;
+	font-weight: normal;
+	/* @noflip */
+	margin-left: 0.5em;
+	/* @noflip */
+	text-align: right;
+	width: auto;
+}
+
+/* Reduce page jumps by hiding collapsed/dismissed content */
+.client-js .collapsible.collapsed > tbody > tr:not(:first-child),
+.client-js .NavFrame.collapsed > .NavContent,
+.client-js .tochidden-wrapper > .toc > ul {
+	display: none;
+}
+
+/* РАСШИРЕНИЯ ------------------------------------- */
+
+/* Стили для расширения [[mw:Extension:Babel]] (03-09-17) */
+/* Скрытие буквы N у родных языков, по аналогии со стандарными шаблонами */
+.mw-babel-box-level-N {
+	display: none;
+}
+
+/* FlaggedRevs */
+/* Скрываем верхнюю таблицу для анонимов и показываем
+для зарегистрированных с помощью [[MediaWiki:Group-user.css]] */
+#mw-fr-revisiontag {
+	display: none;
+}
+.mw-fr-reviewlink,
+.fr-hist-basic-user,
+.fr-hist-basic-auto {
+	font-weight: normal;
+	font-size: 85%;
+}
+.flaggedrevs-pending {
+	background: #ffc;
+}
+.sitedir-ltr div.flaggedrevs_short {
+	float: none;
+	margin-left: 0;
+	padding: 1px;
+}
+.sitedir-ltr div.flaggedrevs_short_details {
+	width: 95%;
+	display: none;
+}
+/* Лишний отступ */
+div.flaggedrevs_notice {
+    margin-right: 0;
+}
+
+/* Remove popup from Content translation tool, if not opted in */
+.cx-callout:not(.cx-campaign-contributionsmenu):not(.cx-entrypoint-dialog) { display: none !important; }
+
+/* Покрасить "неприоритетные" ссылки в библиографических ссылках в черный цвет (касается только ссылок, генерируемых Lua) */
+.wef_low_priority_links a,
+.wef_low_priority_links a.extiw,
+.wef_low_priority_links a.external,
+.wef_low_priority_links a:visited,
+.wef_low_priority_links a.extiw:visited,
+.wef_low_priority_links a.external:visited {
+	color: #202122;
+}
+
+/* РЕДАКТОРЫ -------------------------------------- */
+
+/* Visual editor related */
+.mw-ve-editNotice .mbox-image,
+.ve-active .ve-hide,
+.ve-show {
+	display: none;
+}
+
+.ve-active div.ve-show,
+.ve-active p.ve-show {
+	display: block;
+}
+
+.ve-active span.ve-show,
+.ve-active small.ve-show {
+	display: inline;
+}
+
+.ve-active li.ve-show {
+	display: list-item;
+}
+
+/* Костыль исправляющий дублирование иконки в сообщениях об ошибках (Editnotice) 
+при сохранении правки в визуальном редакторе */
+.ve-ui-mwSaveDialog .oo-ui-flaggedElement-error.oo-ui-iconElement table.fmbox {
+	margin-top: 0;
+}
+.ve-ui-mwSaveDialog .oo-ui-flaggedElement-error.oo-ui-iconElement .mbox-image {
+	display: none;
+}
+
+/* ================================================
+   СЛУЖЕБНЫЕ КЛАССЫ
+   ================================================ */
+
+/* Классы для показа сообщений отдельным группам пользователей */
+.group-checkuser-show,
+.group-bureaucrat-show,
+.group-sysop-show,
+.group-engineer-show,
+.group-closer-show,
+.group-filemover-show,
+.group-editor-show,
+.group-autoreview-show,
+.group-user-show {
+	display: none;
+}
+
+/* ================================================
+   ОБЩИЕ КЛАССЫ
+   ================================================ */
+
+/* СПИСКИ ----------------------------------------- */
+
+/* Style for horizontal lists (separator following item).
+   @source mediawiki.org/wiki/Snippets/Horizontal_lists
+   @revision 9 (2016-08-10)
+   @author [[User:Edokter]]
+ */
+.hlist dl,
+.hlist ol,
+.hlist ul {
+	margin: 0;
+	padding: 0;
+}
+/* Display list items inline */
+.hlist dd,
+.hlist dt,
+.hlist li {
+	margin: 0;
+	display: inline;
+}
+/* Display nested lists inline */
+.hlist.inline,
+.hlist.inline dl,
+.hlist.inline ol,
+.hlist.inline ul,
+.hlist dl dl, .hlist dl ol, .hlist dl ul,
+.hlist ol dl, .hlist ol ol, .hlist ol ul,
+.hlist ul dl, .hlist ul ol, .hlist ul ul {
+	display: inline;
+}
+/* Hide empty list items */
+.hlist .mw-empty-li,
+.hlist .mw-empty-elt {
+	display: none;
+}
+/* Generate bullets */
+.hlist dt:after {
+	content: ": ";
+}
+.hlist dd:after,
+.hlist li:after {
+	content: "\00a0• ";
+}
+.hlist dd:last-child:after,
+.hlist dt:last-child:after,
+.hlist li:last-child:after {
+	content: none;
+}
+/* Add parentheses around nested lists */
+.hlist dd dd:first-child:before, .hlist dd dt:first-child:before, .hlist dd li:first-child:before,
+.hlist dt dd:first-child:before, .hlist dt dt:first-child:before, .hlist dt li:first-child:before,
+.hlist li dd:first-child:before, .hlist li dt:first-child:before, .hlist li li:first-child:before {
+	content: " (";
+	font-weight: normal;
+}
+.hlist dd dd:last-child:after, .hlist dd dt:last-child:after, .hlist dd li:last-child:after,
+.hlist dt dd:last-child:after, .hlist dt dt:last-child:after, .hlist dt li:last-child:after,
+.hlist li dd:last-child:after, .hlist li dt:last-child:after, .hlist li li:last-child:after {
+	content: ")";
+	font-weight: normal;
+}
+/* Put ordinals in front of ordered list items */
+.hlist ol {
+	counter-reset: listitem;
+}
+.hlist ol > li {
+	counter-increment: listitem;
+}
+.hlist ol > li:before {
+	content: " " counter(listitem) "\a0";
+}
+.hlist dd ol > li:first-child:before,
+.hlist dt ol > li:first-child:before,
+.hlist li ol > li:first-child:before {
+	content: " (" counter(listitem) "\a0";
+}
+
+/* Немаркированные списки */
+.plainlist ol:not(.references),
+.plainlist dl,
+.plainlist ul {
+	line-height: inherit;
+	list-style: none none;
+	margin: 0;
+}
+.plainlist ol:not(.references) li,
+.plainlist dl dt,
+.plainlist dl dd,
+.plainlist ul li {
+	margin: 0;
+}
+.plainlist dl dt:after {
+	content: ": ";
+}
+
+/* Неразрывные пробелы в горизонтальных списках */
+.nowrap,
+.nowraplinks a,
+.nowraplinks .selflink,
+.hlist-items-nowrap dd,
+.hlist-items-nowrap dt,
+.hlist-items-nowrap li {
+	white-space: nowrap;
+}
+
+/* Но где-то неразрывность надо сбросить (например, в навшаблонах в узких местах) */
+.wrap,
+.wraplinks a,
+.wraplinks .selflink,
+.hlist-items-nowrap dl dl, .hlist-items-nowrap dl ol, .hlist-items-nowrap dl ul, /* Allow nested lists to wrap anyway */
+.hlist-items-nowrap ol dl, .hlist-items-nowrap ol ol, .hlist-items-nowrap ol ul,
+.hlist-items-nowrap ul dl, .hlist-items-nowrap ul ol, .hlist-items-nowrap ul ul {
+	white-space: normal;
+}
+
+/* ПРИМЕЧАНИЯ ------------------------------------- */
+
+ol.references {
+	font-size: 100%;
+}
+.reflist,
+.references-small {
+	font-size: 90%;
+	margin-bottom: 0.5em;
+}
+.reflist ol.references,
+.references-small ol.references {
+	list-style-type: inherit;  /* Enable custom list style types */
+}
+.reflist-narrow .mw-references-columns {
+	-webkit-column-width: 20em;
+	-moz-column-width: 20em;
+	column-width: 20em;
+}
+.reflist-wide .mw-references-columns {
+	-webkit-column-width: 40em;
+	-moz-column-width: 40em;
+	column-width: 40em;
+}
+
+/* highlight focused footnotes and references in some browsers */
+sup.reference:target,
+ol.references li:target,
+.highlight-target:target,
+cite:target,
+span.citation:target {
+	background: #eaf3ff;
+}
+sup.reference:target {
+	font-weight: bold;
+}
+
+.ref-info {
+	font-size: 85%;
+	color: #72777d;
+}
+
+/* КОЛОНКИ ---------------------------------------- */
+
+/* Авторазбиение списков на колонки. Будет работать только для однострочных списков. 35em является предварительным числом, а фактическое будет посчитано исходя из ширины элементов. Должно использоваться только для UL внутри DIV. Пример использования — шаблон {{Wikidata/SisterCities}} */
+.autocolumns {
+	-moz-columns: 35em auto;
+	columns: 35em auto;
+	white-space: nowrap;
+}
+
+/* Reset top margin for lists embedded in columns */
+div.columns {
+	margin-top: 0.3em;
+}
+div.columns dl,
+div.columns ol,
+div.columns ul {
+	margin-top: 0;
+}
+
+/* Avoid elements from breaking between columns */
+.nocolbreak,
+div.columns li,
+div.columns dd dd {
+	-webkit-column-break-inside: avoid;
+	page-break-inside: avoid;
+	break-inside: avoid-column;
+}
+
+/* ТАБЛИЦЫ ---------------------------------------- */
+
+/* [[Википедия:Оформление таблиц]] */
+.standard,
+.wide {
+	/* For align=center tables dont use shorthand margin */
+	margin-top:1em;
+	margin-bottom:1em;
+	border: 1px solid #a2a9b1;
+	border-collapse: collapse;
+}
+
+.standard > tr > th,
+.standard > tr > td,
+.standard > * > tr > th,
+.standard > * > tr > td,
+.wide > tr > th,
+.wide > tr > td,
+.wide > * > tr > th,
+.wide > * > tr > td {
+	border: 1px solid #a2a9b1;
+	padding: 0.2em 0.4em;
+}
+
+.standard > tr > th,
+.standard > * > tr > th,
+.wide > tr > th,
+.wide > * > tr > th {
+	background-color: #eaf3ff;
+}
+
+.standard > caption,
+.wide > caption {
+	font-weight: bold;
+}
+
+.wide {
+	width: 100%;
+}
+
+table.graytable {
+	background: #f0f0f0;
+	padding: 1em;
+	width: 100%;
+}
+table.graytable caption {
+	padding-top: 0.5em;
+	background: #f0f0f0;
+	font-weight: bold;
+}
+table.graytable caption span.subcaption {
+	font-size: 88.5%;
+	font-weight: normal;
+}
+table.graytable th,
+table.graytable td {
+	font-size: 88.5%;
+}
+
+/* Оформление ячеек */
+tr.highlight th,
+table tr th.highlight {
+	background: #dcebff;
+}
+tr.highlight td,
+table tr td.highlight {
+	background: #ffe;
+	font-weight: normal;
+}
+tr.bright th,
+table tr th.bright {
+	background: #cfe3ff;
+}
+tr.bright td,
+table tr td.bright {
+	background: #fec;
+}
+tr.shadow th,
+tr.shadow td,
+table tr th.shadow,
+table tr td.shadow {
+	background: #f0f0f0;
+}
+tr.dark th,
+tr.dark td,
+table tr th.dark,
+table tr td.dark {
+	background: #ccc;
+}
+
+/* ================================================
+   ШАБЛОНЫ
+   ================================================ */
+
+/* ПРЕДУПРЕЖДЕНИЯ И УВЕДОМЛЕНИЯ ------------------- */
+
+/* Cell sizes for ambox/tmbox/imbox/cmbox/ombox/fmbox/dmbox message boxes */
+.mbox-text,
+.mbox-text {   /* The message body cell(s) */
+	border: none;
+	/* @noflip */
+	padding: 0.25em 0.9em;	 /* 0.9em left/right */
+	width: 100%;			   /* Make all mboxes the same width regardless of text length */
+}
+.mbox-image {				/* The left image cell */
+	border: none;
+	/* @noflip */
+	padding: 2px 0 2px 0.9em;  /* 0.9em left, 0px right */
+	text-align: center;
+}
+.mbox-imageright {		   /* The right image cell */
+	border: none;
+	/* @noflip */
+	padding: 2px 0.9em 2px 0;  /* 0px left, 0.9em right */
+	text-align: center;
+}
+.mbox-empty-cell {		   /* An empty narrow cell */
+	border: none;
+	padding: 0px;
+	width: 1px;
+}
+.mbox-text .mbox-multiply {
+	display: none;
+}
+
+/* Image message box styles */
+.imbox {
+	margin: 4px 10%;
+	border-collapse: collapse;
+	border: 3px solid #1e90ff;	/* Default "notice" blue */
+	background: #fbfbfb;
+}
+.imbox .mbox-text .imbox {  /* For imboxes inside imbox-text cells. */
+	margin: 0 -0.5em;	   /* 0.9 - 0.5 = 0.4em left/right.		*/
+	display: block;		 /* Fix for webkit to force 100% width.  */
+}
+.mbox-inside .imbox {	   /* For imboxes inside other templates.  */
+	margin: 4px;
+}
+
+.imbox-notice {
+	border: 2px solid #1e90ff;	/* Blue */
+}
+.imbox-speedy {
+	border: 2px solid #b22222;	/* Red */
+	background: #fee;			 /* Pink */
+}
+.imbox-delete {
+	border: 2px solid #b22222;	/* Red */
+}
+.imbox-content {
+	border: 2px solid #f28500;	/* Orange */
+}
+.imbox-style {
+	border: 2px solid #f4c430;	/* Yellow */
+}
+.imbox-move {
+	border: 2px solid #9932cc;	/* Purple */
+}
+.imbox-protection {
+	border: 2px solid #bba;	   /* Gray-gold */
+}
+.imbox-license {
+	border: 2px solid #88a;	   /* Dark gray */
+	background: #f7f8ff;		  /* Light gray */
+}
+.imbox-featured {
+	border: 2px solid #cba135;	/* Brown-gold */
+}
+
+/* Category message box styles */
+.cmbox {
+	margin: 3px 10%;
+	border-collapse: collapse;
+	border: 1px solid #aaa;
+	background: #dfe8ff;	/* Default "notice" blue */
+}
+
+.cmbox-notice {
+	background: #d8e8ff;	/* Blue */
+}
+.cmbox-speedy {
+	margin-top: 4px;
+	margin-bottom: 4px;
+	border: 4px solid #b22222;	/* Red */
+	background: #ffdbdb;		  /* Pink */
+}
+.cmbox-delete {
+	background: #ffdbdb;	/* Red */
+}
+.cmbox-content {
+	background: #ffe7ce;	/* Orange */
+}
+.cmbox-style {
+	background: #fff9db;	/* Yellow */
+}
+.cmbox-move {
+	background: #e4d8ff;	/* Purple */
+}
+.cmbox-protection {
+	background: #efefe1;	/* Gray-gold */
+}
+
+/* Other pages message box styles */
+.ombox {
+	margin: 4px 10%;
+	border-collapse: collapse;
+	border: 1px solid #a2a9b1;	   /* Default "notice" gray */
+	background: #f8f9fa;
+}
+
+.ombox-notice {
+	border: 1px solid #a2a9b1;	   /* Gray */
+}
+.ombox-speedy {
+	border: 2px solid #b22222;	/* Red */
+	background: #fee;			 /* Pink */
+}
+.ombox-delete {
+	border: 2px solid #b22222;	/* Red */
+}
+.ombox-content {
+	border: 1px solid #f28500;	/* Orange */
+}
+.ombox-style {
+	border: 1px solid #f4c430;	/* Yellow */
+}
+.ombox-move {
+	border: 1px solid #9932cc;	/* Purple */
+}
+.ombox-protection {
+	border: 2px solid #bba;	   /* Gray-gold */
+}
+
+/* Talk page message box styles */
+.tmbox {
+	margin: 4px 10%;
+	border-collapse: collapse;
+	border: 1px solid #c0c090;	/* Default "notice" gray-brown */
+	background: #f8eaba;
+}
+.mediawiki .mbox-inside .tmbox { /* For tmboxes inside other templates. The "mediawiki" class ensures that */
+	margin: 2px 0;			   /* this declaration overrides other styles (including mbox-small above)   */
+	width: 100%;				 /* For Safari and Opera */
+}
+.mbox-inside .tmbox.mbox-small { /* "small" tmboxes should not be small when  */
+	line-height: 1.5em;		  /* also "nested", so reset styles that are   */
+	font-size: 100%;			 /* set in "mbox-small" above.				*/
+}
+
+.tmbox-speedy {
+	border: 2px solid #b22222;	/* Red */
+	background: #fee;			 /* Pink */
+}
+.tmbox-delete {
+	border: 2px solid #b22222;	/* Red */
+}
+.tmbox-content {
+	border: 2px solid #f28500;	/* Orange */
+}
+.tmbox-style {
+	border: 2px solid #f4c430;	/* Yellow */
+}
+.tmbox-move {
+	border: 2px solid #9932cc;	/* Purple */
+}
+.tmbox-protection,
+.tmbox-notice {
+	border: 1px solid #c0c090;	/* Gray-brown */
+}
+
+/* {ambox} */
+.ambox {
+	margin: 0 10%;				  /* 10% = Will not overlap with other elements */
+	border: 1px solid #a2a9b1;
+	/* @noflip */
+	border-left: 10px solid #36c;  /* Default "notice" blue */
+	background: #fbfbfb;
+}
+.ambox + .ambox {	  /* Single border between stacked boxes. */
+	margin-top: -1px;
+}
+.ambox .mbox-text,
+.ambox .mbox-text {			/* The message body cell(s) */
+	padding: 0 0.5em;	   /* 0.5em left/right */
+}
+.ambox .mbox-image {		   /* The left image cell */
+	/* @noflip */
+	padding: 2px 0 2px 0.5em;	/* 0.5em left, 0px right */
+}
+.ambox .mbox-imageright {	  /* The right image cell */
+	/* @noflip */
+	padding: 2px 0.5em 2px 0;	/* 0px left, 0.5em right */
+}
+
+.navbox + .ambox {              /* for ambox 1em before navbox */
+	margin-top: 1em;
+}
+
+.ambox-notice {
+	/* @noflip */
+	border-left: 10px solid #36c;	/* Blue */
+}
+.ambox-speedy {
+	/* @noflip */
+	border-left: 10px solid #b22222;	/* Red */
+	background: #fee7e6;				   /* Pink */
+}
+.ambox-delete,
+.ambox-serious {
+	/* @noflip */
+	border-left: 10px solid #b22222;	/* Red */
+}
+.ambox-content {
+	/* @noflip */
+	border-left: 10px solid #f28500;	/* Orange */
+}
+.ambox-style {
+	/* @noflip */
+	border-left: 10px solid #f4c430;	/* Yellow */
+}
+.ambox-good {
+	border-left: 10px solid #66cc44;
+}
+.ambox-discussion {
+	border-left: 10px solid #339966;
+}
+.ambox-merge {
+	border-left: 10px solid #9932cc;
+}
+.ambox-move {
+	/* @noflip */
+	border-left: 10px solid #9932cc;	/* Purple */
+}
+.ambox-protection {
+	/* @noflip */
+	border-left: 10px solid #a2a9b1;	   /* Gray-gold */
+}
+
+/* Footer and header message box styles */
+.fmbox {
+	clear: both;
+	margin: 0.2em 0;
+	width: 100%;
+	border: 1px solid #aaa;
+	/* Default "system" gray */
+	background: #f9f9f9;
+}
+.fmbox-system {
+	background: #f9f9f9;
+}
+.fmbox-warning {
+	border: 1px solid #bb7070;  /* Dark pink */
+	background: #ffdbdb;		/* Pink */
+}
+.fmbox-editnotice {
+	background: transparent;
+}
+/* Div based "warning" style fmbox messages. */
+div.mw-warning-with-logexcerpt,
+div.mw-lag-warn-high,
+div.mw-cascadeprotectedwarning,
+div#mw-protect-cascadeon {
+	clear: both;
+	margin: 0.2em 0;
+	border: 1px solid #bb7070;
+	background: #ffdbdb;
+	padding: 0.25em 0.9em;
+}
+/* Div based "system" style fmbox messages.
+	Used in [[MediaWiki:Readonly lag]]. */
+div.mw-lag-warn-normal,
+div.fmbox-system {
+	clear: both;
+	margin: 0.2em 0;
+	border: 1px solid #aaa;
+	background: #f9f9f9;
+	padding: 0.25em 0.9em;
+}
+
+/* These mbox-small classes must be placed after all other
+	ambox/tmbox/ombox etc classes. "body.mediawiki" is so
+	they override "table.ambox + table.ambox" above. */
+.mediawiki .mbox-small.mbox-small {   /* For the "small=yes" option. */
+	/* @noflip */
+	clear: right;
+	/* @noflip */
+	float: right;
+	/* @noflip */
+	margin: 4px 0 4px 1em;
+	width: 238px;
+	font-size: 88%;
+	line-height: 1.25em;
+}
+.mediawiki .mbox-small.mbox-small-left {   /* For the "small=left" option. */
+	/* @noflip */
+	margin: 4px 1em 4px 0;
+	width: 238px;
+	border-collapse: collapse;
+	font-size: 88%;
+	line-height: 1.25em;
+}
+
+/* Style for {{rq}} */
+/* Hide the extra cells */
+.ambox-multiple_issues .ambox .mbox-image,
+.ambox-multiple_issues .ambox .mbox-imageright,
+.ambox-multiple_issues .ambox .mbox-empty-cell,
+.ambox-multiple_issues .ambox .mbox-text-div,
+.ambox-multiple_issues .ambox .mbox-textsmall-div {
+	display: none;
+}
+
+/* Remove borders, backgrounds, padding, etc. */
+.ambox-multiple_issues .ambox {
+	border: none;
+	border-collapse: collapse;
+	background: transparent;
+	margin: 0 0 0 1.6em;
+	padding: 0;
+	width: auto;
+	display: block;
+}
+.ambox-multiple_issues .mbox-small-left {
+	font-size: 100%;
+	width: auto;
+	margin: 0;
+}
+/* Style the text cell as a list item and remove its padding */
+.ambox-multiple_issues .ambox .mbox-text {
+    padding: 0;
+    margin: 0;
+}
+.ambox-multiple_issues .ambox .mbox-multiply {
+    display: list-item;
+    line-height: 1.5em;
+	list-style-image: url(/w/skins/Vector/resources/common/images/bullet-icon.svg);
+}
+.skin-monobook .ambox-multiple_issues .ambox .mbox-multiply {
+    list-style-type: square;
+	list-style-image: url(/w/skins/MonoBook/resources/images/bullet.svg);
+}
+/* Allow for hiding text in compact form */
+.ambox-multiple_issue .hide-when-compact {
+	display: none;
+}
+
+/* Стили нотификаций для ноутбуков */
+@media (max-width: 1366px) {
+	.ombox,
+	.tmbox,
+	.ambox {
+		margin-left: 6%;
+		margin-right: 6%;
+	}
+}
+
+/* Стили нотификаций для мобильного устройсва */
+@media (max-width: 719px) {
+	.ombox,
+	.tmbox,
+	.ambox {
+		margin-left: 0;
+		margin-right: 0;
+	}
+}
+
+/* КАРТОЧКА --------------------------------------- */
+
+.infobox {
+	border: 1px solid #a2a9b1;
+	background: #f8f9fa;
+	margin-bottom: .5em;
+	margin-left: 1em;
+	padding: .4em;
+	float: right;
+	clear: right;
+	font-size: 90%;
+	width: 23em;
+	vertical-align: middle;
+	text-align: left;
+	line-height: 1.5em;
+	border-collapse: separate;
+	border-spacing: 2px;
+}
+.infobox > caption {
+	font-size: 125%;
+	font-weight: bold;
+		padding: .2em;
+}
+.infobox td,
+.infobox th {
+	vertical-align: top;
+}
+
+/* Компоненты карточки */
+.infobox-above {
+	background: #cfe3ff;
+	font-size: 120%;
+	text-align: center;
+}
+.infobox-image {
+	padding-left: 0;
+	padding-right: 0;
+	text-align: center;
+}
+.infobox-header {
+	background: #dcebff;
+	text-align: center;
+}
+.infobox-below {
+	background: #dcebff;
+	text-align: center;
+}
+.infobox-table,
+.infobox-tablebox,
+.infobox-medals {
+	padding: 0;
+}
+.infobox-inner-table,
+.infobox-table > table,
+.infobox-tablebox > table,
+.infobox-medals > table {
+	width: 100%;
+	display: table;
+	margin: 0;
+	background: transparent;
+}
+.infobox-tablebox > table {
+	background: #ffffff;
+	border: 1px solid #a2a9b1;
+}
+.infobox-medals > table {
+	border-collapse: separate;
+}
+.infobox-medals .NavFrame {
+	padding: 0;
+	border: none;
+	font-size: 100%;
+}
+.infobox-medals .NavFrame .NavHead {
+	padding: 1px 5em;
+}
+.infobox-medals .NavFrame .NavToggle {
+	position: absolute;
+	top: 1px;
+	right: 1px;
+}
+.infobox-medals .NavFrame .NavContent {
+	font-size: 95%;
+}
+
+/* Встраиваемая карточка */
+.infobox-child {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border: none;
+	font-size: 100%;
+}
+
+/* Списки в карточках */ 
+.infobox th:not(.noplainlist) > ul,
+.infobox td:not(.noplainlist) > ul,
+.infobox [data-wikidata-property-id] > ul {
+	list-style-type: none;
+	list-style-image: none;
+	margin: 0;
+}
+.infobox .noplainlist > ul:first-child {
+	margin-top: 0;
+}
+.infobox th > ol,
+.infobox td > ol,
+.infobox [data-wikidata-property-id] > ol {
+	margin: 0 0 0 2em;
+}
+.infobox th > dl,
+.infobox td > dl,
+.infobox [data-wikidata-property-id] > dl {
+	margin: 0;
+}
+.infobox li,
+.infobox dt,
+.infobox dd {
+	margin-bottom: 0;
+}
+.infobox th > ol.references,
+.infobox td > ol.references {
+	line-height: 1.25em;
+}
+.infobox th > ol.references li,
+.infobox td > ol.references li {
+	margin-bottom: 0.1em;
+}
+.infobox th > ol.references li:last-child,
+.infobox td > ol.references li:last-child {
+	margin-bottom: 0;
+}
+
+/* ToDo: temporarily fix */
+.infobox td p {
+	margin: 0 !important;
+}
+
+.infobox small,
+.navbox small {
+	font-size: 90%;
+}
+
+/* СКРЫТЫЙ ---------------------------------------- */
+
+/* {Навигационная полоса}, {Hider}, ... */
+div.NavFrame {
+	margin: 0;
+	padding: 2px;
+	overflow: hidden;
+	border: 1px solid #a2a9b1;
+	border-collapse: collapse;
+	font-size: 95%;
+}
+div.NavFrame + div.NavFrame {
+	border-top-style: none;
+	border-top-style: hidden;
+}
+div.NavPic {
+	background: #fff;
+	margin: 0;
+	padding: 2px;
+	float: left;
+}
+div.NavFrame div.NavHead {
+	text-align: center;
+	font-weight: bold;
+	font-size: 100%;
+	background: #eaecf0;
+	position: relative;
+}
+div.NavFrame div.NavContent {
+	overflow-x: auto;
+	overflow-y: hidden;
+	clear: both;
+}
+div.NavFrame p,
+div.NavFrame div.NavContent,
+div.NavFrame div.NavContent p {
+	font-size: 100%
+}
+a.NavToggle {
+	float: right;
+	margin-right: 3px;
+	font-weight: normal;
+	font-size: 90%;
+}
+
+/* НАВИГАЦИОННЫЙ ШАБЛОН --------------------------- */
+
+/* Default style for navigation boxes */
+.navbox {					 /* Navbox container style */
+	box-sizing: border-box;
+	border: 1px solid #a2a9b1;
+	width: 100%;
+	margin: 1em auto 0; /* Prevent preceding content from clinging to navboxes */
+	clear: both;
+	font-size: 90%;
+	text-align: center;
+	padding: 3px;
+}
+.navbox-inner,
+.navbox-subgroup {
+	width: 100%;
+}
+.navbox-group,
+.navbox-title,
+.navbox-abovebelow {
+	padding: 0.25em 1em;	  /* Title, group and above/below styles */
+	text-align: center;
+}
+.navbox-title {
+	line-height: 1.6em;	   /* Standard 1.6em for title */
+}
+
+/* cell spacing for navbox cells */
+tr + tr > .navbox-abovebelow,
+tr + tr > .navbox-group,
+tr + tr > .navbox-image,
+tr + tr > .navbox-list {	/* Borders above 2nd, 3rd, etc. rows */
+	border-top: 2px solid #fdfdfd; /* Must match background color */
+}
+
+th.navbox-group {			 /* Group style */
+	white-space: nowrap;
+	/* @noflip */
+	text-align: right;
+}
+.navbox,
+.navbox-subgroup {
+	background: #fdfdfd;	  /* Background color */
+}
+.navbox-list {
+	border-color: #fdfdfd;	/* Must match background color */
+}
+.navbox th,
+.navbox-title {
+	background: #cfe3ff;	  /* Level 1 color */
+}
+.navbox-abovebelow,
+th.navbox-group,
+.navbox-subgroup .navbox-title {
+	background: #dcebff;	  /* Level 2 color */
+}
+.navbox-subgroup .navbox-group,
+.navbox-subgroup .navbox-abovebelow {
+	background: #eaf3ff;	  /* Level 3 color */
+}
+.navbox-even {
+	background: #f5f5f5;	  /* Even row striping */
+}
+.navbox-odd {
+	background: transparent;  /* Odd row striping */
+}
+.navbox .hlist td dl,
+.navbox .hlist td ol,
+.navbox .hlist td ul,
+.navbox td.hlist dl,
+.navbox td.hlist ol,
+.navbox td.hlist ul {
+	padding: 1px 0 0;	   /* Adjust hlist padding in navboxes */
+}
+.navbox .navbox {
+	margin-top: 0;			/* No top margin for nested navboxes */
+}
+.navbox + .navbox {
+	margin-top: -1px;		 /* Single pixel border between adjacent navboxes */
+}
+
+/* Default styling for Navbar template */
+.navbar {
+	display: inline;
+	font-size: 11px;
+	font-weight: normal;
+}
+.navbar ul {
+	display: inline;
+	white-space: nowrap;
+}
+.mw-body-content .navbar ul {
+	line-height: inherit;
+}
+.navbar.mini {
+	word-spacing: -0.1em;
+}
+.navbar.mini span abbr[title] {
+  border-bottom: none;
+  text-decoration: none;
+  cursor: inherit;
+}
+
+/* Navbar styling when nested in infobox and navbox */
+.infobox .navbar {
+	font-size: 100%;
+}
+.navbox .navbar {
+	display: block;
+	font-size: 100%;
+}
+.navbox-title .navbar {
+	/* @noflip */
+	float: left;
+	/* @noflip */
+	text-align: left;
+	/* @noflip */
+	margin-right: 0.5em;
+	width: 5em;
+}
+
+/* [[Шаблон:Coord]] ------------------------------- */
+
+#mw-indicator-0-coord + .mw-indicator {
+	border-left: 1px solid #A7D7F9;
+	margin-left: 0.25em;
+	padding-left: 0.5em;
+}
+
+.mw-body-content .geo-services {
+	font-size: 82%;
+}
+
+.geo-services a > span {
+	margin: 0.25em;
+}
+.geo-services > :first-child a > span {
+	margin-left: 0.4em;
+}
+
+.geo-geo-dec .geo-dec,
+.geo-geo-dms .geo-dms {
+	display: inline;
+}
+.geo-geo-dec .geo-dms,
+.geo-geo-dms .geo-dec,
+.geo-multi-punct {
+	display: none;
+}
+.geo-lat,
+.geo-lon {
+	white-space: nowrap;
+}
+
+/* ================================================
+   СТРАНИЦЫ
+   ================================================ */
+
+/* [[Заглавная страница]] ------------------------- */
+body.page-Заглавная_страница #ca-current,
+body.page-Заглавная_страница #ca-delete,
+body.page-Заглавная_страница #t-cite,
+body.page-Заглавная_страница #catlinks,
+body.page-Заглавная_страница #lastmod,
+body.page-Заглавная_страница #footer-info-lastmod,
+body.page-Заглавная_страница.action-view #siteSub,
+body.page-Заглавная_страница.action-view #contentSub,
+body.page-Заглавная_страница.action-view #contentSub2,
+body.page-Заглавная_страница.action-view #mw-data-after-content {
+	display: none !important;
+}/*
+MediaWiki:Vector.css
+*/
+/* Показывать «Материал из Википедии — свободной энциклопедии», но чуть меньшим шрифтом (T283756) */
+#siteSub {
+	display: block;
+	font-size: 80%;
+}
+body.skin-vector-legacy #siteSub {
+	font-size: 92%;
+}
+
+/* [[Шаблон:Coord]] */
+#mw-indicator-0-coord {
+	font-size: 0.85em;
+}
+
+/* Чтобы ссылки для вставки символов не отображались цветом посещённой ссылки в некоторых случаях */
+a.mw-charinsert-item {
+	color: #0645ad;
+}
+
+a.mw-charinsert-item:active {
+	color: #faa700;
+}
+
+/* Инвертированные поля контентной области для [[Википедия:Сообщество]] и других мест */
+@media screen and (min-width: 982px) {
+	.mediawiki .inverted-content-padding {
+		margin-left: -1.5rem;
+		margin-right: -1.5rem;
+	}
+	.mediawiki .content-padding {
+		padding-left: 1.5rem;
+		padding-right: 1.5rem;
+	}
+}	
+
+.inverted-content-padding {
+	margin-left: -1rem;
+	margin-right: -1rem;
+}
+.content-padding {
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
+
+.ruwiki-addSectionBottom {
+	float: right;
+	font-size: 0.8em;
+	color: #0645ad;
+	padding: 4px 0.5em;
+	background: #f2f7fb url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAuCAIAAABmjeQ9AAAARElEQVR42mVO2wrAUAhy/f8fz+niVMTYQ3hLKkgGgN/IPvgIhUYYV/qogdP75J01V+JwrKZr/5YPcnzN3e6t7l+2K+EFX91B1daOi7sAAAAASUVORK5CYII=);
+	border: 1px solid #a7d7f9;
+	border-top-style: none;
+}@media print {
+	/*
+	MediaWiki:Print.css
+	*/
+	.ns-0 .navbox,
+	.ns-0 .metadata,
+	.hatnote,
+	.navbar,
+	#catlinks,
+	.collapseRefs,
+	#mw-fr-reviewnotice,
+	/* Ссылки на редактирование с preload в карточках (например, [[Леметр, Жорж]]) */
+	.wikidata-snak a.external.text:after {
+		display: none;
+	}
+	
+	.toccolours {
+		border: 1px solid #aaa;
+	}
+	
+	/* Uncollapse collapsible tables/divs.
+	   The proper way to do this for tables is to use display:table-row,
+	   but this is not supported by all browsers, so use display:block as fallback.
+	*/
+	table.collapsible tr,
+	div.NavPic,
+	div.NavContent {
+	    display: block !important;
+	}
+	
+	table.collapsible tr {
+	    display: table-row !important;
+	}
+	
+	a.NavToggle, span.collapseButton, span.mw-collapsible-toggle {
+		display: none;
+	}
+	
+	.printonly {
+		display: inline;
+	}
+	
+	.mw-kartographer-maplink {
+		padding-left: 0 !important;
+	}}
+/* stylelint-disable selector-class-pattern */
+/* Galleries */
+/* Don't forget to update gallery.print.css */
+ul.gallery {
+  margin: 2px;
+  padding: 2px;
+  display: block;
+}
+li.gallerycaption {
+  font-weight: bold;
+  text-align: center;
+  display: block;
+  word-wrap: break-word;
+}
+li.gallerybox {
+  vertical-align: top;
+  display: inline-block;
+}
+li.gallerybox div.thumb {
+  text-align: center;
+  margin: 2px;
+}
+li.gallerybox div.thumb img {
+  display: block;
+  margin: 0 auto;
+}
+div.gallerytext {
+  overflow: hidden;
+  font-size: 94%;
+  padding: 2px 4px;
+  word-wrap: break-word;
+}
+.galleryfilename {
+  display: block;
+}
+.galleryfilename-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* new gallery stuff */
+ul.mw-gallery-nolines li.gallerybox div.thumb {
+  background-color: transparent;
+  border: 0;
+}
+ul.mw-gallery-nolines li.gallerybox div.gallerytext {
+  text-align: center;
+}
+/* height constrained gallery */
+ul.mw-gallery-packed,
+ul.mw-gallery-packed-overlay,
+ul.mw-gallery-packed-hover {
+  text-align: center;
+}
+ul.mw-gallery-packed li.gallerybox div.thumb,
+ul.mw-gallery-packed-overlay li.gallerybox div.thumb,
+ul.mw-gallery-packed-hover li.gallerybox div.thumb {
+  background-color: transparent;
+  border: 0;
+}
+ul.mw-gallery-packed li.gallerybox div.thumb img,
+ul.mw-gallery-packed-overlay li.gallerybox div.thumb img,
+ul.mw-gallery-packed-hover li.gallerybox div.thumb img {
+  margin: 0 auto;
+}
+ul.mw-gallery-packed-hover li.gallerybox,
+ul.mw-gallery-packed-overlay li.gallerybox {
+  position: relative;
+}
+ul.mw-gallery-packed-hover div.gallerytextwrapper {
+  overflow: hidden;
+  height: 0;
+}
+ul.mw-gallery-packed-hover li.gallerybox:hover div.gallerytextwrapper,
+ul.mw-gallery-packed-overlay li.gallerybox div.gallerytextwrapper,
+ul.mw-gallery-packed-hover li.gallerybox.mw-gallery-focused div.gallerytextwrapper {
+  position: absolute;
+  background: #fff;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 5px 10px;
+  bottom: 0;
+  left: 0;
+  /* Needed for IE */
+  height: auto;
+  max-height: 40%;
+  overflow: hidden;
+  font-weight: bold;
+  margin: 2px;
+  /* correspond to style on div.thumb */
+}
+ul.mw-gallery-packed-hover li.gallerybox:hover div.gallerytextwrapper p,
+ul.mw-gallery-packed-overlay li.gallerybox div.gallerytextwrapper p,
+ul.mw-gallery-packed-hover li.gallerybox.mw-gallery-focused div.gallerytextwrapper p {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+ul.mw-gallery-packed-hover li.gallerybox:hover div.gallerytextwrapper:hover,
+ul.mw-gallery-packed-overlay li.gallerybox div.gallerytextwrapper:hover,
+ul.mw-gallery-packed-hover li.gallerybox.mw-gallery-focused div.gallerytextwrapper:hover {
+  overflow: visible;
+  max-height: none;
+}
+ul.mw-gallery-packed-hover li.gallerybox:hover div.gallerytextwrapper:hover p,
+ul.mw-gallery-packed-overlay li.gallerybox div.gallerytextwrapper:hover p,
+ul.mw-gallery-packed-hover li.gallerybox.mw-gallery-focused div.gallerytextwrapper:hover p {
+  text-overflow: clip;
+  white-space: normal;
+  overflow: visible;
+}
+/* Slideshow */
+ul.gallery.mw-gallery-slideshow {
+  display: block;
+  margin: 4em 0;
+  /* `li` item */
+}
+ul.gallery.mw-gallery-slideshow .gallerycaption {
+  font-size: 1.3em;
+  margin: 0;
+}
+ul.gallery.mw-gallery-slideshow .gallerycarousel {
+  display: block;
+  text-align: center;
+}
+ul.gallery.mw-gallery-slideshow .gallerycarousel.mw-gallery-slideshow-thumbnails-toggled {
+  margin-bottom: 1.3em;
+}
+ul.gallery.mw-gallery-slideshow .mw-gallery-slideshow-buttons {
+  opacity: 0.5;
+  padding: 1.3em 0;
+  white-space: nowrap;
+}
+ul.gallery.mw-gallery-slideshow .mw-gallery-slideshow-buttons .oo-ui-buttonElement {
+  margin: 0 2em;
+}
+ul.gallery.mw-gallery-slideshow .mw-gallery-slideshow-buttons .oo-ui-buttonElement:first-child {
+  margin-left: 0;
+}
+ul.gallery.mw-gallery-slideshow .mw-gallery-slideshow-buttons .oo-ui-buttonElement:last-child {
+  margin-right: 0;
+}
+ul.gallery.mw-gallery-slideshow .gallerybox.slideshow-current {
+  background: #efefef;
+}
+ul.gallery.mw-gallery-slideshow .gallerybox > div {
+  max-width: 120px;
+}
+ul.gallery.mw-gallery-slideshow .gallerybox div.thumb {
+  border: 0;
+  background: transparent;
+}
+.mw-gallery-slideshow-img-container a {
+  display: block;
+}
+@media screen {
+  /* Background and border colors are defined separately for print mode */
+  li.gallerybox div.thumb {
+    border: 1px solid #c8ccd1;
+    background-color: #f8f9fa;
+  }
+}@media print {
+	/* stylelint-disable selector-class-pattern */
+	li.gallerybox {
+	  vertical-align: top;
+	  display: inline-block;
+	}
+	li.gallerybox div.thumb {
+	  background-color: #fff;
+	  border: 1px solid #ccc;
+	}
+	ul.gallery {
+	  margin: 2px;
+	  padding: 2px;
+	  display: block;
+	}
+	li.gallerycaption {
+	  font-weight: bold;
+	  text-align: center;
+	  display: block;
+	  word-wrap: break-word;
+	}
+	div.gallerytext {
+	  overflow: visible;
+	}
+	ul.mw-gallery-packed-hover div.gallerytextwrapper {
+	  overflow: visible;
+	  height: auto;
+	}
+	ul.mw-gallery-packed-hover li.gallerybox:hover div.gallerytextwrapper,
+	ul.mw-gallery-packed-overlay li.gallerybox div.gallerytextwrapper,
+	ul.mw-gallery-packed-hover li.gallerybox.mw-gallery-focused div.gallerytextwrapper {
+	  position: static;
+	  background: transparent;
+	  padding: 0;
+	  max-height: none;
+	  overflow: visible;
+	  font-weight: normal;
+	  margin: 0;
+	  /* correspond to style on div.thumb */
+	}
+	ul.mw-gallery-packed-hover li.gallerybox:hover div.gallerytextwrapper p,
+	ul.mw-gallery-packed-overlay li.gallerybox div.gallerytextwrapper p,
+	ul.mw-gallery-packed-hover li.gallerybox.mw-gallery-focused div.gallerytextwrapper p {
+	  text-overflow: clip;
+	  white-space: normal;
+	  overflow: visible;
+	}}
+/**
+ * Style Parsoid HTML+RDFa output consistent with wikitext from PHP parser.
+ */
+/*
+ * Auto-numbered external links
+ * Parsoid renders those as link without content, and lets CSS do the
+ * counting. This way the counting style can be customized, and counts update
+ * automatically when content is modified.
+ */
+.mw-parser-output {
+  counter-reset: mw-numbered-ext-link;
+}
+.mw-parser-output a[rel~='mw:ExtLink']:empty:after {
+  content: '[' counter(mw-numbered-ext-link) ']';
+  counter-increment: mw-numbered-ext-link;
+}
+
+/**
+ * Block media items
+ */
+figure[typeof~='mw:Image'],
+figure[typeof~='mw:Video'],
+figure[typeof~='mw:Audio'],
+figure[typeof~='mw:Image/Frameless'],
+figure[typeof~='mw:Video/Frameless'],
+figure[typeof~='mw:Audio/Frameless'] {
+  margin: 0;
+  /* Hide the caption for frameless and plain floated images */
+}
+.mw-body-content figure[typeof~='mw:Image'] > a,
+.mw-body-content figure[typeof~='mw:Video'] > a,
+.mw-body-content figure[typeof~='mw:Audio'] > a,
+.mw-body-content figure[typeof~='mw:Image/Frameless'] > a,
+.mw-body-content figure[typeof~='mw:Video/Frameless'] > a,
+.mw-body-content figure[typeof~='mw:Audio/Frameless'] > a {
+  border: 0;
+}
+figure[typeof~='mw:Image'].mw-halign-right,
+figure[typeof~='mw:Video'].mw-halign-right,
+figure[typeof~='mw:Audio'].mw-halign-right,
+figure[typeof~='mw:Image/Frameless'].mw-halign-right,
+figure[typeof~='mw:Video/Frameless'].mw-halign-right,
+figure[typeof~='mw:Audio/Frameless'].mw-halign-right {
+  /* @noflip */
+  margin: 0 0 0.5em 0.5em;
+  /* @noflip */
+  clear: right;
+  /* @noflip */
+  float: right;
+}
+figure[typeof~='mw:Image'].mw-halign-left,
+figure[typeof~='mw:Video'].mw-halign-left,
+figure[typeof~='mw:Audio'].mw-halign-left,
+figure[typeof~='mw:Image/Frameless'].mw-halign-left,
+figure[typeof~='mw:Video/Frameless'].mw-halign-left,
+figure[typeof~='mw:Audio/Frameless'].mw-halign-left {
+  /* @noflip */
+  margin: 0 0.5em 0.5em 0;
+  /* @noflip */
+  clear: left;
+  /* @noflip */
+  float: left;
+}
+figure[typeof~='mw:Image'].mw-halign-none,
+figure[typeof~='mw:Video'].mw-halign-none,
+figure[typeof~='mw:Audio'].mw-halign-none,
+figure[typeof~='mw:Image/Frameless'].mw-halign-none,
+figure[typeof~='mw:Video/Frameless'].mw-halign-none,
+figure[typeof~='mw:Audio/Frameless'].mw-halign-none {
+  clear: none;
+  float: none;
+}
+figure[typeof~='mw:Image'].mw-halign-center,
+figure[typeof~='mw:Video'].mw-halign-center,
+figure[typeof~='mw:Audio'].mw-halign-center,
+figure[typeof~='mw:Image/Frameless'].mw-halign-center,
+figure[typeof~='mw:Video/Frameless'].mw-halign-center,
+figure[typeof~='mw:Audio/Frameless'].mw-halign-center {
+  /* Matches *.center * in element.css */
+  margin: 0 auto;
+  display: table;
+  border-collapse: collapse;
+  clear: none;
+  float: none;
+}
+figure[typeof~='mw:Image'] > figcaption,
+figure[typeof~='mw:Video'] > figcaption,
+figure[typeof~='mw:Audio'] > figcaption,
+figure[typeof~='mw:Image/Frameless'] > figcaption,
+figure[typeof~='mw:Video/Frameless'] > figcaption,
+figure[typeof~='mw:Audio/Frameless'] > figcaption {
+  display: none;
+}
+figure[typeof~='mw:Image/Thumb'],
+figure[typeof~='mw:Video/Thumb'],
+figure[typeof~='mw:Audio/Thumb'],
+figure[typeof~='mw:Image/Frame'],
+figure[typeof~='mw:Video/Frame'],
+figure[typeof~='mw:Audio/Frame'] {
+  margin: 0;
+  margin-bottom: 0.5em;
+  display: table;
+  text-align: center;
+  border-collapse: collapse;
+}
+.mw-body-content figure[typeof~='mw:Image/Thumb'] > a,
+.mw-body-content figure[typeof~='mw:Video/Thumb'] > a,
+.mw-body-content figure[typeof~='mw:Audio/Thumb'] > a,
+.mw-body-content figure[typeof~='mw:Image/Frame'] > a,
+.mw-body-content figure[typeof~='mw:Video/Frame'] > a,
+.mw-body-content figure[typeof~='mw:Audio/Frame'] > a {
+  border: 0;
+}
+.mw-content-ltr figure[typeof~='mw:Image/Thumb'],
+.mw-content-ltr figure[typeof~='mw:Video/Thumb'],
+.mw-content-ltr figure[typeof~='mw:Audio/Thumb'],
+.mw-content-ltr figure[typeof~='mw:Image/Frame'],
+.mw-content-ltr figure[typeof~='mw:Video/Frame'],
+.mw-content-ltr figure[typeof~='mw:Audio/Frame'] {
+  /* @noflip */
+  margin: 0.5em 0 1.3em 1.4em;
+  /* @noflip */
+  clear: right;
+  /* @noflip */
+  float: right;
+}
+.mw-content-rtl figure[typeof~='mw:Image/Thumb'],
+.mw-content-rtl figure[typeof~='mw:Video/Thumb'],
+.mw-content-rtl figure[typeof~='mw:Audio/Thumb'],
+.mw-content-rtl figure[typeof~='mw:Image/Frame'],
+.mw-content-rtl figure[typeof~='mw:Video/Frame'],
+.mw-content-rtl figure[typeof~='mw:Audio/Frame'] {
+  /* @noflip */
+  margin: 0.5em 1.4em 1.3em 0;
+  /* @noflip */
+  clear: left;
+  /* @noflip */
+  float: left;
+}
+figure[typeof~='mw:Image/Thumb'].mw-halign-right,
+figure[typeof~='mw:Video/Thumb'].mw-halign-right,
+figure[typeof~='mw:Audio/Thumb'].mw-halign-right,
+figure[typeof~='mw:Image/Frame'].mw-halign-right,
+figure[typeof~='mw:Video/Frame'].mw-halign-right,
+figure[typeof~='mw:Audio/Frame'].mw-halign-right {
+  /* @noflip */
+  margin: 0.5em 0 1.3em 1.4em;
+  /* @noflip */
+  clear: right;
+  /* @noflip */
+  float: right;
+}
+figure[typeof~='mw:Image/Thumb'].mw-halign-left,
+figure[typeof~='mw:Video/Thumb'].mw-halign-left,
+figure[typeof~='mw:Audio/Thumb'].mw-halign-left,
+figure[typeof~='mw:Image/Frame'].mw-halign-left,
+figure[typeof~='mw:Video/Frame'].mw-halign-left,
+figure[typeof~='mw:Audio/Frame'].mw-halign-left {
+  /* @noflip */
+  margin: 0.5em 1.4em 1.3em 0;
+  /* @noflip */
+  clear: left;
+  /* @noflip */
+  float: left;
+}
+figure[typeof~='mw:Image/Thumb'].mw-halign-none,
+figure[typeof~='mw:Video/Thumb'].mw-halign-none,
+figure[typeof~='mw:Audio/Thumb'].mw-halign-none,
+figure[typeof~='mw:Image/Frame'].mw-halign-none,
+figure[typeof~='mw:Video/Frame'].mw-halign-none,
+figure[typeof~='mw:Audio/Frame'].mw-halign-none {
+  /* Override the default margin from mw-content-xxx above */
+  margin: 0;
+  margin-bottom: 0.5em;
+  clear: none;
+  float: none;
+}
+figure[typeof~='mw:Image/Thumb'].mw-halign-center,
+figure[typeof~='mw:Video/Thumb'].mw-halign-center,
+figure[typeof~='mw:Audio/Thumb'].mw-halign-center,
+figure[typeof~='mw:Image/Frame'].mw-halign-center,
+figure[typeof~='mw:Video/Frame'].mw-halign-center,
+figure[typeof~='mw:Audio/Frame'].mw-halign-center {
+  /* Override the default margin from mw-content-xxx above
+		 * And, matches *.center * in element.css
+		 */
+  margin: 0 auto 0.5em auto;
+  clear: none;
+  float: none;
+}
+figure[typeof~='mw:Image/Thumb'] > *:first-child,
+figure[typeof~='mw:Video/Thumb'] > *:first-child,
+figure[typeof~='mw:Audio/Thumb'] > *:first-child,
+figure[typeof~='mw:Image/Frame'] > *:first-child,
+figure[typeof~='mw:Video/Frame'] > *:first-child,
+figure[typeof~='mw:Audio/Frame'] > *:first-child {
+  /**
+		 * Broken media get a span instead.
+		 *
+		 * FIXME: The `> span:first-child` can be removed once the class
+		 * is rolled out in Parsoid as well and content in RESTBase regenerated.
+		 */
+}
+figure[typeof~='mw:Image/Thumb'] > *:first-child > audio,
+figure[typeof~='mw:Video/Thumb'] > *:first-child > audio,
+figure[typeof~='mw:Audio/Thumb'] > *:first-child > audio,
+figure[typeof~='mw:Image/Frame'] > *:first-child > audio,
+figure[typeof~='mw:Video/Frame'] > *:first-child > audio,
+figure[typeof~='mw:Audio/Frame'] > *:first-child > audio,
+figure[typeof~='mw:Image/Thumb'] > *:first-child > img,
+figure[typeof~='mw:Video/Thumb'] > *:first-child > img,
+figure[typeof~='mw:Audio/Thumb'] > *:first-child > img,
+figure[typeof~='mw:Image/Frame'] > *:first-child > img,
+figure[typeof~='mw:Video/Frame'] > *:first-child > img,
+figure[typeof~='mw:Audio/Frame'] > *:first-child > img,
+figure[typeof~='mw:Image/Thumb'] > *:first-child > video,
+figure[typeof~='mw:Video/Thumb'] > *:first-child > video,
+figure[typeof~='mw:Audio/Thumb'] > *:first-child > video,
+figure[typeof~='mw:Image/Frame'] > *:first-child > video,
+figure[typeof~='mw:Video/Frame'] > *:first-child > video,
+figure[typeof~='mw:Audio/Frame'] > *:first-child > video {
+  margin: 3px;
+}
+figure[typeof~='mw:Image/Thumb'] > *:first-child > span:first-child,
+figure[typeof~='mw:Video/Thumb'] > *:first-child > span:first-child,
+figure[typeof~='mw:Audio/Thumb'] > *:first-child > span:first-child,
+figure[typeof~='mw:Image/Frame'] > *:first-child > span:first-child,
+figure[typeof~='mw:Video/Frame'] > *:first-child > span:first-child,
+figure[typeof~='mw:Audio/Frame'] > *:first-child > span:first-child,
+figure[typeof~='mw:Image/Thumb'] > *:first-child > span.mw-broken-media,
+figure[typeof~='mw:Video/Thumb'] > *:first-child > span.mw-broken-media,
+figure[typeof~='mw:Audio/Thumb'] > *:first-child > span.mw-broken-media,
+figure[typeof~='mw:Image/Frame'] > *:first-child > span.mw-broken-media,
+figure[typeof~='mw:Video/Frame'] > *:first-child > span.mw-broken-media,
+figure[typeof~='mw:Audio/Frame'] > *:first-child > span.mw-broken-media {
+  display: inline-block;
+  /* The extra horizontal margin here is to make up for the lack of a border */
+  margin: 3px 4px;
+  /* This is hardcoded in Linker::makeThumbLink2 for broken media */
+  width: 180px;
+  /* Styles the text of broken media */
+  font-size: 94%;
+}
+figure[typeof~='mw:Image/Thumb'] > figcaption,
+figure[typeof~='mw:Video/Thumb'] > figcaption,
+figure[typeof~='mw:Audio/Thumb'] > figcaption,
+figure[typeof~='mw:Image/Frame'] > figcaption,
+figure[typeof~='mw:Video/Frame'] > figcaption,
+figure[typeof~='mw:Audio/Frame'] > figcaption {
+  display: table-caption;
+  caption-side: bottom;
+  line-height: 1.4em;
+  /**
+		 * The "break-word" value is deprecated, however, it's well supported
+		 * at 94.73%
+		 * https://caniuse.com/mdn-css_properties_word-break_break-word
+		 *
+		 * The spec suggests it has the same effect as,
+		 *
+		 *   word-break: normal;
+		 *   overflow-wrap: anywhere;
+		 *
+		 * https://drafts.csswg.org/css-text-3/#word-break-property
+		 *
+		 * So, we should use that.  However, support for "anywhere" is lagging
+		 * at just 72.39%, with Safari being a notable miss.
+		 * https://caniuse.com/mdn-css_properties_overflow-wrap_anywhere
+		 *
+		 * "Soft wrap opportunities introduced by the word break are considered
+		 * when calculating min-content intrinsic sizes."
+		 * From https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap
+		 */
+  word-break: break-word;
+  /* taken from .thumbcaption, plus .thumbinner */
+  padding: 0 6px 6px 6px;
+}
+.mw-content-ltr figure[typeof~='mw:Image/Thumb'] > figcaption,
+.mw-content-ltr figure[typeof~='mw:Video/Thumb'] > figcaption,
+.mw-content-ltr figure[typeof~='mw:Audio/Thumb'] > figcaption,
+.mw-content-ltr figure[typeof~='mw:Image/Frame'] > figcaption,
+.mw-content-ltr figure[typeof~='mw:Video/Frame'] > figcaption,
+.mw-content-ltr figure[typeof~='mw:Audio/Frame'] > figcaption {
+  /* @noflip */
+  text-align: left;
+}
+.mw-content-rtl figure[typeof~='mw:Image/Thumb'] > figcaption,
+.mw-content-rtl figure[typeof~='mw:Video/Thumb'] > figcaption,
+.mw-content-rtl figure[typeof~='mw:Audio/Thumb'] > figcaption,
+.mw-content-rtl figure[typeof~='mw:Image/Frame'] > figcaption,
+.mw-content-rtl figure[typeof~='mw:Video/Frame'] > figcaption,
+.mw-content-rtl figure[typeof~='mw:Audio/Frame'] > figcaption {
+  /* @noflip */
+  text-align: right;
+}
+/**
+ * Inline media items
+ */
+.mw-valign-middle > *:first-child > audio,
+.mw-valign-middle > *:first-child > img,
+.mw-valign-middle > *:first-child > video {
+  vertical-align: middle;
+}
+.mw-valign-baseline > *:first-child > audio,
+.mw-valign-baseline > *:first-child > img,
+.mw-valign-baseline > *:first-child > video {
+  vertical-align: baseline;
+}
+.mw-valign-sub > *:first-child > audio,
+.mw-valign-sub > *:first-child > img,
+.mw-valign-sub > *:first-child > video {
+  vertical-align: sub;
+}
+.mw-valign-super > *:first-child > audio,
+.mw-valign-super > *:first-child > img,
+.mw-valign-super > *:first-child > video {
+  vertical-align: super;
+}
+.mw-valign-top > *:first-child > audio,
+.mw-valign-top > *:first-child > img,
+.mw-valign-top > *:first-child > video {
+  vertical-align: top;
+}
+.mw-valign-text-top > *:first-child > audio,
+.mw-valign-text-top > *:first-child > img,
+.mw-valign-text-top > *:first-child > video {
+  vertical-align: text-top;
+}
+.mw-valign-bottom > *:first-child > audio,
+.mw-valign-bottom > *:first-child > img,
+.mw-valign-bottom > *:first-child > video {
+  vertical-align: bottom;
+}
+.mw-valign-text-bottom > *:first-child > audio,
+.mw-valign-text-bottom > *:first-child > img,
+.mw-valign-text-bottom > *:first-child > video {
+  vertical-align: text-bottom;
+}
+/* stylelint-disable selector-class-pattern */
+/**
+ * Avoid the need to calculate paddings individually
+ * https://stackoverflow.com/a/7310398
+ *
+ * FIXME: This would be better in mediawiki.page.gallery.styles,
+ * but let's wait until wgParserEnableLegacyMediaDOM is removed
+ */
+.mw-gallery-traditional .gallerybox > .thumb:before {
+  content: '';
+  vertical-align: middle;
+  display: inline-block;
+  height: 100%;
+}
+.mw-gallery-traditional .gallerybox > .thumb > * {
+  vertical-align: middle;
+  display: inline-block;
+}
+
+figure[typeof~='mw:Image/Thumb'],
+figure[typeof~='mw:Video/Thumb'],
+figure[typeof~='mw:Audio/Thumb'],
+figure[typeof~='mw:Image/Frame'],
+figure[typeof~='mw:Video/Frame'],
+figure[typeof~='mw:Audio/Frame'] {
+  border: 1px solid #c8ccd1;
+  border-bottom: 0;
+  background-color: #f8f9fa;
+}
+figure[typeof~='mw:Image/Thumb'] > *:first-child > audio,
+figure[typeof~='mw:Video/Thumb'] > *:first-child > audio,
+figure[typeof~='mw:Audio/Thumb'] > *:first-child > audio,
+figure[typeof~='mw:Image/Frame'] > *:first-child > audio,
+figure[typeof~='mw:Video/Frame'] > *:first-child > audio,
+figure[typeof~='mw:Audio/Frame'] > *:first-child > audio,
+figure[typeof~='mw:Image/Thumb'] > *:first-child > img,
+figure[typeof~='mw:Video/Thumb'] > *:first-child > img,
+figure[typeof~='mw:Audio/Thumb'] > *:first-child > img,
+figure[typeof~='mw:Image/Frame'] > *:first-child > img,
+figure[typeof~='mw:Video/Frame'] > *:first-child > img,
+figure[typeof~='mw:Audio/Frame'] > *:first-child > img,
+figure[typeof~='mw:Image/Thumb'] > *:first-child > video,
+figure[typeof~='mw:Video/Thumb'] > *:first-child > video,
+figure[typeof~='mw:Audio/Thumb'] > *:first-child > video,
+figure[typeof~='mw:Image/Frame'] > *:first-child > video,
+figure[typeof~='mw:Video/Frame'] > *:first-child > video,
+figure[typeof~='mw:Audio/Frame'] > *:first-child > video {
+  border: 1px solid #c8ccd1;
+  background: #ffffff;
+}
+figure[typeof~='mw:Image/Thumb'] > figcaption,
+figure[typeof~='mw:Video/Thumb'] > figcaption,
+figure[typeof~='mw:Audio/Thumb'] > figcaption,
+figure[typeof~='mw:Image/Frame'] > figcaption,
+figure[typeof~='mw:Video/Frame'] > figcaption,
+figure[typeof~='mw:Audio/Frame'] > figcaption {
+  border: 1px solid #c8ccd1;
+  border-top: 0;
+  background-color: #f8f9fa;
+  /* In mw-core the font-size is duplicated, 94% in thumbinner
+		 * and again 94% in thumbcaption. 88.4% for font size of the
+		 * caption results in the same behavior. */
+  font-size: 88.4%;
+}
+.mw-image-border > *:first-child > audio,
+.mw-image-border > *:first-child > img,
+.mw-image-border > *:first-child > video {
+  border: 1px solid #eaecf0;
+}
+/* Magnify clip, not present for broken media */
+figure[typeof~='mw:Image/Thumb']:not( [ typeof~='mw:Error' ] ) > figcaption:before,
+figure[typeof~='mw:Video/Thumb']:not( [ typeof~='mw:Error' ] ) > figcaption:before,
+figure[typeof~='mw:Audio/Thumb']:not( [ typeof~='mw:Error' ] ) > figcaption:before {
+  content: '';
+  width: 15px;
+  height: 11px;
+}
+.mw-content-ltr figure[typeof~='mw:Image/Thumb']:not( [ typeof~='mw:Error' ] ) > figcaption:before,
+.mw-content-ltr figure[typeof~='mw:Video/Thumb']:not( [ typeof~='mw:Error' ] ) > figcaption:before,
+.mw-content-ltr figure[typeof~='mw:Audio/Thumb']:not( [ typeof~='mw:Error' ] ) > figcaption:before {
+  /* @noflip */
+  margin-left: 3px;
+  /* @noflip */
+  float: right;
+}
+.mw-content-rtl figure[typeof~='mw:Image/Thumb']:not( [ typeof~='mw:Error' ] ) > figcaption:before,
+.mw-content-rtl figure[typeof~='mw:Video/Thumb']:not( [ typeof~='mw:Error' ] ) > figcaption:before,
+.mw-content-rtl figure[typeof~='mw:Audio/Thumb']:not( [ typeof~='mw:Error' ] ) > figcaption:before {
+  /* @noflip */
+  margin-right: 3px;
+  /* @noflip */
+  float: left;
+}
+figure[typeof~='mw:Image/Thumb']:not( [ typeof~='mw:Error' ] ) > a,
+figure[typeof~='mw:Video/Thumb']:not( [ typeof~='mw:Error' ] ) > a,
+figure[typeof~='mw:Audio/Thumb']:not( [ typeof~='mw:Error' ] ) > a {
+  display: inline-block;
+  position: relative;
+}
+figure[typeof~='mw:Image/Thumb']:not( [ typeof~='mw:Error' ] ) > a:after,
+figure[typeof~='mw:Video/Thumb']:not( [ typeof~='mw:Error' ] ) > a:after,
+figure[typeof~='mw:Audio/Thumb']:not( [ typeof~='mw:Error' ] ) > a:after {
+  content: '';
+  width: 15px;
+  height: 11px;
+  position: absolute;
+  bottom: -11px;
+}
+.mw-content-ltr figure[typeof~='mw:Image/Thumb']:not( [ typeof~='mw:Error' ] ) > a:after,
+.mw-content-ltr figure[typeof~='mw:Video/Thumb']:not( [ typeof~='mw:Error' ] ) > a:after,
+.mw-content-ltr figure[typeof~='mw:Audio/Thumb']:not( [ typeof~='mw:Error' ] ) > a:after {
+  /* @noflip */
+  right: 6px;
+  /* @noflip */
+  background-image: url(/w/resources/src/mediawiki.skinning/images/magnify-clip-ltr.svg?8330e);
+}
+.mw-content-rtl figure[typeof~='mw:Image/Thumb']:not( [ typeof~='mw:Error' ] ) > a:after,
+.mw-content-rtl figure[typeof~='mw:Video/Thumb']:not( [ typeof~='mw:Error' ] ) > a:after,
+.mw-content-rtl figure[typeof~='mw:Audio/Thumb']:not( [ typeof~='mw:Error' ] ) > a:after {
+  /* @noflip */
+  left: 6px;
+  /* @noflip */
+  background-image: url(/w/resources/src/mediawiki.skinning/images/magnify-clip-rtl.svg?38fd5);
+}
