@@ -1,4 +1,4 @@
-import {parseList} from '../utils.js';
+import {extractFile, parseList} from '../utils.js';
 import {expect} from 'expect';
 import fs from 'fs';
 
@@ -25,5 +25,11 @@ describe('Extractor utils', () => {
         expect(firstPage.index).toEqual('91')
         expect(firstPage.mime_type).toEqual('text/html')
         expect(firstPage.item_size).toEqual('176596')
+    });
+
+    it('extractFile', async () => {
+        const zimdumpCustom = 'docker run -v $(pwd):/app -w /app -i zimdump zimdump'
+        const data = await extractFile(zimdumpCustom, '4184', 'test/data/wikipedia_en_100_maxi_2022-06.zim')
+        fs.writeFileSync('hello.webp', data)
     });
 });

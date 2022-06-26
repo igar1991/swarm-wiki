@@ -4,8 +4,10 @@ import {Wallet} from 'ethers';
 import {Bee} from '@ethersphere/bee-js';
 import {createClient} from 'redis';
 import {uploadData} from './utils.js';
-import {getUnixTimestamp} from "../utils/utils.js";
+import {getUnixTimestamp, sleep} from "../utils/utils.js";
+import multer from "multer";
 
+const upload = multer({storage: multer.memoryStorage()})
 const app = express();
 
 const port = process.env.WIKI_UPLOADER_PORT;
@@ -40,8 +42,6 @@ console.log('WIKI_BEE_URL', beeUrl);
 console.log('WIKI_BEE_DEBUG_URL', beeDebugUrl);
 console.log('WIKI_UPLOADER_REDIS', redisUrl);
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
-
 const client = createClient({
     url: redisUrl
 });
@@ -49,6 +49,7 @@ client.on('error', (err) => {
     // console.log('Redis Client Error', err)
 });
 
+// todo move to utils or remove
 async function downloadFeedData(privateKey, key) {
     const wallet = new Wallet(privateKey)
     const bee = new Bee(beeUrl)
@@ -65,9 +66,26 @@ app.use(express.json({limit: 1024 * 1024 * 20}));
 app.get('/status', async (req, res) => {
     res.send({result: 'ok', status});
 });
-app.post('/upload-page', async (req, res) => {
+
+app.post('/upload', upload.single('file'), async (req, res, next) => {
     const {key, page} = req.body;
-    console.log('/upload-page', key, 'page length', page.length);
+
+    if (!key) {
+        return next('key is not set')
+    }
+
+    let type = 'unknown'
+    if (page) {
+        type = 'page'
+    } else if (req.file) {
+        type = 'file'
+    }
+
+    if (type === 'unknown') {
+        return next('type is not correct')
+    }
+
+    console.log('/upload', key, 'type', type);
     res.send({result: 'ok', status});
     if (status !== 'ok') {
         console.log('status', status, 'skip')
@@ -79,7 +97,11 @@ app.post('/upload-page', async (req, res) => {
         try {
             let data = null
             try {
-                data = await uploadData(beeUrl, beeDebugUrl, privateKey, key, page)
+                if (type === 'page') {
+                    data = await uploadData(beeUrl, beeDebugUrl, privateKey, key, page)
+                } else if (type === 'file') {
+                    data = await uploadData(beeUrl, beeDebugUrl, privateKey, key, req.file.buffer)
+                }
             } catch (e) {
                 if (e.message.startsWith('Conflict: chunk already exists')) {
                     // todo handle it
@@ -105,24 +127,10 @@ app.post('/upload-page', async (req, res) => {
             break
         }
 
-        // todo move to config
+        // todo move time to config
         await sleep(5000)
     }
 });
-
-// app.post('/upload-redirect', async (req, res) => {
-//     const {key, reference} = req.body;
-//     console.log('Received', 'key', key, 'reference', reference);
-//     // todo implement
-//     res.send({result: 'ok'});
-// });
-//
-// app.post('/upload-file', async (req, res) => {
-//     const {urls} = req.body;
-//     console.log('Received', urls);
-//     // todo implement
-//     res.send({result: 'ok'});
-// });
 
 client.connect().then(async () => {
     await client.configSet('save', '5 1');

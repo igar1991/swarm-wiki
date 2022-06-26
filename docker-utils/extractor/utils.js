@@ -1,3 +1,10 @@
+import util from 'node:util';
+import {exec as exec0} from 'node:child_process';
+import fetch from "node-fetch";
+import FormData from "form-data";
+
+const exec = util.promisify(exec0);
+
 /**
  * @typedef ListObject
  * @type {Object}
@@ -50,7 +57,7 @@ export function parseList(data) {
                 type = 'index'
             }
 
-            const key = type === 'page' ? path.substring(2) : path
+            const key = (['page', 'image'].includes(type)) ? path.substring(2) : path
             currentItem = {
                 key,
                 path,
@@ -77,4 +84,61 @@ export function parseList(data) {
     }
 
     return result
+}
+
+export async function extractFile(zimdumpCustom, fileIndex, filePath) {
+    const {stdout, stderr} = await exec(`${zimdumpCustom} show --idx ${fileIndex} ${filePath}`, {
+        maxBuffer: 1024 * 1024 * 500,
+        encoding: 'binary',
+    });
+    if (stderr) {
+        // todo throw error and catch it
+        console.error('stderr show error', stderr);
+    }
+
+    return Buffer.from(stdout, 'binary')
+}
+
+export async function extractPage(zimdumpCustom, fileIndex, filePath) {
+    const {stdout, stderr} = await exec(`${zimdumpCustom} show --idx ${fileIndex} ${filePath}`, {
+        maxBuffer: 1024 * 1024 * 500,
+    });
+    if (stderr) {
+        // todo throw error and catch it
+        console.error('stderr show error', stderr);
+    }
+
+    return stdout
+}
+
+export async function enhanceData(enhancerUrl, key, content, type) {
+    const form = new FormData();
+    form.append('key', key);
+    let action = ''
+    if (type === 'file') {
+        action = 'enhance-file'
+        form.append('file', content, {
+            filename: 'file.bin',
+            knownLength: content.length
+        });
+    } else if (type === 'page') {
+        action = 'enhance-page'
+        form.append('page', content);
+    } else {
+        throw new Error(`Unknown type: ${type}`)
+    }
+
+    return (await fetch(enhancerUrl + action, {
+        method: 'POST',
+        body: form
+    })).json()
+}
+
+/**
+ * Gets uploader status
+ *
+ * @returns {Promise<string>}
+ */
+export async function getUploaderStatus(uploaderUrl) {
+    return (await (await fetch(uploaderUrl + 'status')).json()).status
 }

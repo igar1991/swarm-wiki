@@ -40,7 +40,7 @@ app.post('/index', async (req, res) => {
 
     const data = await run()
     const key = keyPrefix + MIDDLE_PREFIX_PAGE + 'all'
-    const response = await (await fetch(uploaderUrl + 'upload-page', {
+    const response = await (await fetch(uploaderUrl + 'upload', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

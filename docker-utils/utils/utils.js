@@ -11,3 +11,7 @@ export function sleep(ms) {
 export function getUnixTimestamp() {
     return Math.round(Date.now() / 1000)
 }
+
+export const error = (res, text) => {
+    return res.status(500).json({result: 'error', text});
+}

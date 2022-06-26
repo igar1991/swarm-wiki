@@ -37,7 +37,7 @@ export async function getActiveBatch(beeDebugUrl) {
  *
  * @returns {Promise<{uploadedData: UploadResult, feedReference: Reference)}>}
  */
-export async function uploadData(beeUrl, beeDebugUrl, privateKey, key, data, reference) {
+export async function uploadData(beeUrl, beeDebugUrl, privateKey, key, data) {
     const batchId = await getActiveBatch(beeDebugUrl)
     const bee = new Bee(beeUrl)
     const topic = bee.makeFeedTopic(key)
@@ -46,6 +46,7 @@ export async function uploadData(beeUrl, beeDebugUrl, privateKey, key, data, ref
     const feedReference = await feedWriter.upload(batchId, uploadedData.reference)
 
     return {
+        topic,
         feedReference,
         uploadedData
     }
