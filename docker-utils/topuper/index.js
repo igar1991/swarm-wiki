@@ -33,6 +33,7 @@ console.log('WIKI_TOPUPER_SLEEP_SECONDS', sleepSeconds);
 (async function () {
     const beeDebug = new BeeDebug(beeDebugUrl);
     targetBatches = prepareBatchesArray(targetBatches)
+    // todo wait until bee node is available, share cheching function from bee-waiter
     while (true) {
         try {
             const issues = await detectIssues(beeDebug, {

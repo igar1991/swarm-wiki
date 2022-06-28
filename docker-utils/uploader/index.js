@@ -7,7 +7,10 @@ import {uploadData} from './utils.js';
 import {getUnixTimestamp, sleep} from "../utils/utils.js";
 import multer from "multer";
 
-const upload = multer({storage: multer.memoryStorage()})
+const upload = multer({
+    storage: multer.memoryStorage(),
+    fieldSize: 1024 * 1024 * 500
+})
 const app = express();
 
 const port = process.env.WIKI_UPLOADER_PORT;
@@ -68,16 +71,25 @@ app.get('/status', async (req, res) => {
 });
 
 app.post('/upload', upload.single('file'), async (req, res, next) => {
-    const {key, page} = req.body;
+    const {key, page, meta} = req.body;
+    const file = req.file?.buffer
 
     if (!key) {
-        return next('key is not set')
+        return next('Key is empty')
+    }
+
+    if (!meta) {
+        return next('Meta is empty')
+    }
+
+    if (!(file || page)) {
+        return next('File or page is empty')
     }
 
     let type = 'unknown'
     if (page) {
         type = 'page'
-    } else if (req.file) {
+    } else if (file) {
         type = 'file'
     }
 
@@ -100,7 +112,7 @@ app.post('/upload', upload.single('file'), async (req, res, next) => {
                 if (type === 'page') {
                     data = await uploadData(beeUrl, beeDebugUrl, privateKey, key, page)
                 } else if (type === 'file') {
-                    data = await uploadData(beeUrl, beeDebugUrl, privateKey, key, req.file.buffer)
+                    data = await uploadData(beeUrl, beeDebugUrl, privateKey, key, file)
                 }
             } catch (e) {
                 if (e.message.startsWith('Conflict: chunk already exists')) {
@@ -114,6 +126,7 @@ app.post('/upload', upload.single('file'), async (req, res, next) => {
 
             await client.set(key, JSON.stringify({
                 ...data,
+                meta: JSON.parse(meta),
                 updated_at: getUnixTimestamp()
             }))
             status = 'ok'

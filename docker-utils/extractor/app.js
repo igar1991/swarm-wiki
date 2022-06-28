@@ -1,16 +1,10 @@
-import util from 'node:util';
-import {exec as exec0} from 'node:child_process';
 import express from 'express';
 import cors from 'cors';
 import fs from 'fs';
-import {enhanceData, extractFile, extractPage, getUploaderStatus, parseList} from './utils.js';
-import {error, getUnixTimestamp, sleep} from '../utils/utils.js';
+import {enhanceData, getKeyForPage, insertImagesToPage, isAlreadyUploaded, startParser, waitUploader} from './utils.js';
 import {createClient} from 'redis';
 
 const app = express();
-const exec = util.promisify(exec0);
-const MIDDLE_PREFIX_PAGE = 'page_'
-const MIDDLE_PREFIX_IMAGE = 'image_'
 
 const outputDir = process.env.WIKI_DOWNLOADER_OUTPUT_DIR;
 const keyPrefix = process.env.WIKI_SWARM_PREFIX;
@@ -50,7 +44,7 @@ const client = createClient({
     url: redisUrl
 });
 client.on('error', (err) => {
-    // console.log('Redis Client Error', err)
+    console.log('Redis Client Error', err)
 });
 
 let status = 'ok'
@@ -60,16 +54,15 @@ app.post('/extract', async (req, res, next) => {
     const {fileName, lang, limit} = req.body;
 
     if (!fileName) {
-        // todo use next?
-        return error(res, `File param is empty`);
+        return next(`File param is empty`);
     }
 
     if (!lang) {
-        return error(res, `Lang is empty`);
+        return next(`Lang is empty`);
     }
 
     if (limit) {
-        console.log(`Limit is ${limit}`);
+        console.log(`limit is ${limit}`);
     }
 
     const filePath = outputDir + fileName
@@ -78,105 +71,52 @@ app.post('/extract', async (req, res, next) => {
     if (!fs.existsSync(filePath)) {
         const message = `File ${filePath} not found`
         console.log(message)
-        return error(res, message);
+        return next(message);
     }
 
     res.send({result: 'ok'});
-    // todo move config to const, reuse
-    const {stdout, stderr} = await exec(`${zimdumpCustom} list --details ${filePath}`, {
-        maxBuffer: 1024 * 1024 * 500,
-    });
 
-    if (stderr) {
-        console.error('stderr list error', stderr);
-        return
-    }
+    await startParser(zimdumpCustom, filePath,
+        async (item, data) => {
+            const key = getKeyForPage(keyPrefix, lang, item)
 
-    const zims = parseList(stdout)
-    const content = zims
-        .filter(item => ['image', 'page'].includes(item.type))
-        .filter(item => item.internal_type !== 'redirect');
+            if (data) {
+                const pageWithImages = await insertImagesToPage(zimdumpCustom, data, filePath)
+                await waitUploader(uploaderUrl)
 
-    console.log('ZIM items count', zims.length, 'content count', content.length);
-
-    for (const [i, item] of content.entries()) {
-        if (limit && i >= limit) {
-            break;
-        }
-
-        console.log(`item ${i + 1}/${content.length}`)
-        let key = ''
-        if (item.type === 'image') {
-            key = keyPrefix + MIDDLE_PREFIX_IMAGE + lang.toLowerCase() + '_' + item.key
-        } else if (item.type === 'page') {
-            key = keyPrefix + MIDDLE_PREFIX_PAGE + lang.toLowerCase() + '_' + item.key
-        }
-
-        if (!key) {
-            const message = `Unknown type of item: ${item.type}`
-            console.log(message)
-            return error(res, message);
-        }
-
-        console.log('key', key);
-        let storedInfo = await client.get(key)
-        storedInfo = storedInfo ? JSON.parse(storedInfo) : {}
-        console.log('storedInfo', storedInfo)
-
-        // todo remove this temp lifehack for setting time
-        // if (storedInfo.uploadedData && storedInfo.uploadedData.reference && !storedInfo.updated_at) {
-        //     await client.set(key, JSON.stringify({
-        //         ...storedInfo,
-        //         updated_at: getUnixTimestamp()
-        //     }))
-        //
-        //     console.log('Reference found, but date is not set, date updated')
-        //     continue
-        // }
-
-        if (storedInfo.topic && storedInfo.uploadedData && storedInfo.uploadedData.reference && storedInfo.updated_at) {
-            console.log('Topic and update time found, skip')
-            continue
-        }
-
-        while (true) {
-            let uploaderStatus = ''
-            try {
-                uploaderStatus = await getUploaderStatus(uploaderUrl)
-                if (uploaderStatus === 'ok') {
-                    break
+                try {
+                    const response = await enhanceData(enhancerUrl, key, pageWithImages, JSON.stringify({
+                        ...item,
+                        filename: filePath
+                    }), 'page')
+                    status = response.status
+                } catch (e) {
+                    console.log('error', e.message);
                 }
-            } catch (e) {
+            } else {
+                console.log('REDIRECT received. SKIP')
+                // todo it is redirect, also check for cache before processing
+                // todo implement
+            }
+        },
+        async item => {
+            const key = getKeyForPage(keyPrefix, lang, item)
+            let storedInfo = await client.get(key)
+            storedInfo = storedInfo ? JSON.parse(storedInfo) : {}
+            console.log('storedInfo', storedInfo)
 
+            if (isAlreadyUploaded(storedInfo)) {
+                console.log('already uploaded, skip')
+                return false
             }
 
-            console.log('uploader status is not ok -', uploaderStatus, '- sleep')
-            // todo move to config
-            await sleep(5000)
-        }
+            return true
+        },
+        (i, count) => {
+            console.log(`Processing item ${i + 1}/${count}`)
+        })
 
-        let stdout = ''
-        if (item.type === 'image') {
-            stdout = await extractFile(zimdumpCustom, item.index, filePath)
-        } else if (item.type === 'page') {
-            stdout = await extractPage(zimdumpCustom, item.index, filePath)
-        }
-
-        if (!stdout.length) {
-            const message = `Content of zim item is empty, index: ${item.index}`
-            console.log(message)
-            return error(res, message);
-        }
-
-        console.log('content size', stdout.length);
-
-        try {
-            const response = await enhanceData(enhancerUrl, key, stdout, item.type === 'page' ? 'page' : 'file')
-            status = response.status
-        } catch (e) {
-            console.log('error', e.message);
-        }
-    }
+    console.log('Done!')
 });
 
 client.connect().then(async () => {

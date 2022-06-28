@@ -30,6 +30,14 @@ Redis database management tool
 
 `http://localhost:8001/redis-stack/browser`
 
+## Research
+
+-Storing images is not ok in feeds
+
+-Images could be stored under /bytes and in manifest, but in case a lot of images it will be slow
+
+-The best ways is to put all images to the end of the doc, with ability to render it on the end after downloading or insert them to the page
+
 ## Testing
 
 First you need to prepare a docker image with utilities for working with ZIM files.

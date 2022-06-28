@@ -3,7 +3,10 @@ import cors from 'cors';
 import multer from "multer";
 import {uploadContent} from "./utils.js";
 
-const upload = multer({storage: multer.memoryStorage()})
+const upload = multer({
+    storage: multer.memoryStorage(),
+    fieldSize: 1024 * 1024 * 500
+})
 const app = express();
 
 const port = process.env.WIKI_ENHANCER_PORT;
@@ -23,10 +26,23 @@ console.log('WIKI_UPLOADER_URL', uploaderUrl);
 let status = 'ok'
 
 app.use(cors());
-app.post('/enhance-page', upload.none(), async (req, res) => {
-    const {key, page} = req.body;
+app.post('/enhance-page', upload.single('file'), async (req, res, next) => {
+    const {key, meta} = req.body;
+    const file = req.file?.buffer
 
-    console.log('/enhance-page', key, 'page length', page.length);
+    if (!key) {
+        return next('Empty key')
+    }
+
+    if (!file) {
+        return next('Empty file')
+    }
+
+    if (!meta) {
+        return next('Empty meta')
+    }
+
+    console.log('/enhance-page', key, 'page length', file.length);
     res.send({result: 'ok', status});
 
     if (status !== 'ok') {
@@ -35,32 +51,11 @@ app.post('/enhance-page', upload.none(), async (req, res) => {
     }
 
     try {
-        const response = await uploadContent(uploaderUrl, key, page, 'page')
+        const response = await uploadContent(uploaderUrl, key, file, meta, 'page')
         console.log('response', response);
         status = response.status
     } catch (e) {
         console.log('enhancer page error', e);
-    }
-});
-
-app.post('/enhance-file', upload.single('file'), async (req, res) => {
-    const {key} = req.body
-    const file = req.file
-
-    console.log('/enhance-file', key, 'file size', file.size);
-    res.send({result: 'ok', status});
-
-    if (status !== 'ok') {
-        console.log('status', status, 'skip')
-        return
-    }
-
-    try {
-        const response = await uploadContent(uploaderUrl, key, file.buffer, 'file')
-        console.log('response', response);
-        status = response.status
-    } catch (e) {
-        console.log('enhancer file error', e);
     }
 });
 
