@@ -10,4 +10,4 @@ COPY ./docker-utils/extractor .
 COPY ./docker-utils/utils ./utils
 RUN npm ci
 
-ENTRYPOINT ["node", "index.js"]
+ENTRYPOINT ["node", "--max-old-space-size=2048", "index.js"]
