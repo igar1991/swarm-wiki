@@ -105,7 +105,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1500M
+          memory: 2048M
     volumes:
       - ${WIKI_DOWNLOAD_LOCAL_DIR}:/app/data
     depends_on:
