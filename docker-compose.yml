@@ -102,6 +102,10 @@ services:
       - WIKI_UPLOADER_URL=http://uploader:${WIKI_UPLOADER_PORT}/
       - WIKI_ENHANCER_URL=http://enhancer:${WIKI_ENHANCER_PORT}/
       - WIKI_DOWNLOADER_OUTPUT_DIR=/app/data/
+    deploy:
+      resources:
+        limits:
+          memory: 1500M
     volumes:
       - ${WIKI_DOWNLOAD_LOCAL_DIR}:/app/data
     depends_on:
