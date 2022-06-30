@@ -113,7 +113,9 @@ export function prepareUrl(url) {
         throw new Error('url is no defined')
     }
 
-    return url.split('"').join('\\\"')
+    return url
+        .split('"').join('\\\"')
+        .split('$').join('\\\"')
 }
 
 export async function extractFileByUrl(zimdumpCustom, url, filePath) {
