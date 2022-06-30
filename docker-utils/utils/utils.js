@@ -12,6 +12,9 @@ export function getUnixTimestamp() {
     return Math.round(Date.now() / 1000)
 }
 
+// todo remove
 export const error = (res, text) => {
     return res.status(500).json({result: 'error', text});
 }
+
+export const extractFilename = (filePath) => filePath.split('/').pop()

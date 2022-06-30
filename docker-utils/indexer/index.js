@@ -47,6 +47,7 @@ app.post('/index', async (req, res) => {
         },
         body: JSON.stringify({
             key,
+            keyLocalIndex: '-1',
             meta: {no: 'meta'},
             page: data
         })

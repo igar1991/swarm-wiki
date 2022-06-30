@@ -27,7 +27,7 @@ let status = 'ok'
 
 app.use(cors());
 app.post('/enhance-page', upload.single('file'), async (req, res, next) => {
-    const {key, meta} = req.body;
+    const {key, meta, keyLocalIndex} = req.body;
     const file = req.file?.buffer
 
     if (!key) {
@@ -42,6 +42,10 @@ app.post('/enhance-page', upload.single('file'), async (req, res, next) => {
         return next('Empty meta')
     }
 
+    if (!keyLocalIndex) {
+        return next('Empty keyLocalIndex')
+    }
+
     console.log('/enhance-page', key, 'page length', file.length);
     res.send({result: 'ok', status});
 
@@ -51,7 +55,7 @@ app.post('/enhance-page', upload.single('file'), async (req, res, next) => {
     }
 
     try {
-        const response = await uploadContent(uploaderUrl, key, file, meta, 'page')
+        const response = await uploadContent(uploaderUrl, key, keyLocalIndex, file, meta, 'page')
         console.log('response', response);
         status = response.status
     } catch (e) {

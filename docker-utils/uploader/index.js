@@ -71,11 +71,15 @@ app.get('/status', async (req, res) => {
 });
 
 app.post('/upload', upload.single('file'), async (req, res, next) => {
-    const {key, page, meta} = req.body;
+    const {key, keyLocalIndex, page, meta} = req.body;
     const file = req.file?.buffer
 
     if (!key) {
         return next('Key is empty')
+    }
+
+    if (!keyLocalIndex){
+        return next('KeyLocalIndex is empty')
     }
 
     if (!meta) {
@@ -107,25 +111,30 @@ app.post('/upload', upload.single('file'), async (req, res, next) => {
     while (true) {
         console.log('uploading...')
         try {
-            let data = null
+            let uploadedData = null
             try {
                 if (type === 'page') {
-                    data = await uploadData(beeUrl, beeDebugUrl, privateKey, key, page)
+                    uploadedData = await uploadData(beeUrl, beeDebugUrl, privateKey, key, page)
                 } else if (type === 'file') {
-                    data = await uploadData(beeUrl, beeDebugUrl, privateKey, key, file)
+                    uploadedData = await uploadData(beeUrl, beeDebugUrl, privateKey, key, file)
                 }
             } catch (e) {
                 if (e.message.startsWith('Conflict: chunk already exists')) {
                     // todo handle it
                 }
             }
-            console.log('uploaded data result', data)
-            if (!data) {
+            console.log('uploaded data result', key, keyLocalIndex, uploadedData)
+            if (!uploadedData) {
                 console.log('empty uploaded data, skip saving')
             }
 
             await client.set(key, JSON.stringify({
-                ...data,
+                ...uploadedData,
+                meta: JSON.parse(meta),
+                updated_at: getUnixTimestamp()
+            }))
+
+            await client.set(keyLocalIndex, JSON.stringify({
                 meta: JSON.parse(meta),
                 updated_at: getUnixTimestamp()
             }))

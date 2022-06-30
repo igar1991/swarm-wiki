@@ -1,8 +1,17 @@
 import express from 'express';
 import cors from 'cors';
 import fs from 'fs';
-import {enhanceData, getKeyForPage, insertImagesToPage, isAlreadyUploaded, startParser, waitUploader} from './utils.js';
+import {
+    enhanceData, extractPage, getCachedItemInfo, getItemInfoByIndex,
+    getKeyForPageFull,
+    getKeyLocalIndex,
+    insertImagesToPage, isAlreadyProcessed,
+    isAlreadyUploaded, setCachedItemInfo,
+    startParser,
+    waitUploader
+} from './utils.js';
 import {createClient} from 'redis';
+import {extractFilename} from "../utils/utils.js";
 
 const app = express();
 
@@ -76,44 +85,55 @@ app.post('/extract', async (req, res, next) => {
 
     res.send({result: 'ok'});
 
-    await startParser(zimdumpCustom, filePath,
-        async (item, data) => {
-            const key = getKeyForPage(keyPrefix, lang, item)
+    const filename = extractFilename(filePath)
+    await startParser(keyPrefix, zimdumpCustom, filePath,
+        async (item, data, keyLocalIndex, localIndex) => {
+            const key = getKeyForPageFull(keyPrefix, lang, item)
+            let content = ''
 
             if (data) {
-                const pageWithImages = await insertImagesToPage(zimdumpCustom, data, filePath)
+                content = await insertImagesToPage(zimdumpCustom, data, filePath)
                 await waitUploader(uploaderUrl)
-
-                try {
-                    const response = await enhanceData(enhancerUrl, key, pageWithImages, JSON.stringify({
-                        ...item,
-                        filename: filePath
-                    }), 'page')
-                    status = response.status
-                } catch (e) {
-                    console.log('error', e.message);
-                }
             } else {
-                console.log('REDIRECT received. SKIP')
-                // todo it is redirect, also check for cache before processing
-                // todo implement
-            }
-        },
-        async item => {
-            const key = getKeyForPage(keyPrefix, lang, item)
-            let storedInfo = await client.get(key)
-            storedInfo = storedInfo ? JSON.parse(storedInfo) : {}
-            console.log('storedInfo', storedInfo)
+                let info = await getCachedItemInfo(client, filename, item.redirect_index)
+                if (info) {
+                } else {
+                    info = await getItemInfoByIndex(zimdumpCustom, filePath, item.redirect_index)
+                    await setCachedItemInfo(client, filename, item.redirect_index, JSON.stringify(info))
+                }
 
-            if (isAlreadyUploaded(storedInfo)) {
-                console.log('already uploaded, skip')
+                content = `redirect:${info.key}`
+            }
+
+            try {
+                const response = await enhanceData(enhancerUrl, key, keyLocalIndex, content, JSON.stringify({
+                    ...item,
+                    filename
+                }))
+                status = response.status
+            } catch (e) {
+                console.log('error', e.message);
+            }
+
+        },
+        async (i, filename) => {
+            if (await isAlreadyProcessed(client, keyPrefix, filename, i)) {
+                console.log('already processed, skip', filename, i)
                 return false
             }
 
             return true
         },
-        (i, count) => {
-            console.log(`Processing item ${i + 1}/${count}`)
+        async item => {
+            if (await isAlreadyUploaded(client, keyPrefix, lang, item)) {
+                console.log('already uploaded, skip', lang, item.key)
+                return false
+            }
+
+            return true
+        },
+        (i, count, title) => {
+            console.log(`processing item ${i + 1}/${count} - ${title}`)
         })
 
     console.log('Done!')
