@@ -368,20 +368,23 @@ export async function startParser(keyPrefix, zimdumpCustom, zimPath, onItem, onI
             return
         }
 
-        const keyLocal = getKeyLocalIndex(keyPrefix, zimFilename, i)
-        console.log('onIsGetPage', 'i', i, 'title', title, 'keyLocal', keyLocal)
-        const itemInfo = await getItemInfoByUrl(zimdumpCustom, zimPath, title)
-        if (!await onIsGetPageFull(itemInfo)) {
-            return
-        }
+        try {
+            const keyLocal = getKeyLocalIndex(keyPrefix, zimFilename, i)
+            console.log('onIsGetPage', 'i', i, 'title', title, 'keyLocal', keyLocal)
+            const itemInfo = await getItemInfoByUrl(zimdumpCustom, zimPath, title)
+            if (!await onIsGetPageFull(itemInfo)) {
+                return
+            }
 
-        if (itemInfo.type === 'page') {
-            const data = await extractPage(zimdumpCustom, itemInfo.index, zimPath)
-            await onItem(itemInfo, data, keyLocal, i)
-        } else if (itemInfo.type === 'redirect') {
-            await onItem(itemInfo, null, keyLocal, i)
+            if (itemInfo.type === 'page') {
+                const data = await extractPage(zimdumpCustom, itemInfo.index, zimPath)
+                await onItem(itemInfo, data, keyLocal, i)
+            } else if (itemInfo.type === 'redirect') {
+                await onItem(itemInfo, null, keyLocal, i)
+            }
+        } catch (e) {
+            console.log('task error', e)
         }
-
     }
 
     // delayed adding tasks to queue is necessary for millions of tasks
