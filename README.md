@@ -18,6 +18,34 @@ First url will not work, "?" should be encoded
 
 http://localhost:3000/wiki/en/%22The_Spaghetti_Incident?%22 => http://localhost:3000/wiki/en/%22The_Spaghetti_Incident%3F%22
 
+http://localhost:3000/wiki/en/%LOCALAPPDATA%
+
+USE this instruction to prevent ports open https://askubuntu.com/questions/652556/uncomplicated-firewall-ufw-is-not-blocking-anything-when-using-docker
+
+When this happens article uploaded or not? Parse all logs? Reupload that pages?
+
+```
+extractor_1   | Error: Command failed: zimdump show --url "I/Flag_of_Poland_(1919–1928).svg.png.webp" /app/data/wikipedia_en_all_maxi_2022-05.zim
+extractor_1   | Entry not found
+extractor_1   | 
+extractor_1   |     at ChildProcess.exithandler (node:child_process:398:12)
+extractor_1   |     at ChildProcess.emit (node:events:527:28)
+extractor_1   |     at maybeClose (node:internal/child_process:1092:16)
+extractor_1   |     at Socket.<anonymous> (node:internal/child_process:451:11)
+extractor_1   |     at Socket.emit (node:events:527:28)
+extractor_1   |     at Pipe.<anonymous> (node:net:709:12) {
+extractor_1   |   code: 255,
+extractor_1   |   killed: false,
+extractor_1   |   signal: null,
+extractor_1   |   cmd: 'zimdump show --url "I/Flag_of_Poland_(1919–1928).svg.png.webp" /app/data/wikipedia_en_all_maxi_2022-05.zim',
+extractor_1   |   stdout: '',
+extractor_1   |   stderr: 'Entry not found\n'
+extractor_1   | }
+```
+
+Indexer: its pretty slow
+
+
 Extract all
 
 ```
