@@ -118,6 +118,9 @@ export function prepareUrl(url) {
         .split('$').join('\\\$')
 }
 
+/**
+ * Extracts a file from zim archive by url like "I/myfile.webp"
+ */
 export async function extractFileByUrl(zimdumpCustom, url, filePath) {
     url = prepareUrl(url)
     const command = `${zimdumpCustom} show --url "${url}" ${filePath}`
@@ -139,10 +142,14 @@ export async function insertImagesToPage(zimdumpCustom, page, zimPath) {
         const src = decodeURI(img.attributes.src)
             .split('../')
             .join('')
-        // console.log(cache[src] ? 'TRUE CACHE' : 'false cache', 'src', src)
-        const imgContent = cache[src] ?? (await extractFileByUrl(zimdumpCustom, src, zimPath)).toString('base64')
-        if (!imgContent.length) {
-            throw new Error('Image is empty ' + src)
+        let imgContent = cache[src]
+
+        try {
+            const data = await extractFileByUrl(zimdumpCustom, src, zimPath)
+            imgContent = data.toString('base64')
+        } catch (e) {
+            console.log('error on file extraction, fill with empty data', e)
+            imgContent = ''
         }
 
         cache[src] = imgContent
