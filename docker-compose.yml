@@ -99,6 +99,7 @@ services:
       - WIKI_UPLOADER_REDIS
       - WIKI_EXTRACTOR_PORT
       - WIKI_SWARM_PREFIX
+      - WIKI_EXTRACTOR_OFFSET
       - WIKI_UPLOADER_URL=http://uploader:${WIKI_UPLOADER_PORT}/
       - WIKI_ENHANCER_URL=http://enhancer:${WIKI_ENHANCER_PORT}/
       - WIKI_DOWNLOADER_OUTPUT_DIR=/app/data/

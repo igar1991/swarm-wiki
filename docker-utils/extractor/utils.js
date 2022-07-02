@@ -246,10 +246,10 @@ export async function getTitlesList(zimdumpCustom, filePath) {
     const {stdout, stderr} = await exec(`${zimdumpCustom} list --ns A ${filePath}`, execConfigText);
 
     if (stderr) {
-        throw new Error('stderr error', stderr);
+        throw new Error('stderr error ' + stderr);
     }
 
-    return stdout.split('\n').map(item => item.substring(2))
+    return stdout.split('\n').map(item => item.substring(2)).reverse()
 }
 
 export async function getItemsCount(zimdumpCustom, filePath) {
@@ -330,7 +330,7 @@ export async function getItemInfoByUrl(zimdumpCustom, filePath, url) {
 /**
  * Reads ZIM items one by one, check if them is not already uploaded and callback with filled pages
  */
-export async function startParser(keyPrefix, zimdumpCustom, zimPath, onItem, onIsGetPage, onIsGetPageFull, onCounter) {
+export async function startParser(extractorOffset, keyPrefix, zimdumpCustom, zimPath, onItem, onIsGetPage, onIsGetPageFull, onCounter) {
     const zimFilename = extractFilename(zimPath)
     if (!onItem) {
         throw new Error('onItem is required')
@@ -344,17 +344,15 @@ export async function startParser(keyPrefix, zimdumpCustom, zimPath, onItem, onI
         throw new Error('onIsGetPageFull is required')
     }
 
-    // todo move to config
+    // todo move concurrent to config
     const queue = new Queue({
         concurrent: 10
     });
 
     const titles = await getTitlesList(zimdumpCustom, zimPath)
+    const titlesCount = titles.length
 
-    // const redirects = []
-
-    async function task(i, count) {
-        const title = titles[i]
+    async function task(i, title, count) {
         if (onCounter) {
             onCounter(i, count, title)
         }
@@ -390,34 +388,29 @@ export async function startParser(keyPrefix, zimdumpCustom, zimPath, onItem, onI
     // delayed adding tasks to queue is necessary for millions of tasks
     // because Queue is not support so big queues
     return new Promise((resolve) => {
-        // todo could be moved to config
-        // const offset = 3340
-        const offset = 0
+        const offset = extractorOffset || 0
         const firstBatch = 100
         let counter = 0
         for (let i = offset; i <= firstBatch + offset; i++) {
-            queue.enqueue(() => task(i, titles.length))
+            const title = titles.pop()
+            queue.enqueue(() => task(i, title, titlesCount))
         }
 
         queue.on('resolve', () => {
             const nextI = firstBatch + counter + offset
-            if (nextI >= titles.length) {
-                // console.log('Next index more then count', nextI, count)
+            if (nextI >= titlesCount) {
                 return
             }
 
-            queue.enqueue(() => task(nextI, titles.length))
+            const title = titles.pop()
+            queue.enqueue(() => task(nextI, title, titlesCount))
             counter++
         });
 
         queue.on('reject', error => console.error(error));
 
         queue.on('end', async () => {
-            console.log('tasks ended, redirects skipped')
-            // for (const redirect of redirects) {
-            //     await onItem(redirect)
-            // }
-
+            console.log('tasks ended')
             resolve()
         });
     })

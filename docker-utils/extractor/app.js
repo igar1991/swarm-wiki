@@ -21,6 +21,7 @@ const zimdumpCustom = process.env.WIKI_ZIMDUMP_CUSTOM ?? 'zimdump';
 const redisUrl = process.env.WIKI_UPLOADER_REDIS;
 const uploaderUrl = process.env.WIKI_UPLOADER_URL;
 const enhancerUrl = process.env.WIKI_ENHANCER_URL;
+const extractorOffset = process.env.WIKI_EXTRACTOR_OFFSET ?? 0;
 
 if (!outputDir) {
     throw new Error('WIKI_DOWNLOADER_OUTPUT_DIR is not set');
@@ -40,6 +41,10 @@ if (!uploaderUrl) {
 
 if (!enhancerUrl) {
     throw new Error('WIKI_ENHANCER_URL is not set');
+}
+
+if (extractorOffset === undefined) {
+    throw new Error('WIKI_EXTRACTOR_OFFSET is not set');
 }
 
 console.log('WIKI_DOWNLOADER_OUTPUT_DIR', outputDir);
@@ -86,7 +91,7 @@ app.post('/extract', async (req, res, next) => {
     res.send({result: 'ok'});
 
     const filename = extractFilename(filePath)
-    await startParser(keyPrefix, zimdumpCustom, filePath,
+    await startParser(extractorOffset, keyPrefix, zimdumpCustom, filePath,
         async (item, data, keyLocalIndex, localIndex) => {
             const key = getKeyForPageFull(keyPrefix, lang, item)
             let content = ''

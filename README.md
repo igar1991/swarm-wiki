@@ -20,6 +20,26 @@ http://localhost:3000/wiki/en/%22The_Spaghetti_Incident?%22 => http://localhost:
 
 http://localhost:3000/wiki/en/%LOCALAPPDATA%
 
+```
+extractor_1   | onIsGetPage i 17621 title -- keyLocal wiki_page_index_wikipedia_en_all_maxi_2022-05.zim_17621
+extractor_1   | Error: Command failed: zimdump list --details --url "--" /app/data/wikipedia_en_all_maxi_2022-05.zim
+extractor_1   | --url requires an argument
+extractor_1   |     at ChildProcess.exithandler (node:child_process:398:12)
+extractor_1   |     at ChildProcess.emit (node:events:527:28)
+extractor_1   |     at maybeClose (node:internal/child_process:1092:16)
+extractor_1   |     at Process.ChildProcess._handle.onexit (node:internal/child_process:302:5) {
+extractor_1   |   code: 255,
+extractor_1   |   killed: false,
+extractor_1   |   signal: null,
+extractor_1   |   cmd: 'zimdump list --details --url "--" /app/data/wikipedia_en_all_maxi_2022-05.zim',
+```
+
+`Error: Command failed: zimdump list --details --url "+/'\" /app/data/wikipedia_en_all_maxi_2022-05.zim`
+
+show all errors
+
+`docker-compose logs -f | | grep "error" | grep -v "feed get: no update found"`
+
 USE this instruction to prevent ports open https://askubuntu.com/questions/652556/uncomplicated-firewall-ufw-is-not-blocking-anything-when-using-docker
 
 When this happens article uploaded or not? Parse all logs? Reupload that pages?
