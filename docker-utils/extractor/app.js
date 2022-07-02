@@ -21,7 +21,7 @@ const zimdumpCustom = process.env.WIKI_ZIMDUMP_CUSTOM ?? 'zimdump';
 const redisUrl = process.env.WIKI_UPLOADER_REDIS;
 const uploaderUrl = process.env.WIKI_UPLOADER_URL;
 const enhancerUrl = process.env.WIKI_ENHANCER_URL;
-const extractorOffset = process.env.WIKI_EXTRACTOR_OFFSET ?? 0;
+const extractorOffset = Number(process.env.WIKI_EXTRACTOR_OFFSET ?? 0);
 
 if (!outputDir) {
     throw new Error('WIKI_DOWNLOADER_OUTPUT_DIR is not set');
@@ -43,7 +43,7 @@ if (!enhancerUrl) {
     throw new Error('WIKI_ENHANCER_URL is not set');
 }
 
-if (extractorOffset === undefined) {
+if (extractorOffset === undefined || isNaN(extractorOffset)) {
     throw new Error('WIKI_EXTRACTOR_OFFSET is not set');
 }
 
