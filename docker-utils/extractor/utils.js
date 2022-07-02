@@ -391,6 +391,12 @@ export async function startParser(extractorOffset, keyPrefix, zimdumpCustom, zim
         const offset = extractorOffset || 0
         const firstBatch = 100
         let counter = 0
+
+        // remove offset items
+        for (let i = 0; i < offset; i++) {
+            titles.pop()
+        }
+
         for (let i = offset; i <= firstBatch + offset; i++) {
             const title = titles.pop()
             queue.enqueue(() => task(i, title, titlesCount))
