@@ -1,11 +1,11 @@
 import fetch from 'node-fetch';
 import {sleep} from '../utils/utils.js';
 
-const beeDebugUrl = process.env.WIKI_BEE_DEBUG;
+const beeDebugUrl = process.env.WIKI_BEE_DEBUG_URL;
 const triggerUrl = process.env.WIKI_TRIGGER_URL;
 
 if (!beeDebugUrl) {
-    throw new Error('WIKI_BEE_DEBUG is not set');
+    throw new Error('WIKI_BEE_DEBUG_URL is not set');
 }
 
 if (!triggerUrl) {
