@@ -346,7 +346,7 @@ export async function startParser(extractorOffset, keyPrefix, zimdumpCustom, zim
 
     // todo move concurrent to config
     const queue = new Queue({
-        concurrent: 10
+        concurrent: 5
     });
 
     const titles = await getTitlesList(zimdumpCustom, zimPath)
