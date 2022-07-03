@@ -9,6 +9,12 @@ services:
     depends_on:
       - trigger
 
+  enhancer:
+    image: swarm-wiki-enhancer
+    environment:
+      - WIKI_ENHANCER_PORT
+      - WIKI_UPLOADER_URL
+
   extractor:
     image: swarm-wiki-extractor
     environment:
@@ -25,6 +31,8 @@ services:
           memory: 4096M
     volumes:
       - ${WIKI_DOWNLOAD_LOCAL_DIR}:/app/data
+    depends_on:
+      - enhancer
 
   downloader:
     image: swarm-wiki-downloader

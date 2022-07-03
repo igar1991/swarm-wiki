@@ -90,6 +90,7 @@ services:
     environment:
       - WIKI_ENHANCER_PORT
       - WIKI_UPLOADER_URL=http://uploader:${WIKI_UPLOADER_PORT}/
+# do we need it? WIKI_INDEXER_URL
       - WIKI_INDEXER_URL=http://indexer:${WIKI_INDEXER_PORT}/
     depends_on:
       - uploader
