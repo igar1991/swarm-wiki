@@ -55,4 +55,5 @@ services:
       - WIKI_BASE
       - WIKI_ZIMS_CHECK
       - WIKI_DOWNLOADER_URL=http://downloader:${WIKI_DOWNLOADER_PORT}/
-
+    depends_on:
+      - downloader
