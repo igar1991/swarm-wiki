@@ -145,7 +145,11 @@ app.post('/extract', async (req, res, next) => {
 });
 
 client.connect().then(async () => {
-    await client.configSet('save', '5 1');
+    try {
+        await client.configSet('save', '5 1');
+    } catch (e) {
+        console.log(e)
+    }
 })
 
 export default app;

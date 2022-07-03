@@ -78,7 +78,7 @@ app.post('/upload', upload.single('file'), async (req, res, next) => {
         return next('Key is empty')
     }
 
-    if (!keyLocalIndex){
+    if (!keyLocalIndex) {
         return next('KeyLocalIndex is empty')
     }
 
@@ -155,6 +155,10 @@ app.post('/upload', upload.single('file'), async (req, res, next) => {
 });
 
 client.connect().then(async () => {
-    await client.configSet('save', '5 1');
+    try {
+        await client.configSet('save', '5 1');
+    } catch (e) {
+
+    }
 })
 app.listen(port, () => console.log(`Started uploader server at http://localhost:${port}`));
