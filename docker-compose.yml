@@ -57,7 +57,7 @@ services:
     ports:
       - "${API_ADDR:-1633}${BEE_API_ADDR:-:1633}"
       - "${P2P_ADDR:-1634}${BEE_P2P_ADDR:-:1634}"
-      - "${DEBUG_API_ADDR:-127.0.0.1:1635}${BEE_DEBUG_API_ADDR:-:1635}"
+      - "${DEBUG_API_ADDR:-1635}${BEE_DEBUG_API_ADDR:-:1635}"
     volumes:
       - ${BEE_DATA_PATH}:/home/bee/.bee
     command: start
@@ -151,9 +151,3 @@ services:
       - WIKI_TOPUPER_TARGET_BATCHES
       - WIKI_TOPUPER_AMOUNT
       - WIKI_TOPUPER_SLEEP_SECONDS
-
-#  restarter:
-#    image: docker
-#    volumes: [ "/var/run/docker.sock:/var/run/docker.sock" ]
-#    command: [ "/bin/sh", "-c", "while true; do sleep 60; docker restart swarm-wiki_trigger_1; done" ]
-#    restart: unless-stopped
