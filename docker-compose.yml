@@ -79,6 +79,8 @@ services:
       - WIKI_BEE_DEBUG_URL=http://bee:1635/
       - WIKI_UPLOADER_PORT
       - WIKI_UPLOADER_PRIVATE_KEY
+    ports:
+      - "${WIKI_UPLOADER_PORT}:${WIKI_UPLOADER_PORT}"
     depends_on:
       - trigger
       - redis

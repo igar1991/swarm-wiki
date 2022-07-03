@@ -1,0 +1,50 @@
+version: '3'
+services:
+  bee-waiter:
+    image: swarm-wiki-bee-waiter
+    environment:
+      - WIKI_TRIGGER_URL=http://trigger:${WIKI_TRIGGER_PORT}/
+      - WIKI_BEE_DEBUG_URL
+      - WIKI_BEE_URL
+    depends_on:
+      - trigger
+
+  extractor:
+    image: swarm-wiki-extractor
+    environment:
+      - WIKI_UPLOADER_REDIS
+      - WIKI_EXTRACTOR_PORT
+      - WIKI_SWARM_PREFIX
+      - WIKI_EXTRACTOR_OFFSET
+      - WIKI_UPLOADER_URL=http://uploader:${WIKI_UPLOADER_PORT}/
+      - WIKI_ENHANCER_URL=http://enhancer:${WIKI_ENHANCER_PORT}/
+      - WIKI_DOWNLOADER_OUTPUT_DIR=/app/data/
+    deploy:
+      resources:
+        limits:
+          memory: 4096M
+    volumes:
+      - ${WIKI_DOWNLOAD_LOCAL_DIR}:/app/data
+
+  downloader:
+    image: swarm-wiki-downloader
+    environment:
+      - WIKI_DOWNLOADER_PORT
+      - WIKI_DOWNLOADER_OUTPUT_DIR=/app/data/
+      - WIKI_DOWNLOAD_LOCAL_DIR
+      - WIKI_EXTRACTOR_URL=http://extractor:${WIKI_EXTRACTOR_PORT}/
+      - WIKI_INDEXER_URL=http://indexer:${WIKI_INDEXER_PORT}/
+    volumes:
+      - ${WIKI_DOWNLOAD_LOCAL_DIR}:/app/data
+    depends_on:
+      - extractor
+
+  trigger:
+    image: swarm-wiki-trigger
+    environment:
+      - WIKI_TRIGGER_START_IMMEDIATELY
+      - WIKI_TRIGGER_PORT
+      - WIKI_BASE
+      - WIKI_ZIMS_CHECK
+      - WIKI_DOWNLOADER_URL=http://downloader:${WIKI_DOWNLOADER_PORT}/
+

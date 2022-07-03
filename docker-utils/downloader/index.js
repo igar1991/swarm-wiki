@@ -33,11 +33,8 @@ if (!indexerUrl) {
 function download(url, outputDirectory, filename) {
     return new Promise((resolve, reject) => {
         const dl = new DownloaderHelper(url, outputDirectory, {
-            fileName: filename,
-            resumeIfFileExists: true,
-            retry: {
-                maxRetries: 5,
-                delay: 5000
+            fileName: filename, resumeIfFileExists: true, retry: {
+                maxRetries: 5, delay: 5000
             }
         });
         dl.on('end', () => resolve());
@@ -66,24 +63,19 @@ app.post('/download', async (req, res) => {
         }
 
         fetch(extractorUrl + 'extract', {
-            method: 'POST',
-            headers: {
+            method: 'POST', headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                fileName: name,
-                lang
+            }, body: JSON.stringify({
+                fileName: name, lang
             }),
         }).then()
         fetch(indexerUrl + 'index', {
-            method: 'POST',
-            headers: {
+            method: 'POST', headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+            }, body: JSON.stringify({
                 fileName: name
             }),
-        }).then()
+        }).then().catch(err => console.log('error ok for cluster', err))
     }
 });
 
