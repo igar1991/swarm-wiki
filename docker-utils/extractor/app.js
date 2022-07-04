@@ -22,6 +22,7 @@ const redisUrl = process.env.WIKI_UPLOADER_REDIS;
 const uploaderUrl = process.env.WIKI_UPLOADER_URL;
 const enhancerUrl = process.env.WIKI_ENHANCER_URL;
 const extractorOffset = Number(process.env.WIKI_EXTRACTOR_OFFSET ?? 0);
+const concurrency = Number(process.env.WIKI_EXTRACTOR_CONCURRENCY ?? 5);
 
 if (!outputDir) {
     throw new Error('WIKI_DOWNLOADER_OUTPUT_DIR is not set');
@@ -53,6 +54,7 @@ console.log('WIKI_ZIMDUMP_CUSTOM', zimdumpCustom);
 console.log('WIKI_UPLOADER_REDIS', redisUrl);
 console.log('WIKI_UPLOADER_URL', uploaderUrl);
 console.log('WIKI_ENHANCER_URL', enhancerUrl);
+console.log('WIKI_EXTRACTOR_CONCURRENCY', concurrency);
 
 const client = createClient({
     url: redisUrl
@@ -139,6 +141,9 @@ app.post('/extract', async (req, res, next) => {
         },
         (i, count, title) => {
             console.log(`processing item ${i + 1}/${count} - ${title}`)
+        },
+        {
+            concurrency
         })
 
     console.log('Done!')

@@ -330,7 +330,7 @@ export async function getItemInfoByUrl(zimdumpCustom, filePath, url) {
 /**
  * Reads ZIM items one by one, check if them is not already uploaded and callback with filled pages
  */
-export async function startParser(extractorOffset, keyPrefix, zimdumpCustom, zimPath, onItem, onIsGetPage, onIsGetPageFull, onCounter) {
+export async function startParser(extractorOffset, keyPrefix, zimdumpCustom, zimPath, onItem, onIsGetPage, onIsGetPageFull, onCounter, options) {
     const zimFilename = extractFilename(zimPath)
     if (!onItem) {
         throw new Error('onItem is required')
@@ -346,7 +346,7 @@ export async function startParser(extractorOffset, keyPrefix, zimdumpCustom, zim
 
     // todo move concurrent to config
     const queue = new Queue({
-        concurrent: 5
+        concurrent: options.concurrency || 5
     });
 
     const titles = await getTitlesList(zimdumpCustom, zimPath)
