@@ -389,7 +389,7 @@ export async function startParser(extractorOffset, keyPrefix, zimdumpCustom, zim
     // because Queue is not support so big queues
     return new Promise((resolve) => {
         const offset = extractorOffset || 0
-        const firstBatch = 100
+        const firstBatch = Math.max(options.concurrency, 100)
         let counter = 0
 
         // remove offset items
