@@ -20,6 +20,7 @@ const redisUrl = process.env.WIKI_UPLOADER_REDIS;
 const uploaderUrl = process.env.WIKI_UPLOADER_URL;
 const enhancerUrl = process.env.WIKI_ENHANCER_URL;
 const extractorOffset = Number(process.env.WIKI_EXTRACTOR_OFFSET ?? 0);
+const extractorLimit = Number(process.env.WIKI_EXTRACTOR_LIMIT ? process.env.WIKI_EXTRACTOR_LIMIT: -1);
 const concurrency = Number(process.env.WIKI_EXTRACTOR_CONCURRENCY ?? 5);
 
 if (!outputDir) {
@@ -46,6 +47,10 @@ if (extractorOffset === undefined || isNaN(extractorOffset)) {
     throw new Error('WIKI_EXTRACTOR_OFFSET is not set');
 }
 
+if (extractorLimit === undefined || isNaN(extractorLimit)) {
+    throw new Error('WIKI_EXTRACTOR_LIMIT is not set');
+}
+
 console.log('WIKI_DOWNLOADER_OUTPUT_DIR', outputDir);
 console.log('WIKI_SWARM_PREFIX', keyPrefix);
 console.log('WIKI_ZIMDUMP_CUSTOM', zimdumpCustom);
@@ -53,6 +58,8 @@ console.log('WIKI_UPLOADER_REDIS', redisUrl);
 console.log('WIKI_UPLOADER_URL', uploaderUrl);
 console.log('WIKI_ENHANCER_URL', enhancerUrl);
 console.log('WIKI_EXTRACTOR_CONCURRENCY', concurrency);
+console.log('WIKI_EXTRACTOR_OFFSET', extractorOffset);
+console.log('WIKI_EXTRACTOR_LIMIT', extractorLimit);
 
 const client = createClient({
     url: redisUrl
@@ -90,7 +97,7 @@ app.post('/extract', async (req, res, next) => {
     res.send({result: 'ok'});
 
     const filename = extractFilename(filePath)
-    await startParser(extractorOffset, keyPrefix, zimdumpCustom, filePath,
+    await startParser(extractorOffset, extractorLimit, keyPrefix, zimdumpCustom, filePath,
         async (item, data, keyLocalIndex) => {
             const key = getKeyForPageFull(keyPrefix, lang, item)
             let content = ''

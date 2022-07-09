@@ -232,14 +232,22 @@ export async function getPages(zimdumpCustom, filePath) {
     return {zims, pages}
 }
 
-export async function getTitlesList(zimdumpCustom, filePath) {
+export async function getTitlesList(zimdumpCustom, filePath, offset, limit) {
     const {stdout, stderr} = await exec(`${zimdumpCustom} list --ns A ${filePath}`, execConfigText);
 
     if (stderr) {
         throw new Error('stderr error ' + stderr);
     }
 
-    return stdout.split('\n').map(item => item.substring(2)).reverse()
+    if (limit === -1) {
+        limit = 100_000_000
+    }
+
+    return stdout
+        .split('\n')
+        .slice(offset, offset + limit)
+        .map(item => item.substring(2))
+        .reverse()
 }
 
 export async function getItemsCount(zimdumpCustom, filePath) {
@@ -323,7 +331,7 @@ export async function getItemInfoByUrl(zimdumpCustom, filePath, url) {
 /**
  * Reads ZIM items one by one, check if them is not already uploaded and callback with filled pages
  */
-export async function startParser(extractorOffset, keyPrefix, zimdumpCustom, zimPath, onItem, onIsGetPage, onIsGetPageFull, onCounter, options) {
+export async function startParser(extractorOffset, extractorLimit, keyPrefix, zimdumpCustom, zimPath, onItem, onIsGetPage, onIsGetPageFull, onCounter, options) {
     const zimFilename = extractFilename(zimPath)
     if (!onItem) {
         throw new Error('onItem is required')
@@ -342,7 +350,7 @@ export async function startParser(extractorOffset, keyPrefix, zimdumpCustom, zim
         concurrent: options.concurrency || 5
     });
 
-    const titles = await getTitlesList(zimdumpCustom, zimPath)
+    const titles = await getTitlesList(zimdumpCustom, zimPath, extractorOffset, extractorLimit)
     console.log('Total titles:', titles.length)
     const titlesCount = titles.length
 
@@ -386,13 +394,12 @@ export async function startParser(extractorOffset, keyPrefix, zimdumpCustom, zim
         const firstBatch = Math.max(options.concurrency, 100)
         let counter = 0
 
-        // remove offset items
-        for (let i = 0; i < offset; i++) {
-            titles.pop()
-        }
-
         for (let i = offset; i <= firstBatch + offset; i++) {
             const title = titles.pop()
+            if (!title) {
+                break
+            }
+
             queue.enqueue(() => task(i, title, titlesCount))
         }
 
