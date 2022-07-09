@@ -1,9 +1,9 @@
 import util from 'node:util';
 import {exec as exec0} from 'node:child_process';
-import fetch, {FormData, File} from "node-fetch";
+import fetch, {File, FormData} from "node-fetch";
 import {parse} from "node-html-parser";
 import Queue from "queue-promise";
-import {extractFilename, sleep} from "../utils/utils.js";
+import {extractFilename} from "../utils/utils.js";
 
 export const MIDDLE_PREFIX_PAGE = 'page_'
 export const MIDDLE_PREFIX_PAGE_INDEX = 'page_index_'
@@ -174,8 +174,7 @@ export async function insertImagesToPage(zimdumpCustom, page, zimPath) {
 export async function extractPage(zimdumpCustom, fileIndex, filePath) {
     const {stdout, stderr} = await exec(`${zimdumpCustom} show --idx ${fileIndex} ${filePath}`, execConfigText);
     if (stderr) {
-        // todo throw error and catch it
-        console.error('stderr show error', stderr);
+        throw new Error(stderr)
     }
 
     return stdout
@@ -218,15 +217,6 @@ export async function enhanceData(enhancerUrl, key, keyLocalIndex, content, meta
     })).json()
 }
 
-/**
- * Gets uploader status
- *
- * @returns {Promise<string>}
- */
-export async function getUploaderStatus(uploaderUrl) {
-    return (await (await fetch(uploaderUrl + 'status')).json()).status
-}
-
 export async function getPages(zimdumpCustom, filePath) {
     const {stdout, stderr} = await exec(`${zimdumpCustom} list --details ${filePath}`, execConfigText);
 
@@ -263,16 +253,19 @@ export async function getItemsCount(zimdumpCustom, filePath) {
     return Number(stdout.split("\n")[0].split(":")[1])
 }
 
-export function getCachedItemKey(filename, index) {
-    return `cache_${filename}_${index}`
-}
-
+/**
+ * Gets cached info about page by ZIM index. Useful for converting redirect indexes to real pages (if information about them are stored under cache)
+ */
 export async function getCachedItemInfo(client, filename, index) {
     const key = getCachedItemKey(filename, index)
     let storedInfo = await client.get(key)
+
     return storedInfo ? JSON.parse(storedInfo) : null
 }
 
+/**
+ * Saves info about ZIM index to cache
+ */
 export function setCachedItemInfo(client, filename, index, value) {
     const key = getCachedItemKey(filename, index)
     return client.set(key, value)
@@ -316,7 +309,7 @@ export async function getItemInfoByUrl(zimdumpCustom, filePath, url) {
     } = await exec(`${zimdumpCustom} list --details --url "${url}" ${filePath}`, execConfigText);
 
     if (stderr) {
-        throw new Error('stderr error', stderr);
+        throw new Error(stderr);
     }
 
     const parsed = parseList(stdout)
@@ -350,6 +343,7 @@ export async function startParser(extractorOffset, keyPrefix, zimdumpCustom, zim
     });
 
     const titles = await getTitlesList(zimdumpCustom, zimPath)
+    console.log('Total titles:', titles.length)
     const titlesCount = titles.length
 
     async function task(i, title, count) {
@@ -423,27 +417,6 @@ export async function startParser(extractorOffset, keyPrefix, zimdumpCustom, zim
 }
 
 /**
- * Wait while uploader will be ready for files (in case stamps updates, disk errors etc.)
- */
-export async function waitUploader(uploaderUrl) {
-    while (true) {
-        let uploaderStatus = ''
-        try {
-            uploaderStatus = await getUploaderStatus(uploaderUrl)
-            if (uploaderStatus === 'ok') {
-                break
-            }
-        } catch (e) {
-
-        }
-
-        console.log('uploader status is not ok -', uploaderStatus, '- sleep')
-        // todo move to config
-        await sleep(5000)
-    }
-}
-
-/**
  * Checks if page is already processed and information about it stored in DB
  */
 export async function isAlreadyProcessed(client, keyPrefix, filename, index) {
@@ -462,21 +435,31 @@ export async function isAlreadyUploaded(client, keyPrefix, lang, item) {
     const key = getKeyForPageFull(keyPrefix, lang, item)
     let storedInfo = await client.get(key)
     storedInfo = storedInfo ? JSON.parse(storedInfo) : {}
-    console.log('db uploaded info', key, storedInfo)
 
     return storedInfo.topic && storedInfo.uploadedData && storedInfo.uploadedData.reference && storedInfo.updated_at
 }
 
 /**
- * Generates key for storing a page. Output example: wiki_page_en_Hello
+ * Generates key for storing a page.
+ * Example: wiki_page_en_Hello
  */
 export function getKeyForPageFull(keyPrefix, lang, item) {
     return keyPrefix + MIDDLE_PREFIX_PAGE + lang.toLowerCase() + '_' + item.key
 }
 
 /**
- * Generates key for storing a page just by index from titles list. Output example: wiki_page_index_wikipedia_en_100_maxi_2022-06.zim_12
+ * Generates key for storing a page just by ZIM index from titles list.
+ * Example: wiki_page_index_wikipedia_en_100_maxi_2022-06.zim_12
  */
 export function getKeyLocalIndex(keyPrefix, filename, index) {
-    return keyPrefix + MIDDLE_PREFIX_PAGE_INDEX + filename + '_' + index
+    return keyPrefix + MIDDLE_PREFIX_PAGE_INDEX + filename.toLowerCase() + '_' + index
 }
+
+/**
+ * Name for caching pages by ZIM index
+ * Example: cache_wikipedia_en_100_maxi_2022-06.zim_235
+ */
+export function getCachedItemKey(filename, index) {
+    return `cache_${filename}_${index}`
+}
+

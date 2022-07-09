@@ -1,6 +1,9 @@
 /**
  * Sleeps for a given time
  */
+
+import fetch from "node-fetch";
+
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -18,3 +21,31 @@ export const error = (res, text) => {
 }
 
 export const extractFilename = (filePath) => filePath.split('/').pop()
+
+/**
+ * Gets uploader status
+ */
+export async function getUploaderStatus(uploaderUrl) {
+    return (await (await fetch(uploaderUrl + 'status')).json()).status
+}
+
+/**
+ * Wait while uploader will be ready for files (in case stamps updates, disk errors etc.)
+ */
+export async function waitUploader(uploaderUrl) {
+    while (true) {
+        let uploaderStatus = ''
+        try {
+            uploaderStatus = await getUploaderStatus(uploaderUrl)
+            if (uploaderStatus === 'ok') {
+                break
+            }
+        } catch (e) {
+
+        }
+
+        console.log('uploader status is not ok -', uploaderStatus, '- sleep')
+        // todo move to config
+        await sleep(5000)
+    }
+}

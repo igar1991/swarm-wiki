@@ -127,3 +127,93 @@ Return to the root folder
 And run tests
 
 `...`
+
+# DB info
+
+Keys under `wiki_page_en_TITLEKEY` are keys that stores info for page title as key. Here stored info about full pages and redirects.
+
+Here stored information only about **uploaded** pages. They could be full pages or redirects. It is detectable by stored metadata.
+
+```json
+{
+  "topic": "bc25fa531672e8d8d3e69082d6ad8fc1abfd2457dd9116baa65fa9d762c68dc8",
+  "feedReference": "cde1cfa6814bb890e15585f9bbb785aa59dfcad0b1d178e6fd8327d271b4fa24",
+  "uploadedData": {
+    "reference": "ad31a1249bfd6502c81277ed260ae40c073219af84caf760aca059f8a17f9e1e"
+  },
+  "meta": {
+    "key": "US",
+    "path": "A/US",
+    "type": "redirect",
+    "title": "US",
+    "index": "3415",
+    "internal_type": "redirect",
+    "redirect_index": "3481",
+    "filename": "wikipedia_en_100_maxi_2022-06.zim"
+  },
+  "updated_at": 1657370955
+}
+```
+
+Keys `wiki_page_index_wikipedia_en_FILENAME_INDEX` stored info tied to title index (titles retrieved by zimdump tool). 
+
+This info required for fast checking if some title index was processed or not without using zimdump.
+
+This info stored in the same time as title above. It means that pages already uploaded. 
+
+```json
+{
+  "meta": {
+    "key": "United_States_president",
+    "path": "A/United_States_president",
+    "type": "redirect",
+    "title": "United States president",
+    "index": "3520",
+    "internal_type": "redirect",
+    "redirect_index": "2725",
+    "filename": "wikipedia_en_100_maxi_2022-06.zim"
+  },
+  "updated_at": 1657370954
+}
+```
+
+Keys `cache_wikipedia_en_FILENAME_ZIMINDEX` for real ZIM indexes. It is necessary for converting redirects to real pages without using zimdump.
+
+Here stored info only about pages, not redirects. But there is no guarantees that pages uploaded to the network. They could appear here before uploading.
+
+```json
+{
+  "key": "Amphibian",
+  "path": "A/Amphibian",
+  "type": "page",
+  "title": "Amphibian",
+  "index": "235",
+  "internal_type": "item",
+  "mime_type": "text/html",
+  "item_size": "320968"
+}
+```
+
+# VPS Run
+
+`sudo apt-get update && sudo apt-get upgrade`
+
+`curl -fsSL https://get.docker.com -o get-docker.sh`
+
+`sudo sh get-docker.sh`
+
+`sudo apt-get install openssh-client`
+
+`scp root@YOUR_HOST:/root/wikipedia_en_all_maxi_2022-05.zim /root/`
+
+`git clone git@github.com:igar1991/swarm-wiki.git`
+
+`cd swarm-wiki`
+
+`./build-all.sh`
+
+`scp root@YOUR_HOST:/root/swarm-wiki/.env /root/swarm-wiki/`
+
+`sudo ufw allow from YOUR_NEXT_HOST`
+
+`docker compose -f docker-compose-cluster.yml up`

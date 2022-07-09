@@ -99,6 +99,7 @@ services:
   extractor:
     image: swarm-wiki-extractor
     environment:
+      - WIKI_EXTRACTOR_CONCURRENCY
       - WIKI_UPLOADER_REDIS
       - WIKI_EXTRACTOR_PORT
       - WIKI_SWARM_PREFIX

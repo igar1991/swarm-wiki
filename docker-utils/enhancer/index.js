@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import multer from "multer";
 import {uploadContent} from "./utils.js";
+import {waitUploader} from "../utils/utils.js";
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -22,8 +23,6 @@ if (!uploaderUrl) {
 
 console.log('WIKI_ENHANCER_PORT', port);
 console.log('WIKI_UPLOADER_URL', uploaderUrl);
-
-let status = 'ok'
 
 app.use(cors());
 app.post('/enhance-page', upload.single('file'), async (req, res, next) => {
@@ -47,19 +46,13 @@ app.post('/enhance-page', upload.single('file'), async (req, res, next) => {
     }
 
     console.log('/enhance-page', key, 'page length', file.length);
-    res.send({result: 'ok', status});
-
-    if (status !== 'ok') {
-        console.log('status', status, 'skip')
-        return
-    }
+    res.send({result: 'ok'});
 
     try {
-        const response = await uploadContent(uploaderUrl, key, keyLocalIndex, file, meta, 'page')
-        console.log('response', response);
-        status = response.status
+        await waitUploader(uploaderUrl)
+        await uploadContent(uploaderUrl, key, keyLocalIndex, file, meta, 'page')
     } catch (e) {
-        console.log('enhancer page error', e);
+        console.log('enhancer error', e);
     }
 });
 

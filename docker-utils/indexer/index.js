@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import fetch, {FormData} from 'node-fetch';
 import express from 'express';
 import cors from 'cors';
 
@@ -40,19 +40,15 @@ app.post('/index', async (req, res) => {
 
     const data = await run()
     const key = keyPrefix + MIDDLE_PREFIX_PAGE + 'all'
-    const response = await (await fetch(uploaderUrl + 'upload', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            key,
-            keyLocalIndex: '-1',
-            meta: {no: 'meta'},
-            page: data
-        })
-    })).json()
+    const form = new FormData();
+    form.append('key', key);
+    form.append('keyLocalIndex', '-1');
+    form.append('meta', JSON.stringify({no: 'meta'}));
+    form.append('page', data);
 
-    console.log('response', response);
+    await (await fetch(uploaderUrl + 'upload', {
+        method: 'POST',
+        body: form
+    })).json()
 });
 app.listen(port, () => console.log(`Started indexer server at http://localhost:${port}`));

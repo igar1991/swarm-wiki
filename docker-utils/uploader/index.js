@@ -52,16 +52,7 @@ client.on('error', (err) => {
     // console.log('Redis Client Error', err)
 });
 
-// todo move to utils or remove
-async function downloadFeedData(privateKey, key) {
-    const wallet = new Wallet(privateKey)
-    const bee = new Bee(beeUrl)
-    const topic = bee.makeFeedTopic(key)
-    const feedReader = bee.makeFeedReader('sequence', topic, wallet.address)
-    return feedReader.download()
-}
-
-// ok, overissued
+// ok, overissued, uploading_error, not_found
 let status = 'ok'
 
 app.use(cors());
@@ -103,45 +94,41 @@ app.post('/upload', upload.single('file'), async (req, res, next) => {
 
     console.log('/upload', key, 'type', type);
     res.send({result: 'ok', status});
-    if (status !== 'ok') {
-        console.log('status', status, 'skip')
-        return
-    }
 
     while (true) {
-        console.log('uploading...')
+        console.log('uploading...', key, keyLocalIndex)
         try {
             let uploadedData = null
-            try {
-                if (type === 'page') {
-                    uploadedData = await uploadData(beeUrl, beeDebugUrl, privateKey, key, page)
-                } else if (type === 'file') {
-                    uploadedData = await uploadData(beeUrl, beeDebugUrl, privateKey, key, file)
-                }
-            } catch (e) {
-                if (e.message.startsWith('Conflict: chunk already exists')) {
-                    // todo handle it
-                }
-            }
-            console.log('uploaded data result', key, keyLocalIndex, uploadedData)
-            if (!uploadedData) {
-                console.log('empty uploaded data, skip saving')
+            if (type === 'page') {
+                uploadedData = await uploadData(beeUrl, beeDebugUrl, privateKey, key, page)
+            } else if (type === 'file') {
+                uploadedData = await uploadData(beeUrl, beeDebugUrl, privateKey, key, file)
             }
 
-            await client.set(key, JSON.stringify({
-                ...uploadedData,
-                meta: JSON.parse(meta),
-                updated_at: getUnixTimestamp()
-            }))
+            if (uploadedData) {
+                console.log('uploaded data result', key, keyLocalIndex, uploadedData)
+                await client.set(key, JSON.stringify({
+                    ...uploadedData,
+                    meta: JSON.parse(meta),
+                    updated_at: getUnixTimestamp()
+                }))
 
-            await client.set(keyLocalIndex, JSON.stringify({
-                meta: JSON.parse(meta),
-                updated_at: getUnixTimestamp()
-            }))
-            status = 'ok'
+                await client.set(keyLocalIndex, JSON.stringify({
+                    meta: JSON.parse(meta),
+                    updated_at: getUnixTimestamp()
+                }))
+                status = 'ok'
+            } else {
+                console.log('empty uploaded data, skip saving, status = "uploading_error"', key, keyLocalIndex)
+                status = 'uploading_error'
+            }
         } catch (e) {
-            if (e.message.startsWith('Payment Required: batch is overissued')) {
+            const message = e.message ?? ''
+            console.log('Uploading error', message)
+            if (message.startsWith('Payment Required: batch is overissued')) {
                 status = 'overissued'
+            } else if (message.includes('Not Found')) {
+                status = 'not_found'
             }
         }
 
@@ -149,6 +136,7 @@ app.post('/upload', upload.single('file'), async (req, res, next) => {
             break
         }
 
+        console.log('status is not ok', status, key, keyLocalIndex)
         // todo move time to config
         await sleep(5000)
     }
