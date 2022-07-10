@@ -74,6 +74,7 @@ services:
   uploader:
     image: swarm-wiki-uploader
     environment:
+      - WIKI_UPLOADER_CONCURRENCY
       - WIKI_UPLOADER_REDIS
       - WIKI_BEE_URL=http://bee:1633/
       - WIKI_BEE_DEBUG_URL=http://bee:1635/

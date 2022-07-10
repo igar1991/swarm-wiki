@@ -89,6 +89,7 @@ export async function uploadAction(client, data, onSetStatus, onGetStatus, confi
     while (true) {
         console.log('uploading...', key, keyLocalIndex)
         try {
+            // todo optimize
             let uploadedData = null
             if (type === 'page') {
                 uploadedData = await uploadData(beeUrl, beeDebugUrl, privateKey, key, data)
