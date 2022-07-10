@@ -49,6 +49,7 @@ app.post('/enhance-page', upload.single('file'), async (req, res, next) => {
     res.send({result: 'ok'});
 
     try {
+        // todo move waitUploader to extractor to not overflow uploader
         await waitUploader(uploaderUrl)
         await uploadContent(uploaderUrl, key, keyLocalIndex, file, meta, 'page')
     } catch (e) {

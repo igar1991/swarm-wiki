@@ -9,7 +9,7 @@ Get node address
 
 !!! handle continue file downloading? issues for files that 2 times updated for the month. check it. may be I need to add a key to filename with date
 
-`Wait 15-30 minutes to sync`
+
 
 or 3344
 Processing item 3343/23264812 - the latest before complete. why?
@@ -214,6 +214,10 @@ It could be an issue when cache checking
 
 `git clone git@github.com:igar1991/swarm-wiki.git`
 
+`mkdir bee-wiki && chmod 0777 bee-wiki`
+
+`mkdir wiki-redis && chmod 0777 wiki-redis`
+
 `cd swarm-wiki`
 
 `./build-all.sh`
@@ -222,4 +226,32 @@ It could be an issue when cache checking
 
 `sudo ufw allow from YOUR_NEXT_HOST`
 
+!!! remove cluster config
+
 `docker compose -f docker-compose-cluster.yml up`
+
+setup bee before run
+
+`docker compose up bee`
+
+`Wait 15-30 minutes to sync`
+
+
+!!! fund & stamp creation instruction
+
+
+Withdraw this amount from chequebook before buying
+
+
+`curl -X POST http://localhost:1635/v1/chequebook/withdraw?amount=10000000000000000`
+
+then wait 1 minute
+
+~549.76 GB, 1.2 years
+
+`curl -X POST http://localhost:1635/v1/stamps/30000000/27`
+
+`swarm-cli stamp buy --depth 27 --amount 30000000`
+
+wait some time after buy
+

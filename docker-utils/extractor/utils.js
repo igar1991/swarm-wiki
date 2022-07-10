@@ -345,18 +345,17 @@ export async function startParser(extractorOffset, extractorLimit, keyPrefix, zi
         throw new Error('onIsGetPageFull is required')
     }
 
-    // todo move concurrent to config
     const queue = new Queue({
-        concurrent: options.concurrency || 5
+        concurrent: options?.concurrency || 5
     });
 
     const titles = await getTitlesList(zimdumpCustom, zimPath, extractorOffset, extractorLimit)
     console.log('Total titles:', titles.length)
     const titlesCount = titles.length
 
-    async function task(i, title, count) {
+    async function task(i, title, count, offset) {
         if (onCounter) {
-            onCounter(i, count, title)
+            onCounter(i - offset, count, title)
         }
 
         if (!title) {
@@ -400,17 +399,19 @@ export async function startParser(extractorOffset, extractorLimit, keyPrefix, zi
                 break
             }
 
-            queue.enqueue(() => task(i, title, titlesCount))
+            queue.enqueue(() => task(i, title, titlesCount, offset))
         }
 
         queue.on('resolve', () => {
+            // 1000 + 0 + 2000000
             const nextI = firstBatch + counter + offset
-            if (nextI >= titlesCount) {
+            // 2001000 >= 2000000 + 2000000
+            if (nextI >= titlesCount + offset) {
                 return
             }
 
             const title = titles.pop()
-            queue.enqueue(() => task(nextI, title, titlesCount))
+            queue.enqueue(() => task(nextI, title, titlesCount, offset))
             counter++
         });
 

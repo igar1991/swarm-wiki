@@ -1,11 +1,9 @@
 import express from 'express';
 import cors from 'cors';
-import {Wallet} from 'ethers';
-import {Bee} from '@ethersphere/bee-js';
 import {createClient} from 'redis';
-import {uploadData} from './utils.js';
-import {getUnixTimestamp, sleep} from "../utils/utils.js";
+import {uploadAction} from './utils.js';
 import multer from "multer";
+import Queue from "queue-promise";
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -52,6 +50,12 @@ client.on('error', (err) => {
     // console.log('Redis Client Error', err)
 });
 
+// todo move to config
+const queue = new Queue({
+    concurrent: 1
+});
+queue.on('reject', error => console.error(error));
+
 // ok, overissued, uploading_error, not_found
 let status = 'ok'
 
@@ -81,65 +85,28 @@ app.post('/upload', upload.single('file'), async (req, res, next) => {
         return next('File or page is empty')
     }
 
-    let type = 'unknown'
+    let data = null
+    let type = null
     if (page) {
         type = 'page'
+        data = page
     } else if (file) {
         type = 'file'
-    }
-
-    if (type === 'unknown') {
+        data = file
+    } else {
         return next('type is not correct')
     }
 
     console.log('/upload', key, 'type', type);
     res.send({result: 'ok', status});
 
-    while (true) {
-        console.log('uploading...', key, keyLocalIndex)
-        try {
-            let uploadedData = null
-            if (type === 'page') {
-                uploadedData = await uploadData(beeUrl, beeDebugUrl, privateKey, key, page)
-            } else if (type === 'file') {
-                uploadedData = await uploadData(beeUrl, beeDebugUrl, privateKey, key, file)
-            }
-
-            if (uploadedData) {
-                console.log('uploaded data result', key, keyLocalIndex, uploadedData)
-                await client.set(key, JSON.stringify({
-                    ...uploadedData,
-                    meta: JSON.parse(meta),
-                    updated_at: getUnixTimestamp()
-                }))
-
-                await client.set(keyLocalIndex, JSON.stringify({
-                    meta: JSON.parse(meta),
-                    updated_at: getUnixTimestamp()
-                }))
-                status = 'ok'
-            } else {
-                console.log('empty uploaded data, skip saving, status = "uploading_error"', key, keyLocalIndex)
-                status = 'uploading_error'
-            }
-        } catch (e) {
-            const message = e.message ?? ''
-            console.log('Uploading error', message)
-            if (message.startsWith('Payment Required: batch is overissued')) {
-                status = 'overissued'
-            } else if (message.includes('Not Found')) {
-                status = 'not_found'
-            }
-        }
-
-        if (status === 'ok') {
-            break
-        }
-
-        console.log('status is not ok', status, key, keyLocalIndex)
-        // todo move time to config
-        await sleep(5000)
-    }
+    queue.enqueue(() => uploadAction(client, data, newStatus => {
+        status = newStatus
+    }, () => {
+        return status
+    }, {
+        beeUrl, beeDebugUrl, privateKey, key, keyLocalIndex, type, meta
+    }))
 });
 
 client.connect().then(async () => {

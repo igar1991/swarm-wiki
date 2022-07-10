@@ -46,6 +46,7 @@ app.post('/index', async (req, res) => {
     form.append('meta', JSON.stringify({no: 'meta'}));
     form.append('page', data);
 
+    // todo disable it or wait until bee node is ready
     await (await fetch(uploaderUrl + 'upload', {
         method: 'POST',
         body: form
