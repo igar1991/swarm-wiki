@@ -16,6 +16,7 @@ const privateKey = process.env.WIKI_UPLOADER_PRIVATE_KEY;
 const beeUrl = process.env.WIKI_BEE_URL;
 const beeDebugUrl = process.env.WIKI_BEE_DEBUG_URL;
 const redisUrl = process.env.WIKI_UPLOADER_REDIS;
+const uploaderConcurrency = Number(process.env.WIKI_UPLOADER_CONCURRENCY ? process.env.WIKI_UPLOADER_CONCURRENCY : 1);
 
 if (!port) {
     throw new Error('WIKI_UPLOADER_PORT is not set');
@@ -37,11 +38,16 @@ if (!redisUrl) {
     throw new Error('WIKI_UPLOADER_REDIS is not set')
 }
 
+if (!uploaderConcurrency) {
+    throw new Error('WIKI_UPLOADER_CONCURRENCY is not set')
+}
+
 console.log('WIKI_UPLOADER_PORT', port);
 console.log('WIKI_UPLOADER_PRIVATE_KEY length', privateKey.length);
 console.log('WIKI_BEE_URL', beeUrl);
 console.log('WIKI_BEE_DEBUG_URL', beeDebugUrl);
 console.log('WIKI_UPLOADER_REDIS', redisUrl);
+console.log('WIKI_UPLOADER_CONCURRENCY', uploaderConcurrency);
 
 const client = createClient({
     url: redisUrl
@@ -50,9 +56,8 @@ client.on('error', (err) => {
     // console.log('Redis Client Error', err)
 });
 
-// todo move to config
 const queue = new Queue({
-    concurrent: 1
+    concurrent: uploaderConcurrency
 });
 queue.on('reject', error => console.error(error));
 
