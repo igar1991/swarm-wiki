@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import express from 'express';
 import cors from 'cors';
+import {sleep} from "../utils/utils.js";
 
 const baseUrl = process.env.WIKI_BASE
 let zimsCheck = process.env.WIKI_ZIMS_CHECK
@@ -86,14 +87,24 @@ async function run() {
         url: `${baseUrl}${item.zim.name}`,
         lang: item.lang
     }))
-    fetch(downloaderUrl + 'download', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({urls}),
-    }).then()
+
+    while (true) {
+        try {
+            await fetch(downloaderUrl + 'download', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({urls}),
+            })
+            break
+        } catch (e) {
+            console.log('downloader is not available, sleep...')
+            // todo move to config
+            await sleep(5000)
+        }
+    }
 }
 
 if (!port) {
@@ -104,7 +115,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.post('/run', async (req, res) => {
-    // todo implement auto-restart in N hours/days
     console.log('Trigger started by web command')
     res.send({result: 'ok'});
 

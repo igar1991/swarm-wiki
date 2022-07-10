@@ -194,6 +194,12 @@ Here stored info only about pages, not redirects. But there is no guarantees tha
 }
 ```
 
+Redis issue. Some articles have the same name, but with different cases. Only one will be stored. Example
+
+`wiki_page_en_WHO_Essential_Medicines` + `wiki_page_en_WHO_Essential_medicines`
+
+It could be an issue when cache checking
+
 # VPS Run
 
 `sudo apt-get update && sudo apt-get upgrade`
