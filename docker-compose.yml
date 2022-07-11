@@ -3,8 +3,8 @@ services:
   redis:
     image: redis/redis-stack:latest
     ports:
-      - "6379:6379"
-      - "8001:8001"
+      - "127.0.0.1:6379:6379"
+      - "127.0.0.1:8001:8001"
     volumes:
       - ${REDIS_DIR}:/data
 
@@ -55,9 +55,9 @@ services:
       - BEE_WELCOME_MESSAGE="Hello from SwarmWiki server"
       - BEE_MAINNET
     ports:
-      - "1633:1633"
-      - "1634:1634"
-      - "1635:1635"
+      - "127.0.0.1:1633:1633"
+      - "127.0.0.1:1634:1634"
+      - "127.0.0.1:1635:1635"
     volumes:
       - ${BEE_DATA_PATH}:/home/bee/.bee
     command: start

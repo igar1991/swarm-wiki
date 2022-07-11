@@ -224,6 +224,12 @@ It could be an issue when cache checking
 
 `scp root@YOUR_HOST:/root/swarm-wiki/.env /root/swarm-wiki/`
 
+for all nodes
+
+`sudo ufw allow ssh && sudo ufw allow http && sudo ufw allow https && sudo ufw deny 1633 && sudo ufw deny 1634 && sudo ufw deny 1635 && sudo ufw deny 6379 && sudo ufw deny 8001 && sudo ufw enable`
+
+for main node with ZIM file
+
 `sudo ufw allow from YOUR_NEXT_HOST`
 
 !!! remove cluster config
