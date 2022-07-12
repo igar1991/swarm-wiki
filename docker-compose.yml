@@ -73,6 +73,7 @@ services:
 
   uploader:
     image: swarm-wiki-uploader
+    restart: always
     environment:
       - WIKI_UPLOADER_CONCURRENCY
       - WIKI_UPLOADER_REDIS
@@ -88,6 +89,7 @@ services:
 
   enhancer:
     image: swarm-wiki-enhancer
+    restart: always
     environment:
       - WIKI_ENHANCER_PORT
       - WIKI_UPLOADER_URL=http://uploader:${WIKI_UPLOADER_PORT}/
