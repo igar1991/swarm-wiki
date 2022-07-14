@@ -28,9 +28,9 @@ window.onload = function () {
 }
 
 /* WebP Polyfill */
-var webpScripts = ['../-/webpHeroPolyfill.js',
-                   '../-/webpHeroBundle.js',
-                   '../-/webpHandler.js'];
+var webpScripts = ['/wiki_files/en/-/webpHeroPolyfill.js',
+                   '/wiki_files/en/-/webpHeroBundle.js',
+                   '/wiki_files/en/-/webpHandler.js'];
 webpScripts = webpScripts.map(function(scriptUrl) {
     return (typeof(articleId)) ? '../'.repeat(articleId.split('/').length - 1) + scriptUrl : scriptUrl;
 });

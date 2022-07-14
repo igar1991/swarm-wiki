@@ -1,7 +1,8 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useParams} from "react-router-dom";
-import {getImageReference, getPage} from "../utils";
+import {getPage} from "../utils";
 import {Bee} from "@ethersphere/bee-js"
+import "./Page.css"
 
 const bee = new Bee(process.env.REACT_APP_BEE_URL);
 
@@ -9,32 +10,38 @@ export default function Page() {
     let {lang, page} = useParams();
 
     const [pageContent, setPageContent] = useState(null)
+    const [status, setStatus] = useState('Loading...')
     const ref = useRef()
-
 
     useEffect(() => {
         async function run() {
-            const {parsed, imgs} = await getPage(bee, lang, page)
-            console.log('imgs', imgs)
-            setPageContent(parsed)
-            for (const img of imgs) {
-                try {
-                    const imageReference = await getImageReference(bee, lang, img)
-                    console.log(img, imageReference)
-                    try {
-                        // todo replace with real bee node url (.env)
-                        ref.current.contentWindow.postMessage({
-                            action: 'setSrc',
-                            oldSrc: img,
-                            newSrc: `${process.env.REACT_APP_BEE_URL}/bytes/` + imageReference
-                        }, '*')
-                    } catch (e) {
-                        console.log('error on postMessage', e)
+            try {
+                setPageContent('')
+                setStatus('Loading...')
+                const {parsed} = await getPage(bee, lang, page)
+                const redirectKey = 'redirect:'
+                const content = parsed?.innerHTML
+                if (content?.startsWith(redirectKey)) {
+                    const redirectPage = content.substring(redirectKey.length)
+                    if (!redirectPage) {
+                        alert('Received empty redirect page. Try to visit other page or contact admin')
+                        return
                     }
-                    // todo postmessage to iframe with full src and the content to replace (bin or base64)?
-                } catch (e) {
-                    console.log('reference not found', img)
+
+                    window.location.href = `#/wiki/${lang}/${redirectPage}`
+                    return
                 }
+
+                setPageContent(parsed)
+            } catch (e) {
+                let message = e.message ? e.message : ''
+                if (message.includes('lookup failed')) {
+                    message = 'page not found'
+                } else if (message.includes('Not Found')) {
+                    message = 'page not found'
+                }
+
+                setStatus(`Can not get the page. Error: ${message}`)
             }
         }
 
@@ -45,20 +52,19 @@ export default function Page() {
 
     return (
         <div className="Page">
-            {/*<button onClick={() => {*/}
-            {/*    ref.current.contentWindow.postMessage({'helllo':'world'}, '*')*/}
-            {/*    // window.postMessage('helllo', '*')*/}
-            {/*}}>*/}
-            {/*    click*/}
-            {/*</button>*/}
+            <iframe ref={ref} srcDoc={pageContent ? pageContent.innerHTML : status} onLoad={() => {
+                const iframes = document.querySelectorAll('iframe')
+                let aList = []
+                iframes.forEach(item => aList.push(...item.contentWindow.document.body.querySelectorAll('a')))
 
-
-            {/*{pageContent && <div dangerouslySetInnerHTML={{__html: pageContent}}/>}*/}
-            {/*<IFrame src={pageContent?pageContent.innerHTML:'loading...'}>*/}
-            {/*    {pageContent && <div dangerouslySetInnerHTML={{__html: pageContent}}/>}*/}
-            {/*</IFrame>*/}
-            <iframe ref={ref} srcDoc={pageContent ? pageContent.innerHTML : 'loading...'} frameBorder={0} width='100%'
-                    height='600px'/>
+                aList.forEach(a => {
+                    a.setAttribute('href', `/#/wiki/en${a.pathname}`)
+                    a.onclick = (e) => {
+                        e.preventDefault()
+                        window.parent.location = a.href;
+                    }
+                })
+            }}/>
         </div>
     );
 }

@@ -41,7 +41,9 @@ mw.hook( 'wikipage.content' ).add( function ( $content ) {
 				$sortable.tablesorter();
 			}
 			if ( $collapsible && $collapsible.length ) {
-				$collapsible.makeCollapsible();
+				if ($collapsible.makeCollapsible){
+					$collapsible.makeCollapsible();
+				}
 			}
 		} );
 	}

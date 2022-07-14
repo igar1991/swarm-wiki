@@ -52,7 +52,7 @@ function parseData(html) {
 }
 
 /**
- * Fins all passed ZIM archives in the wiki
+ * Fins all passed ZIM archives
  */
 async function run() {
     console.log(`Loading ${baseUrl}`)

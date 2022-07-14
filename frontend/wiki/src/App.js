@@ -1,17 +1,12 @@
-import {Bee} from "@ethersphere/bee-js"
-import parse from 'html-react-parser';
 import './App.css';
-import React, {useEffect, useState} from "react";
-import {Routes, Route, Outlet, Link} from "react-router-dom";
+import React, {useState} from "react";
+import {Routes, Route} from "react-router-dom";
 import Page from "./Page/Page";
 import Home from "./Home/Home";
 import Layout from "./Layout/Layout";
 import NotFound from "./NotFound/NotFound";
 
 function App() {
-    const [bee, setBee] = useState(null);
-    const [content, setContent] = useState('');
-
     return (
         <Routes>
             <Route path="/" element={<Layout/>}>
