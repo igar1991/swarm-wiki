@@ -53,12 +53,34 @@ export default function Page() {
     return (
         <div className="Page">
             <iframe ref={ref} srcDoc={pageContent ? pageContent.innerHTML : status} onLoad={() => {
-                const iframes = document.querySelectorAll('iframe')
+                const iframe = document.querySelector('iframe')
                 let aList = []
-                iframes.forEach(item => aList.push(...item.contentWindow.document.body.querySelectorAll('a')))
+                aList.push(...iframe.contentWindow.document.body.querySelectorAll('a'))
 
                 aList.forEach(a => {
-                    a.setAttribute('href', `/#/wiki/en${a.pathname}`)
+                    if (!a.href) {
+                        return
+                    }
+
+                    if (!a.hash.startsWith('#/')) {
+                        a.onclick = (e) => {
+                            e.preventDefault()
+                            const name = a.hash
+                            iframe.contentWindow.document.body.querySelector(name).scrollIntoView();
+                        }
+
+                        return
+                    }
+
+                    if (a.href.startsWith('http://') || a.href.startsWith('https://')) {
+                        return
+                    }
+
+                    const key = 'javascript:window.parent.location="'
+                    if (a.href.startsWith(key)) {
+                        a.setAttribute('href', a.dataset.url)
+                    }
+
                     a.onclick = (e) => {
                         e.preventDefault()
                         window.parent.location = a.href;
