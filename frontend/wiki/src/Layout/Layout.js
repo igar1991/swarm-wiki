@@ -14,7 +14,7 @@ export default function Layout() {
                     {/*    <Link to="/about">About</Link>*/}
                     {/*</li>*/}
                     <li>
-                        <Link to="/wiki/en/Dance">Page Example</Link>
+                        <Link to="/wiki/en/Dance">Page Example 123</Link>
                     </li>
                     {/*<li>*/}
                     {/*    <Link to="/nothing-here">Nothing Here</Link>*/}

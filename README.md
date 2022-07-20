@@ -1,134 +1,110 @@
-Get node address
+# Swarm Wiki
 
-`curl http://localhost:1635/addresses`
+Project web interface is accessible locally (after running [Bee node](https://github.com/ethersphere/bee) or [Swarm Desktop](https://desktop.ethswarm.org/)) by the url
 
+`http://bzzwiki.eth.swarm.localhost:1633/`
 
-`{"overlay":null,"underlay":[],"ethereum":"0xfce5636c917d2c87bf36c7585d5675a6277a657d","publicKey":"028fb62a69d7191fb4e60d0762ab7285f7ae57b16cf6085bcc408576e9ab03b699","pssPublicKey":"02c67a5751a3b43ea46e737e5abdaeaa9026f06cde837814054da2101124e596e8"}`
+and without Bee node
 
-!!! handle buying stamps before start!! bee-waiter should check it, provide urls to buy that stamps. Can I buy it manually (curl) or only with swarm-cli?
+`https://bzzwiki.bzz.link/`
 
-!!! handle continue file downloading? issues for files that 2 times updated for the month. check it. may be I need to add a key to filename with date
+# How to deploy a project?
 
+Before you follow the instructions for deploying the project, you can watch a video with all the steps.
 
+Here https://gateway.ethswarm.org/access/72d627b3c3798cc475271e7a3ef41de955f0a3c034acb883f43bae620a8d210d or here https://www.youtube.com/watch?v=YkUr01lAykQ
 
-or 3344
-Processing item 3343/23264812 - the latest before complete. why?
+Make sure the system is up to date
 
-First url will not work, "?" should be encoded
+`sudo apt-get update && sudo apt-get upgrade -y`
 
-http://localhost:3000/wiki/en/%22The_Spaghetti_Incident?%22 => http://localhost:3000/wiki/en/%22The_Spaghetti_Incident%3F%22
+Install Docker
 
-http://localhost:3000/wiki/en/%LOCALAPPDATA%
+`curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh`
 
-```
-extractor_1   | onIsGetPage i 17621 title -- keyLocal wiki_page_index_wikipedia_en_all_maxi_2022-05.zim_17621
-extractor_1   | Error: Command failed: zimdump list --details --url "--" /app/data/wikipedia_en_all_maxi_2022-05.zim
-extractor_1   | --url requires an argument
-extractor_1   |     at ChildProcess.exithandler (node:child_process:398:12)
-extractor_1   |     at ChildProcess.emit (node:events:527:28)
-extractor_1   |     at maybeClose (node:internal/child_process:1092:16)
-extractor_1   |     at Process.ChildProcess._handle.onexit (node:internal/child_process:302:5) {
-extractor_1   |   code: 255,
-extractor_1   |   killed: false,
-extractor_1   |   signal: null,
-extractor_1   |   cmd: 'zimdump list --details --url "--" /app/data/wikipedia_en_all_maxi_2022-05.zim',
-```
+Clone the project
 
-`Error: Command failed: zimdump list --details --url "+/'\" /app/data/wikipedia_en_all_maxi_2022-05.zim`
+`git clone git@github.com:igar1991/swarm-wiki.git`
 
-show all errors
+Create directories to store node data and Redis
 
-`docker-compose logs -f | | grep "error" | grep -v "feed get: no update found"`
+`mkdir bee-wiki && chmod 0777 bee-wiki && mkdir wiki-redis && chmod 0777 wiki-redis`
 
-USE this instruction to prevent ports open https://askubuntu.com/questions/652556/uncomplicated-firewall-ufw-is-not-blocking-anything-when-using-docker
+Go to project
 
-When this happens article uploaded or not? Parse all logs? Reupload that pages?
+`cd swarm-wiki`
 
-```
-extractor_1   | Error: Command failed: zimdump show --url "I/Flag_of_Poland_(1919–1928).svg.png.webp" /app/data/wikipedia_en_all_maxi_2022-05.zim
-extractor_1   | Entry not found
-extractor_1   | 
-extractor_1   |     at ChildProcess.exithandler (node:child_process:398:12)
-extractor_1   |     at ChildProcess.emit (node:events:527:28)
-extractor_1   |     at maybeClose (node:internal/child_process:1092:16)
-extractor_1   |     at Socket.<anonymous> (node:internal/child_process:451:11)
-extractor_1   |     at Socket.emit (node:events:527:28)
-extractor_1   |     at Pipe.<anonymous> (node:net:709:12) {
-extractor_1   |   code: 255,
-extractor_1   |   killed: false,
-extractor_1   |   signal: null,
-extractor_1   |   cmd: 'zimdump show --url "I/Flag_of_Poland_(1919–1928).svg.png.webp" /app/data/wikipedia_en_all_maxi_2022-05.zim',
-extractor_1   |   stdout: '',
-extractor_1   |   stderr: 'Entry not found\n'
-extractor_1   | }
-```
+Copy example of environment file to the root and fill all required fields. Every field is well described
 
-Indexer: its pretty slow
+`cp env.example .env`
 
+Build all Docker containers
 
-Extract all
+`./build-all.sh`
 
-```
-docker run -v $(pwd):/app -w /app -it zimdump zimdump dump --dir=z wikipedia_ru_top_maxi_2022-05.zim
-```
+Let's set up the firewall. Open ports for data exchange and close ports for service management
 
-## Run all
+`sudo ufw allow ssh && && sudo ufw allow 1634 && sudo ufw deny 1633 && sudo ufw deny 1635 && sudo ufw deny 6379 && sudo ufw deny 8001 && sudo ufw enable`
 
-1) Copy `example.env` to `.env`, define environment params
+Start Bee node
 
-2) Run 
+`docker compose up bee`
 
-`docker-compose up`
+Copy node address from logs (in the video you can see how to do it) and fund it with 0.1 xDai and at least 1 BZZ on Gnosis Chain network.
 
-## How to build every docker package
+Wait 15-30 minutes to sync.
 
-Build any docker package from the root of the project (because it requires some files from the project)
+If you deposited 1 BZZ, then run this command to withdraw tokens to buy stamps. If you deposited 1.6 BZZ or more, then you can not do this.
+
+Withdraw 0.6 BZZ from chequebook before buying
+
+`curl -X POST http://localhost:1635/v1/chequebook/withdraw?amount=6000000000000000`
+
+Then after 1 minute create a stamp for ~549.76 GB, 1.2 years. You can decrease or increase the parameters by following the documentation https://docs.ethswarm.org/docs/access-the-swarm/keep-your-data-alive/
+
+`curl -X POST http://localhost:1635/v1/stamps/30000000/27`
+
+Wait few minutes after buying to activate stamps.
+
+Done! You can start all services in background with command
+
+`docker compose up -d`
+
+You can check logs with command
+
+`docker compose logs -f --tail 100`
+
+# Reuploading
+
+Because everything is pinned locally you can reupload all chunks this way.
+
+Install NodeJS
+
+`curl -sL https://deb.nodesource.com/setup_16.x -o /tmp/nodesource_setup.sh`
+
+`sudo bash /tmp/nodesource_setup.sh`
+
+`sudo apt install nodejs`
+
+Install swarm-cli
+
+`npm install --global @ethersphere/swarm-cli`
+
+Reupload
+
+`swarm-cli pinning reupload-all`
+
+## How to build docker containers separately
+
+Build any docker package from the root of the project. Example for trigger container
 
 `docker build -t swarm-wiki-trigger -f docker/trigger/Dockerfile . `
 
+Run the package with specific .env
+
 `docker run --env-file .env swarm-wiki-trigger`
 
-## Using stamps
-
-!!! Show examples for specific amount of data
-
-## Data management
-
-Redis database management tool
-
-`http://localhost:8001/redis-stack/browser`
-
-## Research
-
--Storing images is not ok in feeds
-
--Images could be stored under /bytes and in manifest, but in case a lot of images it will be slow
-
--The best ways is to put all images to the end of the doc, with ability to render it on the end after downloading or insert them to the page
-
-## Testing
-
-First you need to prepare a docker image with utilities for working with ZIM files.
-
-Go to `test` directory
-
-`cd test`
-
-Build Dockerfile with ZIM utilities.
-
-`docker build - < Dockerfile`
-
-`docker build -t zimdump .`
-
-Return to the root folder
-
-`cd ..`
-
-And run tests
-
-`...`
-
-# DB info
+# DB format description
 
 Keys under `wiki_page_en_TITLEKEY` are keys that stores info for page title as key. Here stored info about full pages and redirects.
 
@@ -155,11 +131,11 @@ Here stored information only about **uploaded** pages. They could be full pages 
 }
 ```
 
-Keys `wiki_page_index_wikipedia_en_FILENAME_INDEX` stored info tied to title index (titles retrieved by zimdump tool). 
+Keys `wiki_page_index_wikipedia_en_FILENAME_INDEX` stored info tied to title index (titles retrieved by zimdump tool).
 
 This info required for fast checking if some title index was processed or not without using zimdump.
 
-This info stored in the same time as title above. It means that pages already uploaded. 
+This info stored in the same time as title above. It means that pages already uploaded.
 
 ```json
 {
@@ -194,70 +170,8 @@ Here stored info only about pages, not redirects. But there is no guarantees tha
 }
 ```
 
-Redis issue. Some articles have the same name, but with different cases. Only one will be stored. Example
+## DB management
 
-`wiki_page_en_WHO_Essential_Medicines` + `wiki_page_en_WHO_Essential_medicines`
+Redis database management tool. With it, you can search, view, delete and edit any page entries.
 
-It could be an issue when cache checking
-
-# VPS Run
-
-`sudo apt-get update && sudo apt-get upgrade`
-
-`curl -fsSL https://get.docker.com -o get-docker.sh`
-
-`sudo sh get-docker.sh`
-
-`sudo apt-get install openssh-client`
-
-`scp root@YOUR_HOST:/root/wikipedia_en_all_maxi_2022-05.zim /root/`
-
-`git clone git@github.com:igar1991/swarm-wiki.git`
-
-`mkdir bee-wiki && chmod 0777 bee-wiki`
-
-`mkdir wiki-redis && chmod 0777 wiki-redis`
-
-`cd swarm-wiki`
-
-`./build-all.sh`
-
-`scp root@YOUR_HOST:/root/swarm-wiki/.env /root/swarm-wiki/`
-
-for all nodes
-
-`sudo ufw allow ssh && sudo ufw allow http && sudo ufw allow https && sudo ufw deny 1633 && sudo ufw deny 1634 && sudo ufw deny 1635 && sudo ufw deny 6379 && sudo ufw deny 8001 && sudo ufw enable`
-
-for main node with ZIM file
-
-`sudo ufw allow from YOUR_NEXT_HOST`
-
-!!! remove cluster config
-
-`docker compose -f docker-compose-cluster.yml up`
-
-setup bee before run
-
-`docker compose up bee`
-
-`Wait 15-30 minutes to sync`
-
-
-!!! fund & stamp creation instruction
-
-
-Withdraw this amount from chequebook before buying
-
-
-`curl -X POST http://localhost:1635/v1/chequebook/withdraw?amount=10000000000000000`
-
-then wait 1 minute
-
-~549.76 GB, 1.2 years
-
-`curl -X POST http://localhost:1635/v1/stamps/30000000/27`
-
-`swarm-cli stamp buy --depth 27 --amount 30000000`
-
-wait some time after buy
-
+`http://localhost:8001/redis-stack/browser`

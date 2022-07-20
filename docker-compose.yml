@@ -28,7 +28,7 @@ services:
       - BEE_DEBUG_API_ADDR
       - BEE_DEBUG_API_ENABLE=true
       - BEE_GATEWAY_MODE
-      - BEE_FULL_NODE
+      - BEE_FULL_NODE=true
       - BEE_NAT_ADDR
       - BEE_NETWORK_ID
       - BEE_P2P_ADDR
@@ -56,7 +56,7 @@ services:
       - BEE_MAINNET
     ports:
       - "127.0.0.1:1633:1633"
-      - "127.0.0.1:1634:1634"
+      - "1634:1634"
       - "127.0.0.1:1635:1635"
     volumes:
       - ${BEE_DATA_PATH}:/home/bee/.bee
@@ -93,8 +93,6 @@ services:
     environment:
       - WIKI_ENHANCER_PORT
       - WIKI_UPLOADER_URL=http://uploader:${WIKI_UPLOADER_PORT}/
-# do we need it? WIKI_INDEXER_URL
-      - WIKI_INDEXER_URL=http://indexer:${WIKI_INDEXER_PORT}/
     depends_on:
       - uploader
       - indexer

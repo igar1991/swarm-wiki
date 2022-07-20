@@ -1,11 +1,12 @@
 import './App.css';
-import React, {useState} from "react";
+import React from "react";
 import {Routes, Route} from "react-router-dom";
 import Page from "./Page/Page";
 import Home from "./Home/Home";
 import Layout from "./Layout/Layout";
 import NotFound from "./NotFound/NotFound";
 
+// todo preload all css, js without applying them
 function App() {
     return (
         <Routes>

@@ -4,7 +4,7 @@ import {getPage} from "../utils";
 import {Bee} from "@ethersphere/bee-js"
 import "./Page.css"
 
-const bee = new Bee(process.env.REACT_APP_BEE_URL);
+const bee = new Bee(window.location.host === 'bzz.link' ? 'https://bzz.link' : process.env.REACT_APP_BEE_URL);
 
 export default function Page() {
     let {lang, page} = useParams();
