@@ -2190,7 +2190,7 @@ if ( !isCompatible( navigator.userAgent ) ) {
 		 *
 		 * @property {string}
 		 */
-		key: "MediaWikiModuleStore:ruwiki",
+		key: "MediaWikiModuleStore:enwiki",
 
 		/**
 		 * A string containing various factors by which the module cache should vary.
@@ -2833,7 +2833,7 @@ mw.loader.register([
         "mediawiki.feedback",
         "",
         [
-            871,
+            889,
             209
         ]
     ],
@@ -4040,7 +4040,7 @@ mw.loader.register([
         "ext.wikihiero.visualEditor",
         "",
         [
-            440
+            442
         ]
     ],
     [
@@ -4066,7 +4066,7 @@ mw.loader.register([
         "ext.cite.visualEditor.core",
         "",
         [
-            448
+            450
         ]
     ],
     [
@@ -4105,7 +4105,7 @@ mw.loader.register([
         "ext.geshi.visualEditor",
         "",
         [
-            440
+            442
         ]
     ],
     [
@@ -4370,7 +4370,7 @@ mw.loader.register([
         "",
         [
             303,
-            440
+            442
         ]
     ],
     [
@@ -4419,7 +4419,7 @@ mw.loader.register([
         "ext.confirmEdit.visualEditor",
         "",
         [
-            860
+            878
         ]
     ],
     [
@@ -4441,7 +4441,7 @@ mw.loader.register([
         "ext.confirmEdit.fancyCaptchaMobile",
         "",
         [
-            495
+            501
         ]
     ],
     [
@@ -4544,7 +4544,7 @@ mw.loader.register([
         [
             328,
             331,
-            588,
+            605,
             84,
             74
         ]
@@ -4764,7 +4764,7 @@ mw.loader.register([
         "ext.abuseFilter.ace",
         "",
         [
-            568
+            585
         ]
     ],
     [
@@ -4900,8 +4900,16 @@ mw.loader.register([
         "ext.CodeMirror.visualEditor",
         "",
         [
-            440
+            442
         ]
+    ],
+    [
+        "ext.acw.eventlogging",
+        ""
+    ],
+    [
+        "ext.acw.landingPageStyles",
+        ""
     ],
     [
         "ext.MassMessage.styles",
@@ -4963,14 +4971,14 @@ mw.loader.register([
             22,
             35,
             84,
-            397
+            399
         ]
     ],
     [
         "mmv.ui.ondemandshareddependencies",
         "",
         [
-            392,
+            394,
             200
         ]
     ],
@@ -4980,7 +4988,7 @@ mw.loader.register([
         [
             164,
             171,
-            393
+            395
         ]
     ],
     [
@@ -4988,14 +4996,14 @@ mw.loader.register([
         "",
         [
             171,
-            393
+            395
         ]
     ],
     [
         "mmv.ui.tipsyDialog",
         "",
         [
-            392
+            394
         ]
     ],
     [
@@ -5004,7 +5012,7 @@ mw.loader.register([
         [
             168,
             170,
-            399,
+            401,
             199
         ]
     ],
@@ -5012,7 +5020,7 @@ mw.loader.register([
         "mmv.bootstrap.autostart",
         "",
         [
-            397
+            399
         ]
     ],
     [
@@ -5039,8 +5047,8 @@ mw.loader.register([
         "ext.popups.main",
         "",
         [
-            400,
-            401,
+            402,
+            403,
             84,
             91,
             74,
@@ -5095,8 +5103,8 @@ mw.loader.register([
         "ext.visualEditor.sanitize",
         "",
         [
-            406,
-            429
+            408,
+            431
         ],
         4
     ],
@@ -5119,10 +5127,10 @@ mw.loader.register([
         "ext.visualEditor.desktopArticleTarget.init",
         "",
         [
+            416,
             414,
-            412,
-            415,
-            426,
+            417,
+            428,
             33,
             84,
             121,
@@ -5138,8 +5146,8 @@ mw.loader.register([
         "ext.visualEditor.targetLoader",
         "",
         [
+            430,
             428,
-            426,
             33,
             84,
             74,
@@ -5157,10 +5165,10 @@ mw.loader.register([
         "ext.visualEditor.desktopArticleTarget",
         "",
         [
-            432,
-            437,
-            419,
-            442
+            434,
+            439,
+            421,
+            444
         ],
         4
     ],
@@ -5168,8 +5176,8 @@ mw.loader.register([
         "ext.visualEditor.collabTarget",
         "",
         [
-            430,
-            436,
+            432,
+            438,
             92,
             171,
             220,
@@ -5181,10 +5189,10 @@ mw.loader.register([
         "ext.visualEditor.collabTarget.desktop",
         "",
         [
+            423,
+            439,
             421,
-            437,
-            419,
-            442
+            444
         ],
         4
     ],
@@ -5192,7 +5200,7 @@ mw.loader.register([
         "ext.visualEditor.collabTarget.init",
         "",
         [
-            412,
+            414,
             171,
             200
         ],
@@ -5212,7 +5220,7 @@ mw.loader.register([
         "ext.visualEditor.track",
         "",
         [
-            425
+            427
         ],
         4
     ],
@@ -5220,7 +5228,7 @@ mw.loader.register([
         "ext.visualEditor.core.utils",
         "",
         [
-            426,
+            428,
             200
         ],
         4
@@ -5229,7 +5237,7 @@ mw.loader.register([
         "ext.visualEditor.core.utils.parsing",
         "",
         [
-            425
+            427
         ],
         4
     ],
@@ -5237,9 +5245,9 @@ mw.loader.register([
         "ext.visualEditor.base",
         "",
         [
-            427,
-            428,
-            408
+            429,
+            430,
+            410
         ],
         4
     ],
@@ -5247,10 +5255,10 @@ mw.loader.register([
         "ext.visualEditor.mediawiki",
         "",
         [
-            429,
-            418,
+            431,
+            420,
             31,
-            615
+            632
         ],
         4
     ],
@@ -5258,7 +5266,7 @@ mw.loader.register([
         "ext.visualEditor.mwsave",
         "",
         [
-            440,
+            442,
             26,
             28,
             52,
@@ -5270,8 +5278,8 @@ mw.loader.register([
         "ext.visualEditor.articleTarget",
         "",
         [
-            441,
-            431,
+            443,
+            433,
             173
         ],
         4
@@ -5280,19 +5288,19 @@ mw.loader.register([
         "ext.visualEditor.data",
         "",
         [
-            430
+            432
         ]
     ],
     [
         "ext.visualEditor.core",
         "",
         [
-            413,
-            412,
+            415,
+            414,
             17,
-            409,
-            410,
-            411
+            411,
+            412,
+            413
         ],
         4
     ],
@@ -5300,7 +5308,7 @@ mw.loader.register([
         "ext.visualEditor.commentAnnotation",
         "",
         [
-            434
+            436
         ],
         4
     ],
@@ -5308,11 +5316,11 @@ mw.loader.register([
         "ext.visualEditor.rebase",
         "",
         [
-            407,
-            451,
-            435,
+            409,
+            453,
+            437,
             226,
-            405
+            407
         ],
         4
     ],
@@ -5320,7 +5328,7 @@ mw.loader.register([
         "ext.visualEditor.core.desktop",
         "",
         [
-            434
+            436
         ],
         4
     ],
@@ -5348,10 +5356,10 @@ mw.loader.register([
         "ext.visualEditor.mwcore",
         "",
         [
-            452,
-            430,
-            439,
-            438,
+            454,
+            432,
+            441,
+            440,
             128,
             72,
             10,
@@ -5363,16 +5371,16 @@ mw.loader.register([
         "ext.visualEditor.mwextensions",
         "",
         [
-            433,
-            463,
-            456,
+            435,
+            465,
             458,
-            443,
             460,
             445,
-            457,
-            446,
-            448
+            462,
+            447,
+            459,
+            448,
+            450
         ],
         4
     ],
@@ -5380,8 +5388,8 @@ mw.loader.register([
         "ext.visualEditor.mwextensions.desktop",
         "",
         [
-            441,
-            447,
+            443,
+            449,
             81
         ],
         4
@@ -5390,7 +5398,7 @@ mw.loader.register([
         "ext.visualEditor.mwformatting",
         "",
         [
-            440
+            442
         ],
         4
     ],
@@ -5398,7 +5406,7 @@ mw.loader.register([
         "ext.visualEditor.mwimage.core",
         "",
         [
-            440
+            442
         ],
         4
     ],
@@ -5406,7 +5414,7 @@ mw.loader.register([
         "ext.visualEditor.mwimage",
         "",
         [
-            444,
+            446,
             185,
             37,
             223,
@@ -5418,7 +5426,7 @@ mw.loader.register([
         "ext.visualEditor.mwlink",
         "",
         [
-            440
+            442
         ],
         4
     ],
@@ -5426,7 +5434,7 @@ mw.loader.register([
         "ext.visualEditor.mwmeta",
         "",
         [
-            446,
+            448,
             106
         ],
         4
@@ -5435,7 +5443,7 @@ mw.loader.register([
         "ext.visualEditor.mwtransclusion",
         "",
         [
-            440,
+            442,
             188
         ],
         4
@@ -5452,7 +5460,7 @@ mw.loader.register([
         "ext.visualEditor.checkList",
         "",
         [
-            434
+            436
         ],
         4
     ],
@@ -5460,9 +5468,9 @@ mw.loader.register([
         "ext.visualEditor.diffing",
         "",
         [
-            450,
-            434,
-            449
+            452,
+            436,
+            451
         ],
         4
     ],
@@ -5474,7 +5482,7 @@ mw.loader.register([
         "ext.visualEditor.diffLoader",
         "",
         [
-            418
+            420
         ],
         4
     ],
@@ -5482,7 +5490,7 @@ mw.loader.register([
         "ext.visualEditor.diffPage.init",
         "",
         [
-            454,
+            456,
             200,
             212,
             215
@@ -5493,8 +5501,8 @@ mw.loader.register([
         "ext.visualEditor.language",
         "",
         [
-            434,
-            615,
+            436,
+            632,
             115
         ],
         4
@@ -5503,7 +5511,7 @@ mw.loader.register([
         "ext.visualEditor.mwlanguage",
         "",
         [
-            434
+            436
         ],
         4
     ],
@@ -5511,7 +5519,7 @@ mw.loader.register([
         "ext.visualEditor.mwalienextension",
         "",
         [
-            440
+            442
         ],
         4
     ],
@@ -5519,7 +5527,7 @@ mw.loader.register([
         "ext.visualEditor.mwwikitext",
         "",
         [
-            446,
+            448,
             92
         ],
         4
@@ -5528,7 +5536,7 @@ mw.loader.register([
         "ext.visualEditor.mwgallery",
         "",
         [
-            440,
+            442,
             119,
             185,
             223
@@ -5539,7 +5547,7 @@ mw.loader.register([
         "ext.visualEditor.mwsignature",
         "",
         [
-            448
+            450
         ],
         4
     ],
@@ -5553,8 +5561,8 @@ mw.loader.register([
         "ext.visualEditor.icons",
         "",
         [
-            464,
-            465,
+            466,
+            467,
             213,
             214,
             215,
@@ -5583,14 +5591,14 @@ mw.loader.register([
         "",
         [
             253,
-            467
+            469
         ]
     ],
     [
         "ext.citoid.visualEditor.data",
         "",
         [
-            430
+            432
         ]
     ],
     [
@@ -5601,7 +5609,7 @@ mw.loader.register([
         "ext.citoid.wikibase",
         "",
         [
-            468,
+            470,
             36,
             200
         ]
@@ -5625,11 +5633,11 @@ mw.loader.register([
         "ext.templateDataGenerator.editTemplatePage",
         "",
         [
-            470,
-            474,
             472,
+            476,
+            474,
             33,
-            615,
+            632,
             47,
             204,
             209,
@@ -5656,6 +5664,30 @@ mw.loader.register([
         ]
     ],
     [
+        "ext.wikiLove.icon",
+        ""
+    ],
+    [
+        "ext.wikiLove.startup",
+        "",
+        [
+            36,
+            47,
+            168
+        ]
+    ],
+    [
+        "ext.wikiLove.local",
+        ""
+    ],
+    [
+        "ext.wikiLove.init",
+        "",
+        [
+            479
+        ]
+    ],
+    [
         "mediawiki.libs.guiders",
         ""
     ],
@@ -5663,7 +5695,7 @@ mw.loader.register([
         "ext.guidedTour.styles",
         "",
         [
-            476,
+            482,
             168
         ]
     ],
@@ -5678,9 +5710,9 @@ mw.loader.register([
         "ext.guidedTour.lib",
         "",
         [
-            588,
-            478,
-            477
+            605,
+            484,
+            483
         ]
     ],
     [
@@ -5691,35 +5723,35 @@ mw.loader.register([
         "ext.guidedTour",
         "",
         [
-            479
+            485
         ]
     ],
     [
         "ext.guidedTour.tour.firstedit",
         "",
         [
-            481
+            487
         ]
     ],
     [
         "ext.guidedTour.tour.test",
         "",
         [
-            481
+            487
         ]
     ],
     [
         "ext.guidedTour.tour.onshow",
         "",
         [
-            481
+            487
         ]
     ],
     [
         "ext.guidedTour.tour.uprightdownleft",
         "",
         [
-            481
+            487
         ]
     ],
     [
@@ -5751,7 +5783,7 @@ mw.loader.register([
         "",
         [
             84,
-            495
+            501
         ]
     ],
     [
@@ -5773,11 +5805,11 @@ mw.loader.register([
             168,
             170,
             85,
+            499,
+            492,
             493,
-            486,
-            487,
-            488,
-            490
+            494,
+            496
         ]
     ],
     [
@@ -5789,9 +5821,9 @@ mw.loader.register([
             66,
             169,
             173,
-            497,
-            495,
-            494,
+            503,
+            501,
+            500,
             200,
             217
         ]
@@ -5805,21 +5837,21 @@ mw.loader.register([
         "",
         [
             167,
-            496
+            502
         ]
     ],
     [
         "mobile.mediaViewer",
         "",
         [
-            495
+            501
         ]
     ],
     [
         "mobile.languages.structured",
         "",
         [
-            495
+            501
         ]
     ],
     [
@@ -5830,7 +5862,7 @@ mw.loader.register([
         "mobile.special.mobileoptions.scripts",
         "",
         [
-            495
+            501
         ]
     ],
     [
@@ -5846,8 +5878,8 @@ mw.loader.register([
         "",
         [
             84,
-            503,
-            495
+            509,
+            501
         ]
     ],
     [
@@ -5933,14 +5965,14 @@ mw.loader.register([
             84,
             91,
             167,
-            495,
-            513,
-            515,
-            516,
-            514,
+            501,
+            519,
+            521,
             522,
-            523,
-            526
+            520,
+            528,
+            529,
+            532
         ]
     ],
     [
@@ -5965,7 +5997,7 @@ mw.loader.register([
         [
             56,
             171,
-            751,
+            766,
             209
         ]
     ],
@@ -5973,36 +6005,36 @@ mw.loader.register([
         "ext.math.visualEditor",
         "",
         [
-            528,
-            440
+            534,
+            442
         ]
     ],
     [
         "ext.math.visualEditor.mathSymbolsData",
         "",
         [
-            531
+            537
         ]
     ],
     [
         "ext.math.visualEditor.mathSymbols",
         "",
         [
-            532
+            538
         ]
     ],
     [
         "ext.math.visualEditor.chemSymbolsData",
         "",
         [
-            531
+            537
         ]
     ],
     [
         "ext.math.visualEditor.chemSymbols",
         "",
         [
-            534
+            540
         ]
     ],
     [
@@ -6013,12 +6045,93 @@ mw.loader.register([
         "ext.vipsscaler",
         "",
         [
-            538
+            544
         ]
     ],
     [
         "jquery.ucompare",
         ""
+    ],
+    [
+        "mediawiki.template.underscore",
+        "",
+        [
+            546,
+            44
+        ]
+    ],
+    [
+        "ext.pageTriage.external",
+        ""
+    ],
+    [
+        "ext.pageTriage.init",
+        "",
+        [
+            546
+        ]
+    ],
+    [
+        "ext.pageTriage.util",
+        "",
+        [
+            547,
+            84,
+            85,
+            37
+        ]
+    ],
+    [
+        "ext.pageTriage.views.list",
+        "",
+        [
+            548,
+            28,
+            36,
+            545
+        ]
+    ],
+    [
+        "ext.pageTriage.defaultTagsOptions",
+        ""
+    ],
+    [
+        "ext.pageTriage.externalTagsOptions",
+        "",
+        [
+            550,
+            552
+        ]
+    ],
+    [
+        "ext.pageTriage.defaultDeletionTagsOptions",
+        "",
+        [
+            75
+        ]
+    ],
+    [
+        "ext.pageTriage.toolbarStartup",
+        "",
+        [
+            547
+        ]
+    ],
+    [
+        "ext.pageTriage.article",
+        "",
+        [
+            547,
+            84,
+            47
+        ]
+    ],
+    [
+        "ext.PageTriage.enqueue",
+        "",
+        [
+            87
+        ]
     ],
     [
         "ext.interwiki.specialpage",
@@ -6036,17 +6149,17 @@ mw.loader.register([
         "ext.echo.ui.desktop",
         "",
         [
-            547,
-            542
+            564,
+            559
         ]
     ],
     [
         "ext.echo.ui",
         "",
         [
-            543,
-            540,
-            756,
+            560,
+            557,
+            772,
             204,
             213,
             214,
@@ -6060,7 +6173,7 @@ mw.loader.register([
         "ext.echo.dm",
         "",
         [
-            546,
+            563,
             37
         ]
     ],
@@ -6075,7 +6188,7 @@ mw.loader.register([
         "ext.echo.mobile",
         "",
         [
-            542,
+            559,
             198,
             45
         ]
@@ -6084,7 +6197,7 @@ mw.loader.register([
         "ext.echo.init",
         "",
         [
-            544
+            561
         ]
     ],
     [
@@ -6103,8 +6216,8 @@ mw.loader.register([
         "ext.echo.special",
         "",
         [
-            551,
-            542
+            568,
+            559
         ]
     ],
     [
@@ -6127,7 +6240,7 @@ mw.loader.register([
         "ext.thanks.corethank",
         "",
         [
-            553,
+            570,
             19,
             209
         ]
@@ -6136,15 +6249,15 @@ mw.loader.register([
         "ext.thanks.mobilediff",
         "",
         [
-            552,
-            495
+            569,
+            501
         ]
     ],
     [
         "ext.thanks.flowthank",
         "",
         [
-            553,
+            570,
             209
         ]
     ],
@@ -6160,7 +6273,7 @@ mw.loader.register([
         "ext.disambiguator.visualEditor",
         "",
         [
-            447
+            449
         ]
     ],
     [
@@ -6171,13 +6284,13 @@ mw.loader.register([
         "ext.discussionTools.init",
         "",
         [
-            559,
-            428,
+            576,
+            430,
             74,
             85,
             37,
             209,
-            410,
+            412,
             14
         ]
     ],
@@ -6185,15 +6298,15 @@ mw.loader.register([
         "ext.discussionTools.debug",
         "",
         [
-            560
+            577
         ]
     ],
     [
         "ext.discussionTools.ReplyWidget",
         "",
         [
-            860,
-            560,
+            878,
+            577,
             173,
             176,
             204
@@ -6203,8 +6316,8 @@ mw.loader.register([
         "ext.discussionTools.ReplyWidgetPlain",
         "",
         [
-            562,
-            439,
+            579,
+            441,
             92
         ]
     ],
@@ -6212,17 +6325,17 @@ mw.loader.register([
         "ext.discussionTools.ReplyWidgetVisual",
         "",
         [
-            562,
-            432,
-            461,
-            459
+            579,
+            434,
+            463,
+            461
         ]
     ],
     [
         "ext.codeEditor",
         "",
         [
-            566
+            583
         ],
         3
     ],
@@ -6230,8 +6343,8 @@ mw.loader.register([
         "jquery.codeEditor",
         "",
         [
-            568,
-            567,
+            585,
+            584,
             368,
             209
         ],
@@ -6251,7 +6364,7 @@ mw.loader.register([
         "ext.codeEditor.ace.modes",
         "",
         [
-            568
+            585
         ],
         5
     ],
@@ -6302,7 +6415,7 @@ mw.loader.register([
         "ext.RevisionSlider.lazyJs",
         "",
         [
-            580,
+            597,
             225
         ]
     ],
@@ -6310,8 +6423,8 @@ mw.loader.register([
         "ext.RevisionSlider.init",
         "",
         [
-            580,
-            581,
+            597,
+            598,
             224
         ]
     ],
@@ -6331,7 +6444,7 @@ mw.loader.register([
         "ext.RevisionSlider.Slider",
         "",
         [
-            582,
+            599,
             36,
             84,
             37,
@@ -6348,8 +6461,8 @@ mw.loader.register([
         "ext.TwoColConflict.SplitJs",
         "",
         [
-            585,
-            586,
+            602,
+            603,
             72,
             74,
             85,
@@ -6396,7 +6509,7 @@ mw.loader.register([
         "ext.wikimediaEvents",
         "",
         [
-            588,
+            605,
             84,
             91,
             74,
@@ -6407,7 +6520,7 @@ mw.loader.register([
         "ext.wikimediaEvents.wikibase",
         "",
         [
-            588,
+            605,
             91
         ]
     ],
@@ -6415,14 +6528,14 @@ mw.loader.register([
         "ext.navigationTiming",
         "",
         [
-            588
+            605
         ]
     ],
     [
         "ext.uls.common",
         "",
         [
-            615,
+            632,
             74,
             85
         ]
@@ -6431,7 +6544,7 @@ mw.loader.register([
         "ext.uls.compactlinks",
         "",
         [
-            595,
+            612,
             168
         ]
     ],
@@ -6439,16 +6552,16 @@ mw.loader.register([
         "ext.uls.ime",
         "",
         [
-            605,
-            613
+            622,
+            630
         ]
     ],
     [
         "ext.uls.displaysettings",
         "",
         [
-            597,
-            604,
+            614,
+            621,
             165,
             166
         ]
@@ -6472,7 +6585,7 @@ mw.loader.register([
         "ext.uls.interface",
         "",
         [
-            611,
+            628,
             204,
             220
         ]
@@ -6489,9 +6602,9 @@ mw.loader.register([
         "ext.uls.languagesettings",
         "",
         [
-            606,
-            607,
-            616,
+            623,
+            624,
+            633,
             168
         ]
     ],
@@ -6499,18 +6612,18 @@ mw.loader.register([
         "ext.uls.mediawiki",
         "",
         [
-            595,
-            603,
-            606,
-            611,
-            614
+            612,
+            620,
+            623,
+            628,
+            631
         ]
     ],
     [
         "ext.uls.messages",
         "",
         [
-            600
+            617
         ]
     ],
     [
@@ -6542,7 +6655,7 @@ mw.loader.register([
         "ext.uls.webfonts",
         "",
         [
-            607
+            624
         ]
     ],
     [
@@ -6558,8 +6671,8 @@ mw.loader.register([
         "",
         [
             25,
-            615,
-            616
+            632,
+            633
         ]
     ],
     [
@@ -6596,13 +6709,13 @@ mw.loader.register([
         "ext.cx.dashboard",
         "",
         [
-            639,
+            656,
             30,
             171,
             37,
-            624,
-            649,
-            625,
+            641,
+            666,
+            642,
             215,
             217,
             223,
@@ -6613,8 +6726,8 @@ mw.loader.register([
         "sx.publishing.followup",
         "",
         [
-            624,
-            623,
+            641,
+            640,
             38
         ]
     ],
@@ -6622,7 +6735,7 @@ mw.loader.register([
         "mw.cx.util",
         "",
         [
-            619,
+            636,
             85
         ]
     ],
@@ -6630,7 +6743,7 @@ mw.loader.register([
         "mw.cx.SiteMapper",
         "",
         [
-            619,
+            636,
             56,
             85
         ]
@@ -6639,10 +6752,10 @@ mw.loader.register([
         "mw.cx.ui.LanguageFilter",
         "",
         [
-            605,
+            622,
             168,
-            643,
-            623,
+            660,
+            640,
             220
         ]
     ],
@@ -6661,15 +6774,15 @@ mw.loader.register([
         "ext.cx.interlanguagelink.init",
         "",
         [
-            595
+            612
         ]
     ],
     [
         "ext.cx.interlanguagelink",
         "",
         [
-            595,
-            624,
+            612,
+            641,
             204,
             220
         ]
@@ -6685,12 +6798,12 @@ mw.loader.register([
         "ext.cx.stats",
         "",
         [
+            649,
+            657,
+            656,
             632,
-            640,
-            639,
-            615,
             37,
-            624
+            641
         ]
     ],
     [
@@ -6701,7 +6814,7 @@ mw.loader.register([
         "ext.cx.entrypoints.newarticle",
         "",
         [
-            640,
+            657,
             113,
             168,
             201
@@ -6715,8 +6828,8 @@ mw.loader.register([
         "ext.cx.entrypoints.ulsrelevantlanguages",
         "",
         [
-            595,
-            624,
+            612,
+            641,
             38
         ]
     ],
@@ -6724,8 +6837,8 @@ mw.loader.register([
         "ext.cx.entrypoints.newbytranslation",
         "",
         [
-            624,
-            623,
+            641,
+            640,
             204,
             214,
             220
@@ -6739,8 +6852,8 @@ mw.loader.register([
         "ext.cx.entrypoints.contributionsmenu",
         "",
         [
-            620,
-            640,
+            637,
+            657,
             113,
             170
         ]
@@ -6749,7 +6862,7 @@ mw.loader.register([
         "ext.cx.widgets.spinner",
         "",
         [
-            619
+            636
         ]
     ],
     [
@@ -6760,7 +6873,7 @@ mw.loader.register([
         "mw.cx.dm",
         "",
         [
-            619,
+            636,
             197
         ]
     ],
@@ -6768,14 +6881,14 @@ mw.loader.register([
         "mw.cx.dm.Translation",
         "",
         [
-            641
+            658
         ]
     ],
     [
         "mw.cx.ui",
         "",
         [
-            619,
+            636,
             200
         ]
     ],
@@ -6784,59 +6897,59 @@ mw.loader.register([
         "",
         [
             253,
-            437,
-            419,
-            442,
-            645,
-            646
+            439,
+            421,
+            444,
+            662,
+            663
         ]
     ],
     [
         "ve.ce.CXLintableNode",
         "",
         [
-            434
+            436
         ]
     ],
     [
         "ve.dm.CXLintableNode",
         "",
         [
-            434,
-            641
+            436,
+            658
         ]
     ],
     [
         "mw.cx.init",
         "",
         [
-            639,
-            447,
+            656,
+            449,
             196,
-            653,
-            649,
-            645,
-            646,
-            648
+            670,
+            666,
+            662,
+            663,
+            665
         ]
     ],
     [
         "ve.init.mw.CXTarget",
         "",
         [
-            437,
-            624,
-            642,
-            643,
-            623
+            439,
+            641,
+            659,
+            660,
+            640
         ]
     ],
     [
         "mw.cx.ui.Infobar",
         "",
         [
-            643,
-            623,
+            660,
+            640,
             213,
             220
         ]
@@ -6845,8 +6958,8 @@ mw.loader.register([
         "mw.cx.ui.CaptchaDialog",
         "",
         [
-            758,
-            643
+            774,
+            660
         ]
     ],
     [
@@ -6854,7 +6967,7 @@ mw.loader.register([
         "",
         [
             87,
-            643
+            660
         ]
     ],
     [
@@ -6862,7 +6975,7 @@ mw.loader.register([
         "",
         [
             113,
-            653,
+            670,
             45
         ]
     ],
@@ -6870,7 +6983,7 @@ mw.loader.register([
         "mw.cx.tools.TranslationTool",
         "",
         [
-            643
+            660
         ]
     ],
     [
@@ -6878,7 +6991,7 @@ mw.loader.register([
         "",
         [
             72,
-            643
+            660
         ]
     ],
     [
@@ -6897,8 +7010,8 @@ mw.loader.register([
         "",
         [
             56,
-            495,
-            658,
+            501,
+            675,
             217
         ]
     ],
@@ -6910,11 +7023,11 @@ mw.loader.register([
         "mw.externalguidance.special",
         "",
         [
-            615,
+            632,
             56,
             166,
-            495,
-            658
+            501,
+            675
         ]
     ],
     [
@@ -6940,9 +7053,9 @@ mw.loader.register([
             35,
             36,
             56,
-            751,
-            750,
-            866
+            766,
+            765,
+            884
         ]
     ],
     [
@@ -6966,7 +7079,7 @@ mw.loader.register([
         "ext.TemplateSandbox",
         "",
         [
-            666
+            683
         ]
     ],
     [
@@ -6975,6 +7088,14 @@ mw.loader.register([
         [
             171,
             200
+        ]
+    ],
+    [
+        "ext.pageassessments.special",
+        "",
+        [
+            30,
+            201
         ]
     ],
     [
@@ -7009,7 +7130,7 @@ mw.loader.register([
         "ext.graph.vega1",
         "",
         [
-            672,
+            690,
             84
         ]
     ],
@@ -7017,7 +7138,7 @@ mw.loader.register([
         "ext.graph.vega2",
         "",
         [
-            672,
+            690,
             84
         ]
     ],
@@ -7025,8 +7146,8 @@ mw.loader.register([
         "ext.graph.sandbox",
         "",
         [
-            565,
-            675,
+            582,
+            693,
             49
         ]
     ],
@@ -7034,8 +7155,8 @@ mw.loader.register([
         "ext.graph.visualEditor",
         "",
         [
-            672,
-            444,
+            690,
+            446,
             186
         ]
     ],
@@ -7070,7 +7191,7 @@ mw.loader.register([
         "ext.webauthn.register",
         "",
         [
-            682,
+            700,
             47
         ]
     ],
@@ -7078,14 +7199,14 @@ mw.loader.register([
         "ext.webauthn.login",
         "",
         [
-            682
+            700
         ]
     ],
     [
         "ext.webauthn.manage",
         "",
         [
-            682,
+            700,
             47
         ]
     ],
@@ -7093,7 +7214,7 @@ mw.loader.register([
         "ext.webauthn.disable",
         "",
         [
-            682
+            700
         ]
     ],
     [
@@ -7133,41 +7254,15 @@ mw.loader.register([
         "ext.guidedTour.tour.checkuserinvestigateform",
         "",
         [
-            481
+            487
         ]
     ],
     [
         "ext.guidedTour.tour.checkuserinvestigate",
         "",
         [
-            690,
-            481
-        ]
-    ],
-    [
-        "ext.quicksurveys.lib",
-        "",
-        [
-            588,
-            28,
-            84,
-            91,
-            74
-        ]
-    ],
-    [
-        "ext.quicksurveys.lib.vue",
-        "",
-        [
-            694,
-            41
-        ]
-    ],
-    [
-        "ext.quicksurveys.init",
-        "",
-        [
-            694
+            708,
+            487
         ]
     ],
     [
@@ -7190,14 +7285,14 @@ mw.loader.register([
         "leaflet.draw",
         "",
         [
-            700
+            715
         ]
     ],
     [
         "ext.kartographer.link",
         "",
         [
-            704,
+            719,
             198
         ]
     ],
@@ -7205,11 +7300,11 @@ mw.loader.register([
         "ext.kartographer.box",
         "",
         [
-            705,
-            716,
-            699,
-            698,
-            708,
+            720,
+            731,
+            714,
+            713,
+            723,
             84,
             47,
             223
@@ -7219,7 +7314,7 @@ mw.loader.register([
         "ext.kartographer.linkbox",
         "",
         [
-            708
+            723
         ]
     ],
     [
@@ -7230,7 +7325,7 @@ mw.loader.register([
         "ext.kartographer.dialog",
         "",
         [
-            700,
+            715,
             198,
             204,
             209,
@@ -7250,14 +7345,14 @@ mw.loader.register([
         "ext.kartographer.util",
         "",
         [
-            697
+            712
         ]
     ],
     [
         "ext.kartographer.frame",
         "",
         [
-            703,
+            718,
             198
         ]
     ],
@@ -7265,7 +7360,7 @@ mw.loader.register([
         "ext.kartographer.staticframe",
         "",
         [
-            704,
+            719,
             198,
             223
         ]
@@ -7285,16 +7380,16 @@ mw.loader.register([
         "ext.kartographer.editor",
         "",
         [
-            703,
-            701
+            718,
+            716
         ]
     ],
     [
         "ext.kartographer.visualEditor",
         "",
         [
-            708,
-            440,
+            723,
+            442,
             222
         ]
     ],
@@ -7302,21 +7397,21 @@ mw.loader.register([
         "ext.kartographer.lib.prunecluster",
         "",
         [
-            700
+            715
         ]
     ],
     [
         "ext.kartographer.lib.topojson",
         "",
         [
-            700
+            715
         ]
     ],
     [
         "ext.kartographer.wv",
         "",
         [
-            715,
+            730,
             217
         ]
     ],
@@ -7328,7 +7423,7 @@ mw.loader.register([
         "ext.pageviewinfo",
         "",
         [
-            675,
+            693,
             200
         ]
     ],
@@ -7347,15 +7442,15 @@ mw.loader.register([
         "mmv.3d",
         "",
         [
-            720,
-            392
+            735,
+            394
         ]
     ],
     [
         "mmv.3d.head",
         "",
         [
-            720,
+            735,
             201,
             212,
             214
@@ -7365,7 +7460,7 @@ mw.loader.register([
         "ext.3d.special.upload",
         "",
         [
-            725,
+            740,
             153
         ]
     ],
@@ -7425,8 +7520,8 @@ mw.loader.register([
         "ext.growthExperiments.Homepage.Mentorship",
         "",
         [
-            740,
-            730,
+            755,
+            745,
             198
         ]
     ],
@@ -7434,7 +7529,7 @@ mw.loader.register([
         "ext.growthExperiments.Homepage.SuggestedEdits",
         "",
         [
-            730,
+            745,
             72,
             198,
             204,
@@ -7452,9 +7547,9 @@ mw.loader.register([
         "ext.growthExperiments.StructuredTask",
         "",
         [
-            739,
-            746,
-            446,
+            754,
+            761,
+            448,
             198,
             223,
             224,
@@ -7465,15 +7560,15 @@ mw.loader.register([
         "ext.growthExperiments.StructuredTask.desktop",
         "",
         [
-            737,
-            420
+            752,
+            422
         ]
     ],
     [
         "ext.growthExperiments.StructuredTask.PreEdit",
         "",
         [
-            730,
+            745,
             204,
             209
         ]
@@ -7482,7 +7577,7 @@ mw.loader.register([
         "ext.growthExperiments.Help",
         "",
         [
-            746,
+            761,
             84,
             74,
             85,
@@ -7500,9 +7595,9 @@ mw.loader.register([
         "ext.growthExperiments.HelpPanel",
         "",
         [
-            740,
-            731,
-            739,
+            755,
+            746,
+            754,
             72,
             225
         ]
@@ -7511,15 +7606,15 @@ mw.loader.register([
         "ext.growthExperiments.HelpPanel.init",
         "",
         [
-            730
+            745
         ]
     ],
     [
         "ext.growthExperiments.PostEdit",
         "",
         [
-            730,
-            746,
+            745,
+            761,
             209,
             223
         ]
@@ -7544,7 +7639,7 @@ mw.loader.register([
         "ext.growthExperiments.MentorDashboard",
         "",
         [
-            746,
+            761,
             188,
             209,
             216,
@@ -7587,7 +7682,20 @@ mw.loader.register([
         "ext.guidedTour.tour.firsteditve",
         "",
         [
-            481
+            487
+        ]
+    ],
+    [
+        "ext.pageTriage.views.toolbar",
+        "",
+        [
+            551,
+            548,
+            481,
+            28,
+            889,
+            213,
+            545
         ]
     ],
     [
@@ -7602,7 +7710,7 @@ mw.loader.register([
         "ext.wikimediaEvents.visualEditor",
         "",
         [
-            418
+            420
         ]
     ],
     [
@@ -7610,54 +7718,13 @@ mw.loader.register([
         ""
     ],
     [
-        "ext.quicksurveys.survey.perceived-performance-survey",
-        "",
-        [
-            695
-        ]
-    ],
-    [
-        "ext.gadget.common-action-delete",
+        "ext.gadget.modrollback",
         "",
         [],
         2
     ],
     [
-        "ext.gadget.common-action-edit",
-        "",
-        [
-            5
-        ],
-        2
-    ],
-    [
-        "ext.gadget.common-action-history",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.common-namespace-file",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.common-special-abusefilter",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.common-special-block",
-        "",
-        [
-            0
-        ],
-        2
-    ],
-    [
-        "ext.gadget.common-special-log",
+        "ext.gadget.confirmationRollback-mobile",
         "",
         [
             87
@@ -7665,13 +7732,34 @@ mw.loader.register([
         2
     ],
     [
-        "ext.gadget.common-special-movepage",
+        "ext.gadget.removeAccessKeys",
+        "",
+        [
+            3,
+            87
+        ],
+        2
+    ],
+    [
+        "ext.gadget.searchFocus",
         "",
         [],
         2
     ],
     [
-        "ext.gadget.common-special-newpages",
+        "ext.gadget.GoogleTrans",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.ImageAnnotator",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.imagelinks",
         "",
         [
             87
@@ -7679,44 +7767,7 @@ mw.loader.register([
         2
     ],
     [
-        "ext.gadget.common-special-search",
-        "",
-        [
-            0
-        ],
-        2
-    ],
-    [
-        "ext.gadget.common-special-upload",
-        "",
-        [
-            87
-        ],
-        2
-    ],
-    [
-        "ext.gadget.common-special-watchlist-helperStyles",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.common-special-watchlist",
-        "",
-        [
-            0,
-            20
-        ],
-        2
-    ],
-    [
-        "ext.gadget.libJQuery",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.SettingsManager",
+        "ext.gadget.Navigation_popups",
         "",
         [
             85
@@ -7724,114 +7775,289 @@ mw.loader.register([
         2
     ],
     [
-        "ext.gadget.registerTool",
+        "ext.gadget.exlinks",
+        "",
+        [
+            87
+        ],
+        2
+    ],
+    [
+        "ext.gadget.search-new-tab",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.PrintOptions",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.revisionjumper",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.Twinkle",
+        "",
+        [
+            788,
+            790
+        ],
+        2
+    ],
+    [
+        "ext.gadget.morebits",
+        "",
+        [
+            85,
+            36
+        ],
+        2
+    ],
+    [
+        "ext.gadget.Twinkle-pagestyles",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.select2",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.HideCentralNotice",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.ReferenceTooltips",
+        "",
+        [
+            90,
+            17
+        ],
+        2
+    ],
+    [
+        "ext.gadget.formWizard",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.formWizard-core",
+        "",
+        [
+            164,
+            85,
+            16,
+            36
+        ],
+        2
+    ],
+    [
+        "ext.gadget.responsiveContentBase",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.Prosesize",
+        "",
+        [
+            47
+        ],
+        2
+    ],
+    [
+        "ext.gadget.find-archived-section",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.geonotice",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.geonotice-core",
         "",
         [
             87,
+            74
+        ],
+        2
+    ],
+    [
+        "ext.gadget.watchlist-notice",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.watchlist-notice-core",
+        "",
+        [
+            74
+        ],
+        2
+    ],
+    [
+        "ext.gadget.WatchlistBase",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.WatchlistGreenIndicators",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.WatchlistChangesBold",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.SubtleUpdatemarker",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.defaultsummaries",
+        "",
+        [
+            201
+        ],
+        2
+    ],
+    [
+        "ext.gadget.citations",
+        "",
+        [
+            87
+        ],
+        2
+    ],
+    [
+        "ext.gadget.DotsSyntaxHighlighter",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.HotCat",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.wikEdDiff",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.ProveIt",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.ProveIt-classic",
+        "",
+        [
+            36,
+            33,
+            87
+        ],
+        2
+    ],
+    [
+        "ext.gadget.Shortdesc-helper",
+        "",
+        [
+            47,
+            815
+        ],
+        2
+    ],
+    [
+        "ext.gadget.Shortdesc-helper-pagestyles-vector",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.libSettings",
+        "",
+        [
             5
         ],
         2
     ],
     [
-        "ext.gadget.BKL",
+        "ext.gadget.wikEd",
         "",
         [
-            0
+            33,
+            5
         ],
         2
     ],
     [
-        "ext.gadget.collapserefs",
+        "ext.gadget.afchelper",
         "",
         [
-            90,
-            87
+            85,
+            16,
+            28,
+            36
         ],
         2
     ],
     [
-        "ext.gadget.directLinkToCommons",
-        "",
-        [
-            87
-        ],
-        2
-    ],
-    [
-        "ext.gadget.referenceTooltips",
-        "",
-        [
-            17,
-            90
-        ],
-        2
-    ],
-    [
-        "ext.gadget.logo",
+        "ext.gadget.charinsert",
         "",
         [],
         2
     ],
     [
-        "ext.gadget.edittop",
+        "ext.gadget.charinsert-core",
         "",
         [
-            0,
-            87
+            33,
+            3,
+            74
         ],
         2
     ],
     [
-        "ext.gadget.blpEditNotice",
-        "",
-        [
-            0,
-            416
-        ],
-        2
-    ],
-    [
-        "ext.gadget.wikibugs",
+        "ext.gadget.legacyToolbar",
         "",
         [],
         2
     ],
     [
-        "ext.gadget.sidebarRelated",
+        "ext.gadget.extra-toolbar-buttons",
         "",
-        [
-            0
-        ],
+        [],
         2
     ],
     [
-        "ext.gadget.navboxNavigation",
-        "",
-        [
-            0,
-            87
-        ],
-        2
-    ],
-    [
-        "ext.gadget.preview",
-        "",
-        [
-            47,
-            52
-        ],
-        2
-    ],
-    [
-        "ext.gadget.urldecoder",
-        "",
-        [
-            775
-        ],
-        2
-    ],
-    [
-        "ext.gadget.HotCat",
+        "ext.gadget.extra-toolbar-buttons-core",
         "",
         [],
         2
@@ -7846,201 +8072,62 @@ mw.loader.register([
         2
     ],
     [
-        "ext.gadget.ProveIt",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.Wikilinker",
-        "",
-        [
-            775
-        ],
-        2
-    ],
-    [
-        "ext.gadget.DotsSyntaxHighlighter",
-        "",
-        [
-            17
-        ],
-        2
-    ],
-    [
-        "ext.gadget.convenientDiscussions",
-        "",
-        [
-            18,
-            128,
-            66,
-            85,
-            176,
-            200,
-            213,
-            214,
-            217,
-            218,
-            220,
-            225
-        ],
-        2
-    ],
-    [
         "ext.gadget.refToolbarBase",
         "",
         [],
         2
     ],
     [
-        "ext.gadget.wikificator",
+        "ext.gadget.edittop",
         "",
         [
-            775
-        ],
-        2
-    ],
-    [
-        "ext.gadget.summaryButtons",
-        "",
-        [
-            168,
+            5,
             87
         ],
-        2
-    ],
-    [
-        "ext.gadget.newTopicOnTop",
-        "",
-        [
-            33
-        ],
-        2
-    ],
-    [
-        "ext.gadget.HighlightRedirects",
-        "",
-        [
-            87
-        ],
-        2
-    ],
-    [
-        "ext.gadget.HighlightUnpatrolledLinks",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.popups",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.addThisArticles",
-        "",
-        [
-            87
-        ],
-        2
-    ],
-    [
-        "ext.gadget.HideWikimediaNavigation",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.HideExternalLinks",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.OpaqueInfoboxReferences",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.shiftrefs",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.imgToggle",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.wdRedLinks",
-        "",
-        [
-            56
-        ],
-        2
-    ],
-    [
-        "ext.gadget.markadmins",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.markblocked",
-        "",
-        [
-            47
-        ],
-        2
-    ],
-    [
-        "ext.gadget.watchlist-helperStyles",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.watchlist",
-        "",
-        [
-            47
-        ],
-        2
-    ],
-    [
-        "ext.gadget.disableUpdatedMarker",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.OldDiff",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.HideFlaggedRevs",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.UTCLiveClock-helperStyles",
-        "",
-        [],
         2
     ],
     [
         "ext.gadget.UTCLiveClock",
         "",
         [
-            0,
             47
+        ],
+        2
+    ],
+    [
+        "ext.gadget.UTCLiveClock-pagestyles",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.purgetab",
+        "",
+        [
+            47
+        ],
+        2
+    ],
+    [
+        "ext.gadget.ExternalSearch",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.CollapsibleNav",
+        "",
+        [
+            27,
+            74
+        ],
+        2
+    ],
+    [
+        "ext.gadget.MenuTabsToggle",
+        "",
+        [
+            90
         ],
         2
     ],
@@ -8059,7 +8146,49 @@ mw.loader.register([
         2
     ],
     [
-        "ext.gadget.ajaxQuickDelete",
+        "ext.gadget.addsection-plus",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.CommentsInLocalTime",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.OldDiff",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.NoAnimations",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.disablesuggestions",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.NoSmallFonts",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.topalert",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.metadata",
         "",
         [
             87
@@ -8067,7 +8196,19 @@ mw.loader.register([
         2
     ],
     [
-        "ext.gadget.addThisMain",
+        "ext.gadget.JustifyParagraphs",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.righteditlinks",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.PrettyLog",
         "",
         [
             87
@@ -8075,19 +8216,92 @@ mw.loader.register([
         2
     ],
     [
-        "ext.gadget.DelKeepVis",
+        "ext.gadget.switcher",
         "",
         [],
         2
     ],
     [
-        "ext.gadget.hideSandboxLinkFromPersonalToolbar",
+        "ext.gadget.SidebarTranslate",
         "",
         [],
         2
     ],
     [
-        "ext.gadget.osm",
+        "ext.gadget.Blackskin",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.dark-mode-toggle",
+        "",
+        [
+            47,
+            84,
+            74,
+            13
+        ],
+        2
+    ],
+    [
+        "ext.gadget.dark-mode-toggle-pagestyles",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.VectorClassic",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.widensearch",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.DisambiguationLinks",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.markblocked",
+        "",
+        [
+            121
+        ],
+        2
+    ],
+    [
+        "ext.gadget.responsiveContent",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.HideInterwikiSearchResults",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.XTools-ArticleInfo",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.RegexMenuFramework",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.ShowMessageNames",
         "",
         [
             87
@@ -8095,248 +8309,82 @@ mw.loader.register([
         2
     ],
     [
-        "ext.gadget.search-extraTooltips",
+        "ext.gadget.DebugMode",
         "",
         [
-            73
+            87
         ],
         2
     ],
     [
-        "ext.gadget.wfTypos",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.wfTyposUpdate",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.wfIsbnLite",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.toReasonator",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.useWD",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.wikidataInfoboxExport",
+        "ext.gadget.contribsrange",
         "",
         [
-            56,
+            87,
+            28
+        ],
+        2
+    ],
+    [
+        "ext.gadget.BugStatusUpdate",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.RTRC",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.script-installer",
+        "",
+        [
+            168
+        ],
+        2
+    ],
+    [
+        "ext.gadget.XFDcloser",
+        "",
+        [
+            85
+        ],
+        2
+    ],
+    [
+        "ext.gadget.XFDcloser-core",
+        "",
+        [
+            47,
             204,
-            209
+            209,
+            220,
+            214,
+            224,
+            213
         ],
         2
     ],
     [
-        "ext.gadget.wefcore",
+        "ext.gadget.XFDcloser-core-beta",
         "",
         [
-            36,
-            615,
-            56
+            47,
+            204,
+            209,
+            220,
+            214,
+            224,
+            213
         ],
         2
     ],
     [
-        "ext.gadget.wikidataHeaderLink",
-        "",
-        [
-            87
-        ],
-        2
-    ],
-    [
-        "ext.gadget.iwcore",
+        "ext.gadget.libExtraUtil",
         "",
         [],
-        2
-    ],
-    [
-        "ext.gadget.iwhints",
-        "",
-        [
-            833
-        ],
-        2
-    ],
-    [
-        "ext.gadget.iwlocalnames",
-        "",
-        [
-            833
-        ],
-        2
-    ],
-    [
-        "ext.gadget.relatedIcons",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.iwen",
-        "",
-        [
-            833
-        ],
-        2
-    ],
-    [
-        "ext.gadget.iwde",
-        "",
-        [
-            833
-        ],
-        2
-    ],
-    [
-        "ext.gadget.iwfr",
-        "",
-        [
-            833
-        ],
-        2
-    ],
-    [
-        "ext.gadget.iwpl",
-        "",
-        [
-            833
-        ],
-        2
-    ],
-    [
-        "ext.gadget.iwit",
-        "",
-        [
-            833
-        ],
-        2
-    ],
-    [
-        "ext.gadget.iwes",
-        "",
-        [
-            833
-        ],
-        2
-    ],
-    [
-        "ext.gadget.iwpt",
-        "",
-        [
-            833
-        ],
-        2
-    ],
-    [
-        "ext.gadget.iwnl",
-        "",
-        [
-            833
-        ],
-        2
-    ],
-    [
-        "ext.gadget.iwhe",
-        "",
-        [
-            833
-        ],
-        2
-    ],
-    [
-        "ext.gadget.iwja",
-        "",
-        [
-            833
-        ],
-        2
-    ],
-    [
-        "ext.gadget.iwzh",
-        "",
-        [
-            833
-        ],
-        2
-    ],
-    [
-        "ext.gadget.iwuk",
-        "",
-        [
-            833
-        ],
-        2
-    ],
-    [
-        "ext.gadget.iwbe",
-        "",
-        [
-            833
-        ],
-        2
-    ],
-    [
-        "ext.gadget.iwrussia",
-        "",
-        [
-            833
-        ],
-        2
-    ],
-    [
-        "ext.gadget.qualityArticles",
-        "",
-        [
-            36,
-            47
-        ],
-        2
-    ],
-    [
-        "ext.gadget.DYK",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.articleStats",
-        "",
-        [
-            47
-        ],
-        2
-    ],
-    [
-        "ext.gadget.iwrm",
-        "",
-        [],
-        2
-    ],
-    [
-        "ext.gadget.navboxFeaturedArticles",
-        "",
-        [
-            0,
-            56,
-            27
-        ],
         2
     ],
     [
@@ -8346,19 +8394,61 @@ mw.loader.register([
         2
     ],
     [
-        "ext.gadget.yandex-tts",
+        "ext.gadget.addMe",
         "",
         [],
         2
     ],
     [
-        "ext.gadget.yandex-speechrecognition",
+        "ext.gadget.NewImageThumb",
         "",
         [],
         2
     ],
     [
-        "ext.gadget.GeoBox",
+        "ext.gadget.StickyTableHeaders",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.ShowJavascriptErrors",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.PageDescriptions",
+        "",
+        [
+            47
+        ],
+        2
+    ],
+    [
+        "ext.gadget.autonum",
+        "",
+        [],
+        2
+    ],
+    [
+        "ext.gadget.libLua",
+        "",
+        [
+            47
+        ],
+        2
+    ],
+    [
+        "ext.gadget.libSensitiveIPs",
+        "",
+        [
+            875
+        ],
+        2
+    ],
+    [
+        "ext.gadget.dark-mode",
         "",
         [],
         2
@@ -8388,56 +8478,56 @@ mw.loader.register([
         "ext.guidedTour.tour.RcFiltersIntro",
         "",
         [
-            481
+            487
         ]
     ],
     [
         "ext.guidedTour.tour.WlFiltersIntro",
         "",
         [
-            481
+            487
         ]
     ],
     [
         "ext.guidedTour.tour.RcFiltersHighlight",
         "",
         [
-            481
+            487
         ]
     ],
     [
         "wikibase.Site",
         "",
         [
-            605
+            622
         ]
     ],
     [
         "ext.guidedTour.tour.helppanel",
         "",
         [
-            481
+            487
         ]
     ],
     [
         "ext.guidedTour.tour.homepage_mentor",
         "",
         [
-            481
+            487
         ]
     ],
     [
         "ext.guidedTour.tour.homepage_welcome",
         "",
         [
-            481
+            487
         ]
     ],
     [
         "ext.guidedTour.tour.homepage_discovery",
         "",
         [
-            481
+            487
         ]
     ],
     [

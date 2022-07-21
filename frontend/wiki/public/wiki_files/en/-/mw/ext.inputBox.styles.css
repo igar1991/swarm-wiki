@@ -1,0 +1,37 @@
+@media screen {
+	/**
+	 * This file is a LESS import match for "mediawiki.skin.variables.less"
+	 * when Vector is the active skin.
+	 */
+	/**
+	 * Deprecated variables
+	 */
+	.mw-inputbox-centered {
+	  margin-left: auto;
+	  margin-right: auto;
+	  text-align: center;
+	}
+	.mw-inputbox-inline {
+	  display: inline;
+	}
+	.mw-inputbox-element.mw-inputbox-element {
+	  display: inline-table;
+	  white-space: nowrap;
+	}
+	.mw-inputbox-input {
+	  margin-bottom: 0.5em;
+	}
+	.mw-inputbox-createbox:required:invalid ~ .mw-ui-button {
+	  background-color: #c8ccd1;
+	  color: #ffffff;
+	  border-color: #c8ccd1;
+	  cursor: default;
+	}}@media print {
+	.mw-inputbox-centered,
+	.bodySearch,
+	.createbox,
+	.searchbox,
+	.commentbox,
+	.mw-movebox {
+	  display: none;
+	}}

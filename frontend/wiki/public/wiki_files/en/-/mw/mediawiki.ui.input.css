@@ -1,0 +1,98 @@
+/* stylelint-disable selector-class-pattern */
+/* stylelint-disable selector-no-vendor-prefix */
+/* stylelint-enable selector-no-vendor-prefix */
+/**
+ * This file is a LESS import match for "mediawiki.skin.variables.less"
+ * when Vector is the active skin.
+ */
+/**
+ * Deprecated variables
+ */
+.mw-ui-input {
+  background-color: #ffffff;
+  color: #000000;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  border: 1px solid #a2a9b1;
+  border-radius: 2px;
+  padding: 6px 8px;
+  box-shadow: inset 0 0 0 1px transparent;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.28571429em;
+  vertical-align: middle;
+}
+.mw-ui-input::-webkit-input-placeholder {
+  color: #72777d;
+  opacity: 1;
+}
+.mw-ui-input:-ms-input-placeholder {
+  color: #72777d;
+  opacity: 1;
+}
+.mw-ui-input::-moz-placeholder {
+  color: #72777d;
+  opacity: 1;
+}
+.mw-ui-input::placeholder {
+  color: #72777d;
+  opacity: 1;
+}
+.mw-ui-input:invalid {
+  box-shadow: none;
+}
+.mw-ui-input:hover {
+  border-color: #72777d;
+}
+.mw-ui-input:focus {
+  border-color: #3366cc;
+  box-shadow: inset 0 0 0 1px #3366cc;
+  /* stylelint-disable-next-line plugin/no-unsupported-browser-features */
+  outline: 0;
+}
+.mw-ui-input:not( :disabled ) {
+  transition: color 100ms, border-color 100ms, box-shadow 100ms;
+}
+.mw-ui-input:disabled {
+  border-color: #eaecf0;
+  color: #c8ccd1;
+}
+.mw-ui-input[type='search'] {
+  /* stylelint-disable-next-line plugin/no-unsupported-browser-features */
+  -webkit-appearance: none;
+  /* stylelint-disable-next-line plugin/no-unsupported-browser-features */
+  -moz-appearance: textfield;
+}
+.mw-ui-input[type='search']::-ms-clear {
+  display: none;
+}
+.mw-ui-input[type='search']::-webkit-search-cancel-button,
+.mw-ui-input[type='search']::-webkit-search-decoration {
+  /* stylelint-disable-next-line plugin/no-unsupported-browser-features */
+  -webkit-appearance: none;
+}
+textarea.mw-ui-input {
+  min-height: 8em;
+}
+.mw-ui-input-inline {
+  display: inline-block;
+  width: auto;
+  max-width: 100%;
+}
+.mw-ui-input-large {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.mw-ui-input-large + .mw-ui-input-large {
+  margin-top: -1px;
+}
+.mw-ui-input-large:focus {
+  position: relative;
+}
+input.mw-ui-input-large {
+  padding: 8px;
+  font-size: 1.75em;
+  font-weight: bold;
+  line-height: 1.25em;
+}

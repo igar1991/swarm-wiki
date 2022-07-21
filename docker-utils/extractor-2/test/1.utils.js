@@ -1,4 +1,5 @@
 import {
+    getList,
     insertImagesToPage
 } from '../utils.js';
 import {expect} from 'expect';
@@ -11,5 +12,31 @@ describe('Extractor utils', () => {
         const parsed = parse(data);
         const preparedPage = await insertImagesToPage(parsed, 'test/data/');
         fs.writeFileSync(`./test/out.html`, preparedPage);
+    });
+
+    it('get articles with images', async () => {
+        const list = await getList(`/Users/test//Downloads/zim-big/articles-list.txt`);
+        for (const [index, key] of list.entries()) {
+
+            if (index > 50000) break;
+            // console.log(`article ${index + 1} of ${list.length}`);
+            const path = `/Users/test//Downloads/zim-big/A/${key}`
+            if (!fs.existsSync(path)) {
+                continue
+            }
+
+            if (!fs.lstatSync(path).isFile()) {
+                continue
+            }
+
+            const parsed = parse(fs.readFileSync(path, {encoding: 'utf8'}));
+            const imgs = parsed.querySelectorAll('img')
+
+            if (imgs.length > 0) {
+                console.log(`${index + 1} of ${list.length}`);
+                console.log(key);
+                console.log(imgs.map(img => img.attributes.src));
+            }
+        }
     });
 });

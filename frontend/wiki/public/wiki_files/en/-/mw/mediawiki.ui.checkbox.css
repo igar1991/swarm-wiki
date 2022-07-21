@@ -1,0 +1,97 @@
+/* stylelint-disable selector-class-pattern */
+/* stylelint-disable selector-no-vendor-prefix */
+/* stylelint-enable selector-no-vendor-prefix */
+/**
+ * This file is a LESS import match for "mediawiki.skin.variables.less"
+ * when Vector is the active skin.
+ */
+/**
+ * Deprecated variables
+ */
+.mw-ui-checkbox {
+  display: table;
+  position: relative;
+  line-height: 1.5625em;
+  vertical-align: middle;
+}
+.mw-ui-checkbox * {
+  font-size: inherit;
+  vertical-align: middle;
+}
+.mw-ui-checkbox [type='checkbox'] {
+  display: table-cell;
+  position: relative;
+  width: 1.5625em;
+  height: 1.5625em;
+  max-width: none;
+  opacity: 0;
+  z-index: 1;
+}
+.mw-ui-checkbox [type='checkbox'] + label {
+  display: table-cell;
+  padding-left: 0.4em;
+}
+.mw-ui-checkbox [type='checkbox'] + label:before {
+  content: '';
+  background-color: #fff;
+  background-origin: border-box;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 0 0;
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 1.5625em;
+  height: 1.5625em;
+  margin-top: -0.78125em;
+  border: 1px solid #72777d;
+  border-radius: 2px;
+}
+.mw-ui-checkbox [type='checkbox']:checked + label:before {
+  background-image: url(/w/resources/src/mediawiki.ui.checkbox/images/checkbox-checked.svg?8153e);
+  background-size: 90% 90%;
+}
+.mw-ui-checkbox [type='checkbox']:enabled {
+  cursor: pointer;
+}
+.mw-ui-checkbox [type='checkbox']:enabled + label {
+  cursor: pointer;
+}
+.mw-ui-checkbox [type='checkbox']:enabled + label:before {
+  cursor: pointer;
+  transition: background-color 100ms, color 100ms, border-color 100ms, box-shadow 100ms;
+}
+.mw-ui-checkbox [type='checkbox']:enabled:focus + label:before {
+  border-color: #3366cc;
+  box-shadow: inset 0 0 0 1px #3366cc;
+}
+.mw-ui-checkbox [type='checkbox']:enabled:hover + label:before {
+  border-color: #447ff5;
+}
+.mw-ui-checkbox [type='checkbox']:enabled:active + label:before {
+  background-color: #2a4b8d;
+  border-color: #2a4b8d;
+  box-shadow: inset 0 0 0 1px #2a4b8d;
+}
+.mw-ui-checkbox [type='checkbox']:enabled:checked + label:before {
+  background-color: #3366cc;
+  border-color: #3366cc;
+}
+.mw-ui-checkbox [type='checkbox']:enabled:checked:focus + label:before {
+  background-color: #3366cc;
+  border-color: #3366cc;
+  box-shadow: inset 0 0 0 1px #3366cc, inset 0 0 0 2px #ffffff;
+}
+.mw-ui-checkbox [type='checkbox']:enabled:checked:hover + label:before {
+  background-color: #447ff5;
+  border-color: #447ff5;
+}
+.mw-ui-checkbox [type='checkbox']:enabled:checked:active + label:before {
+  background-color: #2a4b8d;
+  border-color: #2a4b8d;
+}
+.mw-ui-checkbox [type='checkbox']:disabled + label:before {
+  background-color: #c8ccd1;
+  border-color: #c8ccd1;
+}
