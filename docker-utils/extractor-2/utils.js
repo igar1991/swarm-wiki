@@ -37,6 +37,17 @@ export async function processContent(options) {
         const filePath = `${zimContentDirectory}A/${key}`
         const saveKey = `wiki_page_${lang.toLowerCase()}_${key}`
         const cacheFileName = `${zimContentDirectory}cache/${key}`
+
+        try {
+            const stat = await fs.stat(cacheFileName)
+            if (stat.isFile()) {
+                console.log('cache file exists, skip', cacheFileName);
+                continue
+            }
+        } catch (e) {
+
+        }
+
         let fileInfo
         try {
             fileInfo = await fs.stat(filePath)
