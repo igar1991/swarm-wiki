@@ -97,7 +97,7 @@ export async function processContent(options) {
 // }
 
 export async function getImageByName(path, name) {
-    const filePath = `${path}/I/${name}`
+    const filePath = `${path}${name}`
     const fileInfo = await fs.stat(filePath)
     if (!fileInfo.isFile()) {
         throw new Error(`image file does not exist ${filePath}`)
