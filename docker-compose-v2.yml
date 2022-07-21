@@ -1,0 +1,129 @@
+version: '3'
+services:
+  bee:
+    image: ethersphere/bee:stable
+    restart: unless-stopped
+    environment:
+      - BEE_API_ADDR
+      - BEE_BLOCK_TIME
+      - BEE_BOOTNODE
+      - BEE_BOOTNODE_MODE
+      - BEE_CLEF_SIGNER_ENABLE=false
+      - BEE_CONFIG
+      - BEE_CORS_ALLOWED_ORIGINS=*
+      - BEE_DATA_DIR
+      - BEE_CACHE_CAPACITY
+      - BEE_DB_OPEN_FILES_LIMIT
+      - BEE_DB_BLOCK_CACHE_CAPACITY
+      - BEE_DB_WRITE_BUFFER_SIZE
+      - BEE_DB_DISABLE_SEEKS_COMPACTION
+      - BEE_DEBUG_API_ADDR
+      - BEE_DEBUG_API_ENABLE=true
+      - BEE_GATEWAY_MODE
+      - BEE_FULL_NODE
+      - BEE_NAT_ADDR
+      - BEE_NETWORK_ID
+      - BEE_P2P_ADDR
+      - BEE_P2P_QUIC_ENABLE
+      - BEE_P2P_WS_ENABLE
+      - BEE_PASSWORD
+      - BEE_PASSWORD_FILE
+      - BEE_PAYMENT_EARLY_PERCENT
+      - BEE_PAYMENT_THRESHOLD
+      - BEE_PAYMENT_TOLERANCE_PERCENT
+      - BEE_POSTAGE_STAMP_ADDRESS
+      - BEE_RESOLVER_OPTIONS
+      - BEE_SWAP_ENABLE
+      - BEE_SWAP_ENDPOINT
+      - BEE_SWAP_FACTORY_ADDRESS
+      - BEE_SWAP_LEGACY_FACTORY_ADDRESSES
+      - BEE_SWAP_INITIAL_DEPOSIT
+      - BEE_SWAP_DEPLOYMENT_GAS_PRICE
+      - BEE_TRACING_ENABLE
+      - BEE_TRACING_ENDPOINT
+      - BEE_TRACING_SERVICE_NAME
+      - BEE_TRANSACTION
+      - BEE_VERBOSITY
+      - BEE_WELCOME_MESSAGE="Hello from SwarmWiki server"
+      - BEE_MAINNET
+    ports:
+      - "127.0.0.1:1633:1633"
+      - "1634:1634"
+      - "127.0.0.1:1635:1635"
+    volumes:
+      - ${BEE_DATA_PATH}:/home/bee/.bee
+    command: start
+
+  bee-waiter:
+    image: swarm-wiki-bee-waiter
+    environment:
+      - WIKI_TRIGGER_URL=http://trigger:${WIKI_TRIGGER_PORT}/
+      - WIKI_BEE_DEBUG_URL=http://bee:1635/
+    depends_on:
+      - bee
+      - trigger
+
+  uploader:
+    image: swarm-wiki-uploader
+    restart: always
+    environment:
+      - WIKI_UPLOADER_CONCURRENCY
+      - WIKI_UPLOADER_REDIS
+      - WIKI_BEE_URL=http://bee:1633/
+      - WIKI_BEE_DEBUG_URL=http://bee:1635/
+      - WIKI_UPLOADER_PORT
+      - WIKI_UPLOADER_PRIVATE_KEY
+    ports:
+      - "${WIKI_UPLOADER_PORT}:${WIKI_UPLOADER_PORT}"
+    volumes:
+      - ${WIKI_DOWNLOAD_LOCAL_DIR}:/app/data
+    depends_on:
+      - trigger
+
+  extractor-2:
+    image: swarm-wiki-extractor-2
+    environment:
+      - WIKI_EXTRACTOR_2_PORT
+      - WIKI_EXTRACTOR_2_ARTICLES_FILE
+      - WIKI_EXTRACTOR_2_EXCEPTIONS_FILE
+      - WIKI_EXTRACTOR_2_CONCURRENCY
+      - WIKI_UPLOADER_URL=http://uploader:${WIKI_UPLOADER_PORT}/
+      - WIKI_DOWNLOADER_OUTPUT_DIR=/app/data/
+    deploy:
+      resources:
+        limits:
+          memory: 4096M
+    volumes:
+      - ${WIKI_DOWNLOAD_LOCAL_DIR}:/app/data
+
+  downloader:
+    image: swarm-wiki-downloader
+    environment:
+      - WIKI_DOWNLOADER_PORT
+      - WIKI_DOWNLOADER_OUTPUT_DIR=/app/data/
+      - WIKI_DOWNLOAD_LOCAL_DIR
+      - WIKI_EXTRACTOR_URL=http://extractor-2:${WIKI_EXTRACTOR_2_PORT}/
+      - WIKI_INDEXER_URL=http://indexer:${WIKI_INDEXER_PORT}/
+    volumes:
+      - ${WIKI_DOWNLOAD_LOCAL_DIR}:/app/data
+    depends_on:
+      - extractor-2
+      - uploader
+
+  trigger:
+    image: swarm-wiki-trigger
+    environment:
+      - WIKI_TRIGGER_START_IMMEDIATELY
+      - WIKI_TRIGGER_PORT
+      - WIKI_BASE
+      - WIKI_ZIMS_CHECK
+      - WIKI_DOWNLOADER_URL=http://downloader:${WIKI_DOWNLOADER_PORT}/
+
+  topuper:
+    image: swarm-wiki-topuper
+    environment:
+      - WIKI_BEE_DEBUG_URL=http://bee:1635/
+      - WIKI_TOPUPER_TTL_LIMIT
+      - WIKI_TOPUPER_TARGET_BATCHES
+      - WIKI_TOPUPER_AMOUNT
+      - WIKI_TOPUPER_SLEEP_SECONDS

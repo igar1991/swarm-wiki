@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import {createClient} from 'redis';
-import {uploadAction} from './utils.js';
+import {uploadAction, uploadActionV2} from './utils.js';
 import multer from "multer";
 import Queue from "queue-promise";
 
@@ -111,6 +111,30 @@ app.post('/upload', upload.single('file'), async (req, res, next) => {
         return status
     }, {
         beeUrl, beeDebugUrl, privateKey, key, keyLocalIndex, type, meta
+    }))
+});
+
+app.post('/upload-v2', upload.single('file'), async (req, res, next) => {
+    const {key, cacheFileName} = req.body;
+    const file = req.file?.buffer
+
+    if (!key) {
+        return next('Key is empty')
+    }
+
+    if (!file ) {
+        return next('File is empty')
+    }
+
+    console.log('/upload-v2', key);
+    res.send({result: 'ok', status});
+
+    queue.enqueue(() => uploadActionV2(client, file, newStatus => {
+        status = newStatus
+    }, () => {
+        return status
+    }, {
+        beeUrl, beeDebugUrl, privateKey, key, cacheFileName
     }))
 });
 

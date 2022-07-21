@@ -1,6 +1,7 @@
 import {Bee, BeeDebug} from '@ethersphere/bee-js';
 import bmt from "@fairdatasociety/bmt-js";
 import {getUnixTimestamp, sleep} from "../utils/utils.js";
+import fs from "fs";
 
 /**
  * Calculates used stamp percentage
@@ -76,13 +77,13 @@ export async function uploadData(beeUrl, beeDebugUrl, privateKey, key, data) {
     }
 }
 
-export async function uploadAction(client, data, onSetStatus, onGetStatus, config){
+export async function uploadAction(client, data, onSetStatus, onGetStatus, config) {
     const {beeUrl, beeDebugUrl, privateKey, key, keyLocalIndex, type, meta} = config
-    if (!onSetStatus){
+    if (!onSetStatus) {
         throw new Error('onSetStatus is not set')
     }
 
-    if (!onGetStatus){
+    if (!onGetStatus) {
         throw new Error('onGetStatus is not set')
     }
 
@@ -130,6 +131,53 @@ export async function uploadAction(client, data, onSetStatus, onGetStatus, confi
         }
 
         console.log('status is not ok', status, key, keyLocalIndex)
+        // todo move time to config
+        await sleep(5000)
+    }
+}
+
+export async function uploadActionV2(client, data, onSetStatus, onGetStatus, config) {
+    const {beeUrl, beeDebugUrl, privateKey, key, cacheFileName} = config
+    if (!onSetStatus) {
+        throw new Error('onSetStatus is not set')
+    }
+
+    if (!onGetStatus) {
+        throw new Error('onGetStatus is not set')
+    }
+
+    while (true) {
+        console.log('uploading...', key)
+        try {
+            let uploadedData = await uploadData(beeUrl, beeDebugUrl, privateKey, key, data)
+
+            if (uploadedData) {
+                console.log('uploaded data result', key, uploadedData)
+                fs.writeFileSync(cacheFileName, JSON.stringify({
+                    ...uploadedData,
+                    updated_at: getUnixTimestamp()
+                }))
+                onSetStatus('ok')
+            } else {
+                console.log('empty uploaded data, skip saving, status = "uploading_error"', key)
+                onSetStatus('uploading_error')
+            }
+        } catch (e) {
+            const message = e.message ?? ''
+            console.log('Uploading error', message)
+            if (message.startsWith('Payment Required: batch is overissued')) {
+                onSetStatus('overissued')
+            } else if (message.includes('Not Found')) {
+                onSetStatus('not_found')
+            }
+        }
+
+        const status = onGetStatus()
+        if (status === 'ok') {
+            break
+        }
+
+        console.log('status is not ok', status, key)
         // todo move time to config
         await sleep(5000)
     }

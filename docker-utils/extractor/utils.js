@@ -140,6 +140,7 @@ export async function insertImagesToPage(zimdumpCustom, page, zimPath) {
     const cache = {}
     for (const img of imgs) {
         // sometimes its more than one "../"
+        // todo decodeURIComponent?
         const src = decodeURI(img.attributes.src)
             .split('../')
             .join('')

@@ -1,5 +1,7 @@
 # Swarm Wiki
 
+Swarm Wiki - project for uploading wikipedia pages to the Swarm decentralized network. The project uses ZIM archives with articles as a data source, forms pages ready for viewing in a browser, and uploads them to the network using Bee node.
+
 Project web interface is accessible locally (after running [Bee node](https://github.com/ethersphere/bee) or [Swarm Desktop](https://desktop.ethswarm.org/)) by the url
 
 `http://bzzwiki.eth.swarm.localhost:1633/`
@@ -8,11 +10,13 @@ and without Bee node
 
 `https://bzzwiki.bzz.link/`
 
-# How to deploy a project?
+# How to deploy the project?
 
 Before you follow the instructions for deploying the project, you can watch a video with all the steps.
 
 Here https://gateway.ethswarm.org/access/72d627b3c3798cc475271e7a3ef41de955f0a3c034acb883f43bae620a8d210d or here https://www.youtube.com/watch?v=YkUr01lAykQ
+
+Tested on Ubuntu 20.04.4 LTS
 
 Make sure the system is up to date
 
@@ -44,7 +48,7 @@ Build all Docker containers
 
 Let's set up the firewall. Open ports for data exchange and close ports for service management
 
-`sudo ufw allow ssh && && sudo ufw allow 1634 && sudo ufw deny 1633 && sudo ufw deny 1635 && sudo ufw deny 6379 && sudo ufw deny 8001 && sudo ufw enable`
+`sudo ufw allow ssh && sudo ufw allow 1634 && sudo ufw deny 1633 && sudo ufw deny 1635 && sudo ufw deny 6379 && sudo ufw deny 8001 && sudo ufw enable`
 
 Start Bee node
 
