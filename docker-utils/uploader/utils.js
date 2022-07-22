@@ -53,7 +53,6 @@ export async function uploadData(beeUrl, beeDebugUrl, privateKey, key, data) {
     const bee = new Bee(beeUrl)
     const topic = bee.makeFeedTopic(key)
     const feedWriter = bee.makeFeedWriter('sequence', topic, privateKey)
-    // todo write in docs about pined data and reuploading possibility with bee js lib methods and about using bmt-js
     let reference = null
     try {
         const uploadedData = await bee.uploadData(batchId, data, {
