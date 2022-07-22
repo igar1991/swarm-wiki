@@ -4,7 +4,7 @@ import {getPage} from "../utils";
 import {Bee} from "@ethersphere/bee-js"
 import "./Page.css"
 
-const bee = new Bee(window.location.host === 'bzz.link' ? 'https://bzz.link' : process.env.REACT_APP_BEE_URL);
+const bee = new Bee(process.env.REACT_APP_BEE_URL);
 
 export default function Page() {
     let {lang, page} = useParams();
@@ -62,11 +62,16 @@ export default function Page() {
                         return
                     }
 
-                    if (!a.hash.startsWith('#/')) {
+                    if (!a.hash.startsWith('#/') && !a.classList.contains('external')) {
                         a.onclick = (e) => {
                             e.preventDefault()
                             const name = a.hash
-                            iframe.contentWindow.document.body.querySelector(name).scrollIntoView();
+                            const element = iframe.contentWindow.document.body.querySelector(name)
+                            if (element) {
+                                element.scrollIntoView()
+                            } else {
+                                console.log('element not found', name)
+                            }
                         }
 
                         return
