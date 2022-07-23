@@ -7,6 +7,23 @@ export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+export function extractKeyFromExceptionItem(exceptionItem) {
+    if (exceptionItem === 'A%2f100%_Lena') {
+        return '100%_Lena'
+    }
+
+    if (exceptionItem === 'A%2f%%2f%') {
+        return '/'
+    }
+
+    let result = decodeURIComponent(exceptionItem)
+    if (result.startsWith('A/')) {
+        result = result.substring(2)
+    }
+
+    return result
+}
+
 export async function getList(path) {
     const list = await fs.readFile(path, 'utf8');
 
@@ -23,20 +40,26 @@ export async function processContent(options) {
     });
     queue.on('reject', error => console.error(error));
 
-    // todo process exceptions files
-    for (const [index, rawKey] of articles.entries()) {
-        // if (index > 50000) break;
+    const exceptionLength = exceptions.length
+    const totalLength = articles.length + exceptionLength
+    for (const [index, rawKey] of [...exceptions, ...articles].entries()) {
+        if (['X%2ffulltext%2fxapian', 'X%2ftitle%2fxapian'].includes(rawKey)) {
+            console.log('skip xapian index')
+            continue
+        }
 
-        console.log(`article ${index + 1} of ${articles.length}`);
-        const key = rawKey.trim()
+        const rawKeyTrimmed = rawKey.trim()
+        const isException = index < exceptionLength
+        console.log(`item ${index + 1} (${isException ? 'exception' : 'article'}) of ${totalLength}`);
+        const key = isException ? extractKeyFromExceptionItem(rawKeyTrimmed) : rawKeyTrimmed
         if (!key) {
             console.log('empty key');
             continue
         }
 
-        const filePath = `${zimContentDirectory}A/${key}`
+        const filePath = isException ? `${zimContentDirectory}_exceptions/${rawKeyTrimmed}` : `${zimContentDirectory}A/${key}`
         const saveKey = `wiki_page_${lang.toLowerCase()}_${key}`
-        const cacheFileName = `${zimContentDirectory}cache/${key}`
+        const cacheFileName = `${zimContentDirectory}cache/${rawKeyTrimmed}`
 
         try {
             const stat = await fs.stat(cacheFileName)

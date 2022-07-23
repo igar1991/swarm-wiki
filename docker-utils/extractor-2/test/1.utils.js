@@ -1,4 +1,5 @@
 import {
+    extractKeyFromExceptionItem,
     getList,
     insertImagesToPage
 } from '../utils.js';
@@ -15,7 +16,7 @@ describe('Extractor utils', () => {
     });
 
     it('get articles with images', async () => {
-        const list = await getList(`/Users/test//Downloads/zim-big/articles-list.txt`);
+        const list = await getList(`/Users/test/Downloads/zim-big/articles-list.txt`);
         for (const [index, key] of list.entries()) {
 
             if (index > 50000) break;
@@ -37,6 +38,19 @@ describe('Extractor utils', () => {
                 console.log(key);
                 console.log(imgs.map(img => img.attributes.src));
             }
+        }
+    });
+
+    it('extractKeyFromExceptionItem', async () => {
+        const list = await getList(`test/data/exceptions-list.txt`);
+        for (const key of list) {
+            // console.log(key)
+
+            if (['X%2ffulltext%2fxapian', 'X%2ftitle%2fxapian'].includes(key)) {
+                continue
+            }
+            const decodedKey = extractKeyFromExceptionItem(key);
+            console.log(key, '=>', decodedKey);
         }
     });
 });
