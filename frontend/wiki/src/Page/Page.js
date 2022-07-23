@@ -6,18 +6,62 @@ import "./Page.css"
 
 const bee = new Bee(process.env.REACT_APP_BEE_URL);
 
+const getStatusElement = (status) => {
+    const container = `
+    .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+    `
+    if (status === 'loading') {
+        return `
+<style>
+.loader {
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+${container}
+</style>
+<div class="container">
+<div class="loader"></div>
+</div>`
+    } else {
+        return `
+<style>
+.error-message{
+font-size: 1.5rem;
+}
+${container}
+</style>
+<div class="container">
+<span class="error-message">${status}</span>
+</div>`
+    }
+}
+
 export default function Page() {
     let {lang, page} = useParams();
 
     const [pageContent, setPageContent] = useState(null)
-    const [status, setStatus] = useState('Loading...')
+    const [status, setStatus] = useState('loading')
     const ref = useRef()
 
     useEffect(() => {
         async function run() {
             try {
                 setPageContent('')
-                setStatus('Loading...')
+                setStatus('loading')
                 const {parsed} = await getPage(bee, lang, page)
                 const redirectKey = 'redirect:'
                 const content = parsed?.innerHTML
@@ -52,7 +96,8 @@ export default function Page() {
 
     return (
         <div className="Page">
-            <iframe ref={ref} srcDoc={pageContent ? pageContent.innerHTML : status} onLoad={onIframeLoaded}/>
+            <iframe ref={ref} srcDoc={pageContent ? pageContent.innerHTML : getStatusElement(status)}
+                    onLoad={onIframeLoaded}/>
         </div>
     );
 }
