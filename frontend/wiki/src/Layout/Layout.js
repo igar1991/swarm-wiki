@@ -3,8 +3,8 @@ import './Layout.css';
 
 export default function Layout() {
     return (
-        <div className="container py-3">
-            <header>
+        <div>
+            <header className="container py-3">
                 <div className="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
                     <Link to="/" className="d-flex align-items-center text-dark text-decoration-none">
                         <img src="/favicon.png" alt="" className="Layout-header-logo"/>

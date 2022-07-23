@@ -14,7 +14,7 @@ and without Bee node
 
 Before you follow the instructions for deploying the project, you can watch a video with all the steps.
 
-Here https://gateway.ethswarm.org/access/72d627b3c3798cc475271e7a3ef41de955f0a3c034acb883f43bae620a8d210d or here https://www.youtube.com/watch?v=YkUr01lAykQ
+Here https://bah5acgzacdhwqugdtco47yhxkt6a2zgy65ux6x4rnk32zsbbcpxpfon7zsya.bzz.link/ or here https://www.youtube.com/watch?v=YkUr01lAykQ
 
 Tested on Ubuntu 20.04.4 LTS
 

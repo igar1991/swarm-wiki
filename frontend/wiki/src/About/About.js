@@ -1,6 +1,6 @@
 export default function About() {
     return (
-        <div className="About">
+        <div className="About container py-3">
             <h1>About Bzz Wiki</h1>
 
             <p>Bzz Wiki is a front-end part of the Swarm Wiki project that allows you to view Wikipedia pages uploaded

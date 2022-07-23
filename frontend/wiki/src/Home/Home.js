@@ -2,7 +2,7 @@ import {Link} from "react-router-dom";
 
 export default function Home() {
     return (
-        <div className="Home">
+        <div className="Home container py-3">
             <div id="mw-content-text">
                 <section data-mw-section-id="0" id="mwAQ">
                     <meta property="mw:PageProp/displaytitle" content="Welcome" id="mwAg"/>
