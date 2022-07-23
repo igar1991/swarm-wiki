@@ -1,32 +1,22 @@
 import { Outlet, Link } from "react-router-dom";
+import './Layout.css';
 
 export default function Layout() {
     return (
-        <div>
-            {/* A "layout route" is a good place to put markup you want to
-          share across all the pages on your site, like navigation. */}
-            <nav>
-                <ul>
-                    <li>
-                        <Link to="/">Home</Link>
-                    </li>
-                    {/*<li>*/}
-                    {/*    <Link to="/about">About</Link>*/}
-                    {/*</li>*/}
-                    <li>
-                        <Link to="/wiki/en/Dance">Page Example</Link>
-                    </li>
-                    {/*<li>*/}
-                    {/*    <Link to="/nothing-here">Nothing Here</Link>*/}
-                    {/*</li>*/}
-                </ul>
-            </nav>
+        <div className="container py-3">
+            <header>
+                <div className="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+                    <Link to="/" className="d-flex align-items-center text-dark text-decoration-none">
+                        <img src="/favicon.png" alt="" className="Layout-header-logo"/>
+                        <span className="fs-4">Bzz Wiki</span>
+                    </Link>
 
-            <hr />
+                    <nav className="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+                        <Link className="py-2 text-dark text-decoration-none" to="/about">About</Link>
+                    </nav>
+                </div>
+            </header>
 
-            {/* An <Outlet> renders whatever child route is currently active,
-          so you can think about this <Outlet> as a placeholder for
-          the child routes we defined above. */}
             <Outlet />
         </div>
     );

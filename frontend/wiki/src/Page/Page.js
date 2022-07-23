@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useParams} from "react-router-dom";
-import {getPage} from "../utils";
+import {getPage, onIframeLoaded} from "../utils";
 import {Bee} from "@ethersphere/bee-js"
 import "./Page.css"
 
@@ -52,46 +52,7 @@ export default function Page() {
 
     return (
         <div className="Page">
-            <iframe ref={ref} srcDoc={pageContent ? pageContent.innerHTML : status} onLoad={() => {
-                const iframe = document.querySelector('iframe')
-                let aList = []
-                aList.push(...iframe.contentWindow.document.body.querySelectorAll('a'))
-
-                aList.forEach(a => {
-                    if (!a.href) {
-                        return
-                    }
-
-                    if (!a.hash.startsWith('#/') && !a.classList.contains('external')) {
-                        a.onclick = (e) => {
-                            e.preventDefault()
-                            const name = a.hash
-                            const element = iframe.contentWindow.document.body.querySelector(name)
-                            if (element) {
-                                element.scrollIntoView()
-                            } else {
-                                console.log('element not found', name)
-                            }
-                        }
-
-                        return
-                    }
-
-                    if (a.href.startsWith('http://') || a.href.startsWith('https://')) {
-                        return
-                    }
-
-                    const key = 'javascript:window.parent.location="'
-                    if (a.href.startsWith(key)) {
-                        a.setAttribute('href', a.dataset.url)
-                    }
-
-                    a.onclick = (e) => {
-                        e.preventDefault()
-                        window.parent.location = a.href;
-                    }
-                })
-            }}/>
+            <iframe ref={ref} srcDoc={pageContent ? pageContent.innerHTML : status} onLoad={onIframeLoaded}/>
         </div>
     );
 }

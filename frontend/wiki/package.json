@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ethersphere/bee-js": "^4.1.1",
+    "bootstrap": "^5.2.0",
     "node-html-parser": "^5.3.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

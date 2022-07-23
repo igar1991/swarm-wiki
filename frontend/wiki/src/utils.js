@@ -6,12 +6,18 @@ export const wikiOwnerAddress = process.env.REACT_APP_WIKI_OWNER_ADDRESS;
  * Downloads wikipedia page content and prepare it for rendering
  */
 export async function getPage(bee, lang, pageName) {
+    // todo send event to server in case problems with the page or/and try to download it from other source
     let content = await getContentByKey(bee, `wiki_page_${lang}_${pageName}`);
+    if (!content.trim()) {
+        throw new Error('Page is not available at this moment');
+    }
+
     const replaceWithUrl = '/wiki_files/en'
     const parsed = parse(content)
     // parsed.innerHTML = parsed.innerHTML.replace('<head>', `<head><script src="/wiki_files/handler.js"></script>`);
     const cssLinks = parsed.querySelectorAll('link')
     const scripts = parsed.querySelectorAll('script')
+    // because swarm can't handle so long urls during upload
     const longName = 'skins.minerva.base.reset|skins.minerva.content.styles|ext.cite.style|site.styles|mobile.app.pagestyles.android|mediawiki.page.gallery.styles|mediawiki.skinning.content.parsoid.css'
     const shortName = 'pack.css'
     cssLinks.forEach(item => {
@@ -23,13 +29,12 @@ export async function getPage(bee, lang, pageName) {
         }
     })
     const aList = parsed.querySelectorAll('a')
-    const iframe = document.querySelector('iframe')
     aList.forEach(a => {
         if (!a.attributes.href) {
             return
         }
 
-        if (a.attributes.href.startsWith('#')){
+        if (a.attributes.href.startsWith('#')) {
             return
         }
 
@@ -52,5 +57,50 @@ export async function getContentByKey(bee, key) {
     const topic = bee.makeFeedTopic(key)
     const feedReader = bee.makeFeedReader('sequence', topic, wikiOwnerAddress)
     const data = await feedReader.download()
+
     return (await bee.downloadData(data.reference)).text()
+}
+
+/**
+ * Handles iframe loaded event
+ */
+export function onIframeLoaded() {
+    const iframe = document.querySelector('iframe')
+    let aList = []
+    aList.push(...iframe.contentWindow.document.body.querySelectorAll('a'))
+
+    aList.forEach(a => {
+        if (!a.href) {
+            return
+        }
+
+        if (!a.hash.startsWith('#/') && !a.classList.contains('external')) {
+            a.onclick = (e) => {
+                e.preventDefault()
+                const name = a.hash
+                const element = iframe.contentWindow.document.body.querySelector(name)
+                if (element) {
+                    element.scrollIntoView()
+                } else {
+                    console.log('element not found', name)
+                }
+            }
+
+            return
+        }
+
+        if (a.href.startsWith('http://') || a.href.startsWith('https://')) {
+            return
+        }
+
+        const key = 'javascript:window.parent.location="'
+        if (a.href.startsWith(key)) {
+            a.setAttribute('href', a.dataset.url)
+        }
+
+        a.onclick = (e) => {
+            e.preventDefault()
+            window.parent.location = a.href;
+        }
+    })
 }
