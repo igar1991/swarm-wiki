@@ -114,7 +114,7 @@ export async function processContent(options) {
                 continue
             }
         } catch (e) {
-
+            console.log(`cache error: ${e.message}`)
         }
 
         let fileInfo
