@@ -90,6 +90,7 @@ services:
       - WIKI_UPLOADER_URL=http://uploader:${WIKI_UPLOADER_PORT}/
       - WIKI_DOWNLOADER_OUTPUT_DIR=/app/data/
       - WIKI_BEE_URL=http://bee:1633/
+      - WIKI_EXTRACTOR_2_MODE
     deploy:
       resources:
         limits:
