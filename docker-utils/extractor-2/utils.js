@@ -2,11 +2,20 @@ import fs from 'fs/promises';
 import {parse} from "node-html-parser";
 import Queue from "queue-promise";
 import fetch, {File, FormData} from "node-fetch";
+import {Bee, Utils} from "@ethersphere/bee-js";
+import {Wallet} from "ethers";
 
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+export function isCorrectMode(mode) {
+    return ['common', 'restore'].includes(mode);
+}
+
+/**
+ * Extracts correct key for uploading from exception item
+ */
 export function extractKeyFromExceptionItem(exceptionItem) {
     if (exceptionItem === 'A%2f100%_Lena') {
         return '100%_Lena'
@@ -24,6 +33,12 @@ export function extractKeyFromExceptionItem(exceptionItem) {
     return result
 }
 
+/**
+ * Gets list of items from file
+ *
+ * @param path
+ * @returns {Promise<string[]>}
+ */
 export async function getList(path) {
     const list = await fs.readFile(path, 'utf8');
 
@@ -31,8 +46,31 @@ export async function getList(path) {
         .split('\n')
 }
 
+export async function checkContentExists(ownerAddress, beeUrl, key, reference) {
+    const bee = new Bee(beeUrl)
+    const topic = bee.makeFeedTopic(key)
+    const feedReader = bee.makeFeedReader('sequence', topic, ownerAddress)
+    const content = await feedReader.download()
+    if (content.reference !== reference) {
+        throw new Error(`Content reference ${content.reference} is not equal to ${reference}`)
+    }
+}
+
+/**
+ * Processes all content
+ */
 export async function processContent(options) {
-    const {zimContentDirectory, articles, lang, uploaderUrl, exceptions} = options;
+    const {zimContentDirectory, articles, lang, uploaderUrl, exceptions, mode, privateKey, beeUrl} = options;
+
+    let ownerAddress = privateKey ? (new Wallet(privateKey)).address : null;
+
+    if (!isCorrectMode(mode)) {
+        throw new Error('Mode is not correct');
+    }
+
+    if (mode === 'restore' && !(privateKey && beeUrl && ownerAddress)) {
+        throw new Error('Private key or bee url or owner address is not set for mode "restore"');
+    }
 
     const concurrency = options?.concurrency || 5
     const queue = new Queue({
@@ -64,7 +102,13 @@ export async function processContent(options) {
         try {
             const stat = await fs.stat(cacheFileName)
             if (stat.isFile()) {
-                console.log('cache file exists, skip', cacheFileName);
+                if (mode === 'restore') {
+                    const cacheContent = JSON.parse(await fs.readFile(cacheFileName, 'utf8'))
+                    await checkContentExists(ownerAddress, beeUrl, saveKey, cacheContent.uploadedData.reference)
+                } else {
+                    console.log('cache file exists, skip', cacheFileName);
+                }
+
                 continue
             }
         } catch (e) {
@@ -107,18 +151,11 @@ export async function processContent(options) {
     }
 }
 
-// export function prepareUrl(url) {
-//     if (!url) {
-//         throw new Error('url is no defined')
-//     }
-//
-//     return url
-//         .split('\\').join('\\\\')
-//         .split('"').join('\\\"')
-//         .split('$').join('\\\$')
-//         .split('`').join('\\\`')
-// }
-
+/**
+ * Gets image content from filesystem
+ *
+ * @returns {Promise<Buffer>}
+ */
 export async function getImageByName(path, name) {
     const filePath = `${path}${name}`
     const fileInfo = await fs.stat(filePath)
@@ -129,6 +166,11 @@ export async function getImageByName(path, name) {
     return fs.readFile(filePath)
 }
 
+/**
+ * Insert images to page as base64
+ *
+ * @returns {Promise<*>}
+ */
 export async function insertImagesToPage(parsed, path) {
     const imgs = parsed.querySelectorAll('img')
     const cache = {}

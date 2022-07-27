@@ -114,6 +114,7 @@ export function prepareUrl(url) {
     }
 
     return url
+        .split('\\').join('\\\\')
         .split('"').join('\\\"')
         .split('$').join('\\\$')
         .split('`').join('\\\`')
