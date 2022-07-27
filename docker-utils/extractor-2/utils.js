@@ -46,13 +46,14 @@ export async function getList(path) {
         .split('\n')
 }
 
-export async function checkContentExists(ownerAddress, beeUrl, key, reference) {
+export async function checkContentExists(ownerAddress, beeUrl, key) {
     const bee = new Bee(beeUrl)
     const topic = bee.makeFeedTopic(key)
     const feedReader = bee.makeFeedReader('sequence', topic, ownerAddress)
     const content = await feedReader.download()
-    if (content.reference !== reference) {
-        throw new Error(`Content reference ${content.reference} is not equal to ${reference}`)
+    const data = (await bee.downloadData(content.reference)).text()
+    if (!data) {
+        throw new Error(`Data under ${content.reference} is empty`)
     }
 }
 
@@ -128,7 +129,7 @@ export async function processContent(options) {
                 try {
                     console.log(`checking for restoring ${cacheFileName}`)
                     const cacheContent = JSON.parse(await fs.readFile(cacheFileName, 'utf8'))
-                    await checkContentExists(ownerAddress, beeUrl, saveKey, cacheContent.uploadedData.reference)
+                    await checkContentExists(ownerAddress, beeUrl, saveKey)
                     console.log(`references found for ${cacheFileName}`)
 
                     return
