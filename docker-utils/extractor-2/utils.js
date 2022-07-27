@@ -103,8 +103,10 @@ export async function processContent(options) {
             const stat = await fs.stat(cacheFileName)
             if (stat.isFile()) {
                 if (mode === 'restore') {
+                    console.log(`restoring ${cacheFileName}`)
                     const cacheContent = JSON.parse(await fs.readFile(cacheFileName, 'utf8'))
                     await checkContentExists(ownerAddress, beeUrl, saveKey, cacheContent.uploadedData.reference)
+                    console.log(`references found for ${cacheFileName}`)
                 } else {
                     console.log('cache file exists, skip', cacheFileName);
                 }
