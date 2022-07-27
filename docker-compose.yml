@@ -67,6 +67,7 @@ services:
     environment:
       - WIKI_TRIGGER_URL=http://trigger:${WIKI_TRIGGER_PORT}/
       - WIKI_BEE_DEBUG_URL=http://bee:1635/
+      - WIKI_BEE_URL=http://bee:1633/
     depends_on:
       - bee
       - trigger
