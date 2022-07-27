@@ -126,14 +126,14 @@ export async function processContent(options) {
         queue.enqueue(async () => {
             if (mode === 'restore') {
                 try {
-                    console.log(`restoring ${cacheFileName}`)
+                    console.log(`checking for restoring ${cacheFileName}`)
                     const cacheContent = JSON.parse(await fs.readFile(cacheFileName, 'utf8'))
                     await checkContentExists(ownerAddress, beeUrl, saveKey, cacheContent.uploadedData.reference)
                     console.log(`references found for ${cacheFileName}`)
 
                     return
                 } catch (e) {
-
+                    console.log('restoring...', cacheFileName)
                 }
             }
 

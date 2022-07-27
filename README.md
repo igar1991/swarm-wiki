@@ -179,3 +179,9 @@ Here stored info only about pages, not redirects. But there is no guarantees tha
 Redis database management tool. With it, you can search, view, delete and edit any page entries.
 
 `http://localhost:8001/redis-stack/browser`
+
+## Experimental
+
+To run an extractor-2 that works on the full set of pre-extracted data, use command
+
+`docker compose -f docker-compose-v2.yml up -d`
