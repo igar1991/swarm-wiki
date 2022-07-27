@@ -95,23 +95,17 @@ export async function processContent(options) {
             continue
         }
 
-        const filePath = isException ? `${zimContentDirectory}_exceptions/${rawKeyTrimmed}` : `${zimContentDirectory}A/${key}`
+        const pageFilePath = isException ? `${zimContentDirectory}_exceptions/${rawKeyTrimmed}` : `${zimContentDirectory}A/${key}`
         const saveKey = `wiki_page_${lang.toLowerCase()}_${key}`
         const cacheFileName = `${zimContentDirectory}cache/${rawKeyTrimmed}`
 
         try {
             const stat = await fs.stat(cacheFileName)
             if (stat.isFile()) {
-                if (mode === 'restore') {
-                    console.log(`restoring ${cacheFileName}`)
-                    const cacheContent = JSON.parse(await fs.readFile(cacheFileName, 'utf8'))
-                    await checkContentExists(ownerAddress, beeUrl, saveKey, cacheContent.uploadedData.reference)
-                    console.log(`references found for ${cacheFileName}`)
-                } else {
+                if (mode !== 'restore') {
                     console.log('cache file exists, skip', cacheFileName);
+                    continue
                 }
-
-                continue
             }
         } catch (e) {
             console.log(`cache error: ${e.message}`)
@@ -119,18 +113,31 @@ export async function processContent(options) {
 
         let fileInfo
         try {
-            fileInfo = await fs.stat(filePath)
+            fileInfo = await fs.stat(pageFilePath)
             if (!fileInfo.isFile()) {
-                console.log('not a file', filePath);
+                console.log('not a file', pageFilePath);
                 continue
             }
         } catch (e) {
-            console.log('file does not exist', filePath);
+            console.log('file does not exist', pageFilePath);
             continue
         }
 
         queue.enqueue(async () => {
-            const page = await fs.readFile(filePath, {encoding: 'utf8'});
+            if (mode === 'restore') {
+                try {
+                    console.log(`restoring ${cacheFileName}`)
+                    const cacheContent = JSON.parse(await fs.readFile(cacheFileName, 'utf8'))
+                    await checkContentExists(ownerAddress, beeUrl, saveKey, cacheContent.uploadedData.reference)
+                    console.log(`references found for ${cacheFileName}`)
+
+                    return
+                } catch (e) {
+
+                }
+            }
+
+            const page = await fs.readFile(pageFilePath, {encoding: 'utf8'});
             const parsed = parse(page)
 
             try {
