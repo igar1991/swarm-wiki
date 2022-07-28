@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import fetch from "node-fetch";
 
 const beeUrl = process.env.WIKI_BEE_URL;
 const extractor2Url = process.env.WIKI_EXTRACTOR_2_URL;
