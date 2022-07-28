@@ -46,10 +46,13 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
 
     let feedJson = null
     let data = null
+    let feedResponse = null
     try {
         const url = `${beeUrl}feeds/${address}/${chunk}?type=sequence`
         console.log('fetching from bee node...', url)
-        feedJson = await (await fetch(url)).json();
+        feedResponse = await fetch(url)
+        console.log(...feedResponse.headers);
+        feedJson = await feedResponse.json();
         data = await (await fetch(`${beeUrl}bytes/${feedJson.reference}`)).text();
         console.log('successfully fetched from bee node', url)
     } catch (e) {
@@ -58,6 +61,8 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
 
     // if context exists in node - response the same as node
     if (feedJson && data) {
+        res.set(feedResponse.headers)
+
         return res.send(feedJson);
     }
 
