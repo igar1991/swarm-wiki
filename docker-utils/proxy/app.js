@@ -26,7 +26,7 @@ function isCorrectAddressLength(addressLength) {
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.get('/feeds/:address/:chunk', async (req, res) => {
+app.get('/feeds/:address/:chunk', async (req, res, next) => {
     // todo get address from config
     const allowedAddress = 'fffffA46f2883920e6f4976CF2F2E905523d80E6'
     const {address, chunk} = req.params;
