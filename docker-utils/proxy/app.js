@@ -61,7 +61,12 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
 
     // if context exists in node - response the same as node
     if (feedJson && data) {
-        res.set(feedResponse.headers)
+        const headers = feedResponse.headers
+        res.set({
+            'swarm-feed-index': headers['swarm-feed-index'],
+            'swarm-feed-index-next': headers['swarm-feed-index-next'],
+            'access-control-expose-headers': headers['access-control-expose-headers'],
+        })
 
         return res.send(feedJson);
     }
