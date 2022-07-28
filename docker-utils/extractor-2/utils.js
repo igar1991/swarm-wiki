@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import {parse} from "node-html-parser";
 import Queue from "queue-promise";
 import fetch, {File, FormData} from "node-fetch";
-import {Bee, Utils} from "@ethersphere/bee-js";
+import {Bee} from "@ethersphere/bee-js";
 import {Wallet} from "ethers";
 
 export function sleep(ms) {
@@ -57,11 +57,31 @@ export async function checkContentExists(ownerAddress, beeUrl, key) {
     }
 }
 
+export async function isFileExists(path) {
+    try {
+        const stat = await fs.stat(path)
+
+        return stat.isFile()
+    } catch (e) {
+        return false
+    }
+}
+
 /**
  * Processes all content
  */
 export async function processContent(options) {
-    const {zimContentDirectory, articles, lang, uploaderUrl, exceptions, mode, privateKey, beeUrl, resolverDirectory} = options;
+    const {
+        zimContentDirectory,
+        articles,
+        lang,
+        uploaderUrl,
+        exceptions,
+        mode,
+        privateKey,
+        beeUrl,
+        resolverDirectory
+    } = options;
 
     if (!resolverDirectory && !(await fs.stat(resolverDirectory)).isDirectory()) {
         throw new Error(`Resolver directory ${resolverDirectory} does not exist`)
@@ -110,7 +130,11 @@ export async function processContent(options) {
                 if (mode !== 'restore') {
                     console.log('cache file exists, create resolver and skip', cacheFileName);
                     const topic = JSON.parse(await fs.readFile(cacheFileName, 'utf8')).topic
-                    await fs.writeFile(`${resolverDirectory}${topic}`, rawKeyTrimmed)
+                    const resolveFilePath = `${resolverDirectory}${topic}`
+                    if (!await isFileExists(resolveFilePath)) {
+                        console.log('resolve file not found, write...', resolveFilePath)
+                        await fs.writeFile(resolveFilePath, rawKeyTrimmed)
+                    }
 
                     continue
                 }
@@ -135,7 +159,7 @@ export async function processContent(options) {
             if (mode === 'restore') {
                 try {
                     console.log(`checking for restoring ${cacheFileName}`)
-                    const cacheContent = JSON.parse(await fs.readFile(cacheFileName, 'utf8'))
+                    // const cacheContent = JSON.parse(await fs.readFile(cacheFileName, 'utf8'))
                     await checkContentExists(ownerAddress, beeUrl, saveKey)
                     console.log(`references found for ${cacheFileName}`)
 

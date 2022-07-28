@@ -7,3 +7,4 @@ docker build -t swarm-wiki-enhancer -f docker/enhancer/Dockerfile .
 docker build -t swarm-wiki-bee-waiter -f docker/bee-waiter/Dockerfile .
 docker build -t swarm-wiki-indexer -f docker/indexer/Dockerfile .
 docker build -t swarm-wiki-topuper -f docker/topuper/Dockerfile .
+docker build -t swarm-wiki-proxy -f docker/proxy/Dockerfile .

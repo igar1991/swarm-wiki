@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import fs from 'fs';
-import {getList, isCorrectMode, processContent} from "./utils.js";
+import {getList, insertImagesToPage, isCorrectMode, processContent, uploadContent} from "./utils.js";
+import {parse} from "node-html-parser";
 
 const app = express();
 
@@ -51,6 +52,7 @@ if (!fs.existsSync(outputDir + articlesFile)) {
     throw new Error(`Articles list file does not exist`);
 }
 
+// todo move cache dir to env variable
 if (!fs.existsSync(outputDir + 'cache')) {
     throw new Error(`Cache directory does not exist`);
 }
@@ -68,6 +70,10 @@ console.log('WIKI_EXTRACTOR_2_EXCEPTIONS_FILE', exceptionsFile);
 console.log('WIKI_EXTRACTOR_2_CONCURRENCY', concurrency);
 console.log('WIKI_DOWNLOADER_OUTPUT_DIR', outputDir);
 console.log('WIKI_EXTRACTOR_2_MODE', mode);
+
+function isCorrectChunkLength(chunkLength) {
+    return chunkLength === 64
+}
 
 app.use(cors());
 app.use(express.json());
@@ -101,6 +107,35 @@ app.post('/extract', async (req, res, next) => {
     })
 
     console.log('Done!')
+});
+
+app.get('/recover/:chunk', async (req, res, next) => {
+    const {chunk} = req.params;
+
+    console.log('received chunk', chunk);
+    if (!isCorrectChunkLength(chunk.length)) {
+        return next(`Chunk length is not correct`);
+    }
+
+    const chunkPath = outputDir + resolverDirectory + chunk
+    const pageName = fs.readFileSync(chunkPath, {encoding: 'utf8'});
+    if (!pageName) {
+        return next(`Chunk does not exist: ${chunk}`);
+    }
+
+    console.log('preparing content for chunk', chunk);
+    const pageFilePath = outputDir + 'A/' + pageName
+    const page = fs.readFileSync(pageFilePath, {encoding: 'utf8'});
+    const parsed = parse(page)
+    const preparedPage = await insertImagesToPage(parsed, outputDir)
+    res.send(preparedPage);
+    console.log('content for chunk prepared, send to uploader', chunk);
+    // todo make language as changable param
+    const saveKey = `wiki_page_en_${pageName}`
+    const cacheFileName = `${outputDir}cache/${pageName}`
+    console.log('content for chunk uploading', saveKey, chunk);
+    await uploadContent(uploaderUrl, saveKey, cacheFileName, preparedPage)
+    console.log('content for chunk uploaded', saveKey, chunk);
 });
 
 export default app;
