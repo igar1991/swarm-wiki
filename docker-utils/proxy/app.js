@@ -56,14 +56,17 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
 
     }
 
+    // if context exists in node - response the same as node
+    if (feedJson && data) {
+        return res.send(feedJson);
+    }
+
+    // in other case - get cached data and return it
     try {
-        if (!feedJson || !data) {
-            data = (await fetch(`${extractor2Url}recover/${chunk}`)).text();
-        }
+        data = (await fetch(`${extractor2Url}recover/${chunk}`)).text();
     } catch (e) {
 
     }
-
 
     if (!data) {
         return next('Data is not available');
