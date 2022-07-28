@@ -7,6 +7,7 @@ const app = express();
 
 const articlesFile = process.env.WIKI_EXTRACTOR_2_ARTICLES_FILE;
 const exceptionsFile = process.env.WIKI_EXTRACTOR_2_EXCEPTIONS_FILE;
+const resolverDirectory = process.env.WIKI_EXTRACTOR_2_RESOLVER_DIRECTORY;
 const concurrency = Number(process.env.WIKI_EXTRACTOR_2_CONCURRENCY ? process.env.WIKI_EXTRACTOR_2_CONCURRENCY : 10);
 const outputDir = process.env.WIKI_DOWNLOADER_OUTPUT_DIR;
 const uploaderUrl = process.env.WIKI_UPLOADER_URL;
@@ -20,6 +21,10 @@ if (!articlesFile) {
 
 if (!exceptionsFile) {
     throw new Error('WIKI_EXTRACTOR_2_EXCEPTIONS_FILE is not set');
+}
+
+if (!resolverDirectory) {
+    throw new Error('WIKI_EXTRACTOR_2_RESOLVER_DIRECTORY is not set');
 }
 
 if (!concurrency) {
@@ -52,6 +57,10 @@ if (!fs.existsSync(outputDir + 'cache')) {
 
 if (!fs.existsSync(outputDir + exceptionsFile)) {
     throw new Error(`Exceptions list file does not exist`);
+}
+
+if (!fs.existsSync(outputDir + resolverDirectory)) {
+    throw new Error(`Resolver directory does not exist`);
 }
 
 console.log('WIKI_EXTRACTOR_2_ARTICLES_FILE', articlesFile);
@@ -87,7 +96,8 @@ app.post('/extract', async (req, res, next) => {
         concurrency,
         mode,
         privateKey,
-        beeUrl
+        beeUrl,
+        resolverDirectory: outputDir + resolverDirectory
     })
 
     console.log('Done!')

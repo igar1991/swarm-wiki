@@ -61,7 +61,11 @@ export async function checkContentExists(ownerAddress, beeUrl, key) {
  * Processes all content
  */
 export async function processContent(options) {
-    const {zimContentDirectory, articles, lang, uploaderUrl, exceptions, mode, privateKey, beeUrl} = options;
+    const {zimContentDirectory, articles, lang, uploaderUrl, exceptions, mode, privateKey, beeUrl, resolverDirectory} = options;
+
+    if (!resolverDirectory && !(await fs.stat(resolverDirectory)).isDirectory()) {
+        throw new Error(`Resolver directory ${resolverDirectory} does not exist`)
+    }
 
     let ownerAddress = privateKey ? (new Wallet(privateKey)).address : null;
 
@@ -104,7 +108,10 @@ export async function processContent(options) {
             const stat = await fs.stat(cacheFileName)
             if (stat.isFile()) {
                 if (mode !== 'restore') {
-                    console.log('cache file exists, skip', cacheFileName);
+                    console.log('cache file exists, create resolver and skip', cacheFileName);
+                    const topic = JSON.parse(await fs.readFile(cacheFileName, 'utf8')).topic
+                    await fs.writeFile(`${resolverDirectory}${topic}`, rawKeyTrimmed)
+
                     continue
                 }
             }
