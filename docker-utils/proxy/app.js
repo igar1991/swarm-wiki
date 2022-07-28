@@ -50,9 +50,7 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
         const url = `${beeUrl}feeds/${address}/${chunk}?type=sequence`
         console.log('fetching from bee node...', url)
         feedJson = await (await fetch(url)).json();
-        console.log('feedJson', feedJson)
         data = await (await fetch(`${beeUrl}bytes/${feedJson.reference}`)).text();
-        console.log('data', data)
         console.log('successfully fetched from bee node', url)
     } catch (e) {
 
@@ -71,7 +69,7 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
         return next('Data is not available');
     }
 
-    res.send(data);
+    res.send({cache: data});
 });
 
 app.get('/bytes/:chunk', async (req, res, next) => {
