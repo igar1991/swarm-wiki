@@ -63,9 +63,9 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
     if (feedJson && data) {
         const headers = feedResponse.headers
         res.set({
-            'swarm-feed-index': headers['swarm-feed-index'],
-            'swarm-feed-index-next': headers['swarm-feed-index-next'],
-            'access-control-expose-headers': headers['access-control-expose-headers'],
+            'swarm-feed-index': headers.get('swarm-feed-index'),
+            'swarm-feed-index-next': headers.get('swarm-feed-index-next'),
+            'access-control-expose-headers': headers.get('access-control-expose-headers'),
         })
 
         return res.send(feedJson);
