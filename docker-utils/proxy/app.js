@@ -29,8 +29,6 @@ app.use(express.json());
 app.get('/feeds/:address/:chunk', async (req, res, next) => {
     // todo get address from config
     const allowedAddress = 'fffffA46f2883920e6f4976CF2F2E905523d80E6'
-    console.log('req.params',req.params)
-    console.log('req.body',req.body)
     const {address, chunk} = req.params;
 
     if (!isCorrectChunkLength(chunk.length)) {

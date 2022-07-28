@@ -105,7 +105,7 @@ services:
     image: swarm-wiki-proxy
     environment:
       - WIKI_PROXY_PORT
-      - WIKI_BEE_URL=http://bee:1633/
+      - WIKI_BEE_URL=http://localhost:1633/
       - WIKI_EXTRACTOR_2_URL=http://extractor-2:${WIKI_EXTRACTOR_2_PORT}/
     ports:
       - "${WIKI_PROXY_PORT}:${WIKI_PROXY_PORT}"
