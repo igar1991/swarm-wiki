@@ -1,6 +1,6 @@
 import app from './app.js';
 
-const port = process.env.WIKI_EXTRACTOR_2_PORT;
+const port = process.env.WIKI_PROXY_PORT;
 if (!port) {
     throw new Error('WIKI_PROXY_PORT is not set');
 }
