@@ -118,11 +118,12 @@ app.get('/recover/:chunk', async (req, res, next) => {
     }
 
     const chunkPath = outputDir + resolverDirectory + chunk
-    const pageName = fs.readFileSync(chunkPath, {encoding: 'utf8'});
-    if (!pageName) {
+    if (!fs.existsSync(chunkPath)) {
+        console.log('chunk does not exist', chunkPath);
         return next(`Chunk does not exist: ${chunk}`);
     }
 
+    const pageName = fs.readFileSync(chunkPath, {encoding: 'utf8'});
     console.log('preparing content for chunk', chunk);
     const pageFilePath = outputDir + 'A/' + pageName
     const page = fs.readFileSync(pageFilePath, {encoding: 'utf8'});
