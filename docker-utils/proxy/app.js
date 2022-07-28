@@ -92,7 +92,7 @@ app.get('/bytes/:chunk', async (req, res, next) => {
         return next('Incorrect length of chunk');
     }
 
-    const data = (await fetch(`${beeUrl}bytes/${chunk}`)).text();
+    const data = await (await fetch(`${beeUrl}bytes/${chunk}`)).text();
 
     res.send(data);
 });
