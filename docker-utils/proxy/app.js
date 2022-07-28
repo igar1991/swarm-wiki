@@ -49,9 +49,9 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
     try {
         const url = `${beeUrl}feeds/${address}/${chunk}?type=sequence`
         console.log('fetching from bee node...', url)
-        feedJson = (await fetch(url)).json();
+        feedJson = await (await fetch(url)).json();
         console.log('feedJson', feedJson)
-        data = (await fetch(`${beeUrl}bytes/${feedJson.reference}`)).text();
+        data = await (await fetch(`${beeUrl}bytes/${feedJson.reference}`)).text();
         console.log('data', data)
         console.log('successfully fetched from bee node', url)
     } catch (e) {
