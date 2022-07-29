@@ -12,9 +12,7 @@ and without Bee node
 
 # How to deploy the project?
 
-Before you follow the instructions for deploying the project, you can watch a video with all the steps.
-
-Here http://bee.bzzwiki.xyz/bzz/10cf6850c3989dcfe0f754fc0d64d8f7697f5f916ab7acc82113eef2b9bfccb0/ or here https://www.youtube.com/watch?v=YkUr01lAykQ
+Before you follow the instructions for deploying the project, you can watch a video with all the steps: https://www.youtube.com/watch?v=YkUr01lAykQ
 
 Tested on Ubuntu 20.04.4 LTS
 
