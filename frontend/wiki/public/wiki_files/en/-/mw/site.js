@@ -38,8 +38,8 @@ mw.loader.using( [ 'mediawiki.util' ] ).done( function () {
 	 * @source www.mediawiki.org/wiki/Snippets/Load_JS_and_CSS_by_URL
 	 * @rev 6
 	 */
-	var extraCSS = mw.util.getParamValue( 'withCSS' ),
-		extraJS = mw.util.getParamValue( 'withJS' );
+	var extraCSS = mw.util ? mw.util.getParamValue( 'withCSS' ) : () => {},
+		extraJS = mw.util ? mw.util.getParamValue( 'withJS' ) : () => {};
 
 	if ( extraCSS ) {
 		if ( extraCSS.match( /^MediaWiki:[^&<>=%#]*\.css$/ ) ) {
