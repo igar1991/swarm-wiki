@@ -104,6 +104,10 @@ app.post('/recover', async (req, res, next) => {
     }
 
     const pageFilePath = outputDir + 'A/' + pageName
+    if (!fs.existsSync(pageFilePath)) {
+        return next(`Page file does not exist`);
+    }
+
     const page = fs.readFileSync(pageFilePath, {encoding: 'utf8'});
     const parsed = parse(page)
     const preparedPage = await insertImagesToPage(parsed, outputDir)

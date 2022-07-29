@@ -28,9 +28,9 @@ function isCorrectAddressLength(addressLength) {
     return addressLength === 40
 }
 
-console.log('getting all pages...');
-const {result0, result1, result2} = getAllPages(outputDir, articlesFile, 'topic_pagename_cache')
-console.log('got all pages');
+// console.log('getting all pages...');
+// const {result0, result1, result2} = getAllPages(outputDir, articlesFile, 'topic_pagename_cache')
+// console.log('got all pages');
 
 const app = express();
 app.use(cors());
@@ -39,6 +39,7 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
     // todo get address from config
     const allowedAddress = 'fffffA46f2883920e6f4976CF2F2E905523d80E6'
     const {address, chunk} = req.params;
+    const {pageName} = req.query;
 
     if (!isCorrectChunkLength(chunk.length)) {
         return next('Incorrect length of chunk');
@@ -81,18 +82,8 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
         return res.send(feedJson);
     }
 
-    let pageName = result0[chunk];
-
     if (!pageName) {
-        pageName = result1[chunk];
-    }
-
-    if (!pageName) {
-        pageName = result2[chunk];
-    }
-
-    if (!pageName) {
-        return next('Page name not found');
+        return next('Page content not found in swarm and in cache');
     }
 
     console.log('found page name', pageName);

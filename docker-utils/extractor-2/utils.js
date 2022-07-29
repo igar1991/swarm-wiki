@@ -119,23 +119,8 @@ export async function processContent(options) {
         const saveKey = `wiki_page_${lang.toLowerCase()}_${key}`
         const cacheFileName = `${zimContentDirectory}cache/${rawKeyTrimmed}`
 
-        try {
-            const stat = await fs.stat(cacheFileName)
-            if (stat.isFile()) {
-                if (mode !== 'restore') {
-                    console.log('cache file exists, skip', cacheFileName);
-                    // const topic = JSON.parse(await fs.readFile(cacheFileName, 'utf8')).topic
-                    // const resolveFilePath = `${resolverDirectory}${topic}`
-                    // if (!await isFileExists(resolveFilePath)) {
-                    //     console.log('resolve file not found, write...', resolveFilePath)
-                    //     await fs.writeFile(resolveFilePath, rawKeyTrimmed)
-                    // }
-
-                    continue
-                }
-            }
-        } catch (e) {
-            console.log(`cache error: ${e.message}`)
+        if (await isFileExists(cacheFileName)) {
+            continue
         }
 
         let fileInfo
