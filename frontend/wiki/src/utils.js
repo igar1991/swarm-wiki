@@ -55,7 +55,7 @@ export async function getPage(bee, lang, pageName) {
 export async function getContentByKey(bee, key, pageName) {
     const topic = bee.makeFeedTopic(key)
     const feedReader = bee.makeFeedReader('sequence', topic, wikiOwnerAddress)
-    const data = (await fetch(process.env.REACT_APP_BEE_URL + `feeds/${wikiOwnerAddress.replace('0x', '')}/${feedReader.topic}?type=sequence&pageName=${decodeURI(pageName)}`)).json()
+    const data = await (await fetch(process.env.REACT_APP_BEE_URL + `feeds/${wikiOwnerAddress.replace('0x', '')}/${feedReader.topic}?type=sequence&pageName=${decodeURI(pageName)}`)).json()
 
     if (data.cache) {
         return data.cache
