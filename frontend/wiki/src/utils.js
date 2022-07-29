@@ -6,8 +6,7 @@ export const wikiOwnerAddress = process.env.REACT_APP_WIKI_OWNER_ADDRESS;
  * Downloads wikipedia page content and prepare it for rendering
  */
 export async function getPage(bee, lang, pageName) {
-    // todo send event to server in case problems with the page or/and try to download it from other source
-    let content = await getContentByKey(bee, `wiki_page_${lang}_${pageName}`);
+    let content = await getContentByKey(bee, `wiki_page_${lang}_${pageName}`, pageName);
     if (!content.trim()) {
         throw new Error('Page is not available at this moment');
     }
@@ -53,12 +52,16 @@ export async function getPage(bee, lang, pageName) {
 /**
  * Downloads page by key from feed
  */
-export async function getContentByKey(bee, key) {
+export async function getContentByKey(bee, key, pageName) {
     const topic = bee.makeFeedTopic(key)
     const feedReader = bee.makeFeedReader('sequence', topic, wikiOwnerAddress)
-    const data = await feedReader.download()
+    const data = (await fetch(process.env.REACT_APP_BEE_URL + `feeds/${wikiOwnerAddress.replace('0x', '')}/${feedReader.topic}?type=sequence&pageName=${decodeURI(pageName)}`)).json()
 
-    return (await bee.downloadData(data.reference)).text()
+    if (data.cache) {
+        return data.cache
+    } else {
+        return (await bee.downloadData(data.reference)).text()
+    }
 }
 
 /**

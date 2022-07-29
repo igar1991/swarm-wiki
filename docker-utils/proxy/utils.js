@@ -4,14 +4,16 @@ import fs from 'fs'
 /**
  * Sends page name to recovery service and returns page data
  */
-export async function recoverPage(extractorUrl, pageName) {
-    const form = new FormData();
-    form.append('pageName', pageName);
-
-    return (await fetch(extractorUrl + 'recover', {
+export async function recoverPage(extractor2Url, pageName) {
+    const params = {
         method: 'POST',
-        body: form
-    })).text()
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({pageName})
+    }
+
+    return (await fetch(extractor2Url + 'recover', params)).text()
 }
 
 export function getList(path) {

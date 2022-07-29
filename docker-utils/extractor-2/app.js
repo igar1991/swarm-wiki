@@ -44,7 +44,7 @@ if (mode === 'restore' && !(privateKey && beeUrl)) {
 }
 
 if (!fs.existsSync(outputDir + articlesFile)) {
-    throw new Error(`Articles list file does not exist`);
+    throw new Error(`Articles list file does not exist ${outputDir + articlesFile}`);
 }
 
 // todo move cache dir to env variable
@@ -66,6 +66,8 @@ app.use(cors());
 app.use(express.json());
 app.post('/extract', async (req, res, next) => {
     const {fileName, lang} = req.body;
+
+    console.log('fileName', fileName, 'lang', lang);
 
     if (!fileName) {
         return next(`File param is empty`);
