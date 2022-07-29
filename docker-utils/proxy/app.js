@@ -95,6 +95,7 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
         return next('Page name not found');
     }
 
+    console.log('found page name', pageName);
     // in other case - get cached data and return it
     try {
         data = await recoverPage(extractor2Url, pageName);

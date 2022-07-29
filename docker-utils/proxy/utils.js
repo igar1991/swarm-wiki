@@ -39,8 +39,12 @@ export function getAllPages(workingDirectory, articlesFile, identity) {
     } else {
         const list = getList(workingDirectory + articlesFile)
         for (const [index, item] of list.entries()) {
-            console.log(`getting page ${index + 1}/${list.length}`)
+            if (index > 1000) {
+                break
+            }
+
             const path = workingDirectory + 'cache/' + item
+            console.log(`getting page ${index + 1}/${list.length}`, path)
             try {
                 const json = JSON.parse(fs.readFileSync(path, {encoding: 'utf8'}))
                 if (index < 8000000) {

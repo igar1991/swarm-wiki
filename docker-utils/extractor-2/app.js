@@ -99,6 +99,10 @@ app.post('/recover', async (req, res, next) => {
     const {pageName} = req.body;
 
     console.log('received pageName', pageName);
+    if (!pageName) {
+        return next(`Page name is empty`);
+    }
+
     const pageFilePath = outputDir + 'A/' + pageName
     const page = fs.readFileSync(pageFilePath, {encoding: 'utf8'});
     const parsed = parse(page)
