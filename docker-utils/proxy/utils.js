@@ -30,7 +30,7 @@ export function getAllPages(workingDirectory, articlesFile, identity) {
     const cachedList0 = cachedList + '.0'
     const cachedList1 = cachedList + '.1'
     const cachedList2 = cachedList + '.2'
-    if (fs.existsSync(cachedList)) {
+    if (fs.existsSync(cachedList0) && fs.existsSync(cachedList1) && fs.existsSync(cachedList2)) {
         console.log('found cached list')
         result0 = JSON.parse(fs.readFileSync(cachedList0, {encoding: 'utf8'}))
         result1 = JSON.parse(fs.readFileSync(cachedList1, {encoding: 'utf8'}))
