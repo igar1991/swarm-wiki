@@ -1,9 +1,13 @@
 import express from 'express';
 import cors from 'cors';
 import fetch from "node-fetch";
+import {getAllPages, recoverPage} from "./utils.js";
 
 const beeUrl = process.env.WIKI_BEE_URL;
 const extractor2Url = process.env.WIKI_EXTRACTOR_2_URL;
+const outputDir = process.env.WIKI_DOWNLOADER_OUTPUT_DIR;
+const articlesFile = process.env.WIKI_EXTRACTOR_2_ARTICLES_FILE;
+
 
 if (!beeUrl) {
     throw new Error('WIKI_BEE_URL is not set');
@@ -23,6 +27,10 @@ function isCorrectChunkLength(chunkLength) {
 function isCorrectAddressLength(addressLength) {
     return addressLength === 40
 }
+
+console.log('getting all pages...');
+const allPages = getAllPages(outputDir, articlesFile, 'topic_pagename_cache')
+console.log('got all pages');
 
 const app = express();
 app.use(cors());
@@ -73,9 +81,14 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
         return res.send(feedJson);
     }
 
+    const pageName = allPages[chunk];
+    if (!pageName) {
+        return next('Page name not found');
+    }
+
     // in other case - get cached data and return it
     try {
-        data = (await fetch(`${extractor2Url}recover/${chunk}`)).text();
+        data = await recoverPage(extractor2Url, pageName);
     } catch (e) {
 
     }

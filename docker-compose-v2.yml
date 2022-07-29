@@ -107,8 +107,16 @@ services:
       - WIKI_PROXY_PORT
       - WIKI_BEE_URL=http://bee:1633/
       - WIKI_EXTRACTOR_2_URL=http://extractor-2:${WIKI_EXTRACTOR_2_PORT}/
+      - WIKI_DOWNLOADER_OUTPUT_DIR=/app/data/
+      - WIKI_EXTRACTOR_2_ARTICLES_FILE
     ports:
       - "${WIKI_PROXY_PORT}:${WIKI_PROXY_PORT}"
+    deploy:
+      resources:
+        limits:
+          memory: 4096M
+    volumes:
+      - ${WIKI_DOWNLOAD_LOCAL_DIR}:/app/data
 
   downloader:
     image: swarm-wiki-downloader

@@ -128,13 +128,13 @@ export async function processContent(options) {
             const stat = await fs.stat(cacheFileName)
             if (stat.isFile()) {
                 if (mode !== 'restore') {
-                    console.log('cache file exists, create resolver and skip', cacheFileName);
-                    const topic = JSON.parse(await fs.readFile(cacheFileName, 'utf8')).topic
-                    const resolveFilePath = `${resolverDirectory}${topic}`
-                    if (!await isFileExists(resolveFilePath)) {
-                        console.log('resolve file not found, write...', resolveFilePath)
-                        await fs.writeFile(resolveFilePath, rawKeyTrimmed)
-                    }
+                    console.log('cache file exists, skip', cacheFileName);
+                    // const topic = JSON.parse(await fs.readFile(cacheFileName, 'utf8')).topic
+                    // const resolveFilePath = `${resolverDirectory}${topic}`
+                    // if (!await isFileExists(resolveFilePath)) {
+                    //     console.log('resolve file not found, write...', resolveFilePath)
+                    //     await fs.writeFile(resolveFilePath, rawKeyTrimmed)
+                    // }
 
                     continue
                 }

@@ -71,10 +71,6 @@ console.log('WIKI_EXTRACTOR_2_CONCURRENCY', concurrency);
 console.log('WIKI_DOWNLOADER_OUTPUT_DIR', outputDir);
 console.log('WIKI_EXTRACTOR_2_MODE', mode);
 
-function isCorrectChunkLength(chunkLength) {
-    return chunkLength === 64
-}
-
 app.use(cors());
 app.use(express.json());
 app.post('/extract', async (req, res, next) => {
@@ -109,34 +105,22 @@ app.post('/extract', async (req, res, next) => {
     console.log('Done!')
 });
 
-app.get('/recover/:chunk', async (req, res, next) => {
-    const {chunk} = req.params;
+app.post('/recover', async (req, res, next) => {
+    const {pageName} = req.body;
 
-    console.log('received chunk', chunk);
-    if (!isCorrectChunkLength(chunk.length)) {
-        return next(`Chunk length is not correct`);
-    }
-
-    const chunkPath = outputDir + resolverDirectory + chunk
-    if (!fs.existsSync(chunkPath)) {
-        console.log('chunk does not exist', chunkPath);
-        return next(`Chunk does not exist: ${chunk}`);
-    }
-
-    const pageName = fs.readFileSync(chunkPath, {encoding: 'utf8'});
-    console.log('preparing content for chunk', chunk);
+    console.log('received pageName', pageName);
     const pageFilePath = outputDir + 'A/' + pageName
     const page = fs.readFileSync(pageFilePath, {encoding: 'utf8'});
     const parsed = parse(page)
     const preparedPage = await insertImagesToPage(parsed, outputDir)
     res.send(preparedPage);
-    console.log('content for chunk prepared, send to uploader', chunk);
+    console.log('content prepared, send to uploader', pageName);
     // todo make language as changable param
     const saveKey = `wiki_page_en_${pageName}`
     const cacheFileName = `${outputDir}cache/${pageName}`
-    console.log('content for chunk uploading', saveKey, chunk);
+    console.log('content for pageName uploading', saveKey);
     await uploadContent(uploaderUrl, saveKey, cacheFileName, preparedPage)
-    console.log('content for chunk uploaded', saveKey, chunk);
+    console.log('content for pageName uploaded', saveKey);
 });
 
 export default app;
