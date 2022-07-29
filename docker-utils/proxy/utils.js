@@ -53,14 +53,14 @@ export function getAllPages(workingDirectory, articlesFile, identity) {
             } catch (e) {
                 console.log('can not read file', path)
             }
-
         }
 
-        console.log('saving cached list...')
-        fs.writeFileSync(cachedList0, JSON.stringify(result0))
-        fs.writeFileSync(cachedList1, JSON.stringify(result1))
-        fs.writeFileSync(cachedList2, JSON.stringify(result2))
-        console.log('cached list saved')
+        // todo throw an error because of too long string. should be saved as a simple file and recovered by reading line by line
+        // console.log('saving cached list...')
+        // fs.writeFileSync(cachedList0, JSON.stringify(result0))
+        // fs.writeFileSync(cachedList1, JSON.stringify(result1))
+        // fs.writeFileSync(cachedList2, JSON.stringify(result2))
+        // console.log('cached list saved')
     }
 
     return {result0, result1, result2}
