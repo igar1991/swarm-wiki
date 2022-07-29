@@ -29,7 +29,7 @@ function isCorrectAddressLength(addressLength) {
 }
 
 console.log('getting all pages...');
-const allPages = getAllPages(outputDir, articlesFile, 'topic_pagename_cache')
+const {result0, result1, result2} = getAllPages(outputDir, articlesFile, 'topic_pagename_cache')
 console.log('got all pages');
 
 const app = express();
@@ -81,7 +81,16 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
         return res.send(feedJson);
     }
 
-    const pageName = allPages[chunk];
+    let pageName = result0[chunk];
+
+    if (!pageName) {
+        pageName = result1[chunk];
+    }
+
+    if (!pageName) {
+        pageName = result2[chunk];
+    }
+
     if (!pageName) {
         return next('Page name not found');
     }
