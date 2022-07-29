@@ -79,13 +79,8 @@ export async function processContent(options) {
         exceptions,
         mode,
         privateKey,
-        beeUrl,
-        resolverDirectory
+        beeUrl
     } = options;
-
-    if (!resolverDirectory && !(await fs.stat(resolverDirectory)).isDirectory()) {
-        throw new Error(`Resolver directory ${resolverDirectory} does not exist`)
-    }
 
     let ownerAddress = privateKey ? (new Wallet(privateKey)).address : null;
 
