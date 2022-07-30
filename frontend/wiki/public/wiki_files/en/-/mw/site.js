@@ -38,24 +38,24 @@ mw.loader.using( [ 'mediawiki.util' ] ).done( function () {
 	 * @source www.mediawiki.org/wiki/Snippets/Load_JS_and_CSS_by_URL
 	 * @rev 6
 	 */
-	var extraCSS = mw.util ? mw.util.getParamValue( 'withCSS' ) : () => {},
+	var extraCSS = mw.util ? mw.util.getParamValue( 'withCSS' ) : ({match:()=>false}) ,
 		extraJS = mw.util ? mw.util.getParamValue( 'withJS' ) : () => {};
 
-	if ( extraCSS ) {
-		if ( extraCSS.match( /^MediaWiki:[^&<>=%#]*\.css$/ ) ) {
-			mw.loader.load( '/w/index.php?title=' + extraCSS + '&action=raw&ctype=text/css', 'text/css' );
-		} else {
-			mw.notify( 'Only pages from the MediaWiki namespace are allowed.', { title: 'Invalid withCSS value' } );
-		}
-	}
-
-	if ( extraJS ) {
-		if ( extraJS.match( /^MediaWiki:[^&<>=%#]*\.js$/ ) ) {
-			mw.loader.load( '/w/index.php?title=' + extraJS + '&action=raw&ctype=text/javascript' );
-		} else {
-			mw.notify( 'Only pages from the MediaWiki namespace are allowed.', { title: 'Invalid withJS value' } );
-		}
-	}
+	// if ( extraCSS ) {
+	// 	if ( extraCSS.match( /^MediaWiki:[^&<>=%#]*\.css$/ ) ) {
+	// 		mw.loader.load( '/w/index.php?title=' + extraCSS + '&action=raw&ctype=text/css', 'text/css' );
+	// 	} else {
+	// 		mw.notify( 'Only pages from the MediaWiki namespace are allowed.', { title: 'Invalid withCSS value' } );
+	// 	}
+	// }
+    //
+	// if ( extraJS ) {
+	// 	if ( extraJS.match( /^MediaWiki:[^&<>=%#]*\.js$/ ) ) {
+	// 		mw.loader.load( '/w/index.php?title=' + extraJS + '&action=raw&ctype=text/javascript' );
+	// 	} else {
+	// 		mw.notify( 'Only pages from the MediaWiki namespace are allowed.', { title: 'Invalid withJS value' } );
+	// 	}
+	// }
 
 	/**
 	 * WikiMiniAtlas

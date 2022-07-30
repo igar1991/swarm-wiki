@@ -107,3 +107,18 @@ export function onIframeLoaded() {
         }
     })
 }
+
+export function getRedirectPage(parsed) {
+    const content = parsed?.innerHTML
+    const redirectKey = 'redirect:'
+    const redirectKey2 = `<meta http-equiv="refresh" content="0;url=`
+
+    let redirectPage = ''
+    if (content?.startsWith(redirectKey)) {
+        redirectPage = content.substring(redirectKey.length)
+    } else if (content?.includes(redirectKey2)) {
+        redirectPage = parsed.querySelector('meta[http-equiv="refresh"]').attributes.content.split('url=')[1]
+    }
+
+    return redirectPage
+}

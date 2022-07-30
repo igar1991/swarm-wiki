@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useParams} from "react-router-dom";
-import {getPage, onIframeLoaded} from "../utils";
+import {getPage, getRedirectPage, onIframeLoaded} from "../utils";
 import {Bee} from "@ethersphere/bee-js"
 import "./Page.css"
 
@@ -63,15 +63,9 @@ export default function Page() {
                 setPageContent('')
                 setStatus('loading')
                 const {parsed} = await getPage(bee, lang, page)
-                const redirectKey = 'redirect:'
                 const content = parsed?.innerHTML
-                if (content?.startsWith(redirectKey)) {
-                    const redirectPage = content.substring(redirectKey.length)
-                    if (!redirectPage) {
-                        alert('Received empty redirect page. Try to visit other page or contact admin')
-                        return
-                    }
-
+                const redirectPage = getRedirectPage(parsed)
+                if (redirectPage) {
                     window.location.href = `#/wiki/${lang}/${redirectPage}`
                     return
                 }

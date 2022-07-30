@@ -6,16 +6,16 @@ export default function Home() {
             <div id="mw-content-text">
                 <section data-mw-section-id="0" id="mwAQ">
                     <meta property="mw:PageProp/displaytitle" content="Welcome" id="mwAg"/>
-                    <p id="mwCA">
+                    <div id="mwCA" style={{marginBottom: 12}}>
                         <b id="mwCQ">
                             <span id="mwCw">6,489,052</span></b> articles in <b id="mwDA">
                         <Link to="/wiki/en/English_Wikipedia" title="English Wikipedia" id="mwDQ">English</Link>
                     </b>
-                    </p>
+                    </div>
 
                 </section>
                 <section data-mw-section-id="1" id="mwDg"><h2 id="Arts">Arts</h2>
-                    <p id="mwDw"><Link to="/wiki/en/Architecture" title="Architecture" id="mwEA">Architecture</Link>
+                    <div id="mwDw" style={{marginBottom: 12}}><Link to="/wiki/en/Architecture" title="Architecture" id="mwEA">Architecture</Link>
                         <div className="link-separator">•</div>
                         <Link to="/wiki/en/Books" title="Books" className="mw-redirect" id="mwEQ">Books</Link> <div className="link-separator">•</div>
                         <Link to="/wiki/en/Cinematography" title="Cinematography" id="mwEg">Cinematography</Link> <div className="link-separator">•</div>
@@ -39,11 +39,11 @@ export default function Home() {
                             title="Sculpture"
                             id="mwHg">Sculpture</Link> <div className="link-separator">•</div>
                         <Link to="/wiki/en/Theatre" title="Theatre" id="mwHw">Theatre</Link>
-                    </p>
+                    </div>
 
                 </section>
                 <section data-mw-section-id="2" id="mwIQ"><h2 id="Geography">Geography</h2>
-                    <p id="mwIg"><Link to="/wiki/en/Africa" title="Africa" id="mwIw">Africa</Link> <div className="link-separator">•</div>
+                    <div id="mwIg" style={{marginBottom: 15}}><Link to="/wiki/en/Africa" title="Africa" id="mwIw">Africa</Link> <div className="link-separator">•</div>
                         <Link to="/wiki/en/Antarctica" title="Antarctica" id="mwJA">Antarctica</Link> <div className="link-separator">•</div> <Link
                             to="/wiki/en/Arctic"
                             title="Arctic"
@@ -66,11 +66,11 @@ export default function Home() {
                             title="South America"
                             id="mwLw">South
                             America</Link> <div className="link-separator">•</div> <Link to="/wiki/en/Cartography" title="Cartography"
-                                                   id="mwMA">Cartography</Link></p>
+                                                   id="mwMA">Cartography</Link></div>
 
                 </section>
                 <section data-mw-section-id="3" id="mwMQ"><h2 id="History">History</h2>
-                    <p id="mwMg"><Link to="/wiki/en/Ancient_Egypt" title="Ancient Egypt" id="mwMw">Ancient
+                    <div id="mwMg" style={{marginBottom: 12}}><Link to="/wiki/en/Ancient_Egypt" title="Ancient Egypt" id="mwMw">Ancient
                         Egypt</Link> <div className="link-separator">•</div>
                         <Link to="/wiki/en/Ancient_Greece" title="Ancient Greece" id="mwNA">Ancient Greece</Link> <div className="link-separator">•</div>
                         <Link to="/wiki/en/Ancient_Near_East" title="Ancient Near East" id="mwNQ">Ancient Near
@@ -86,7 +86,7 @@ export default function Home() {
                             title="Heraldry"
                             id="mwPA">Heraldry</Link> <div className="link-separator">•</div>
                         <Link to="/wiki/en/History_of_science" title="History of science" id="mwPQ">History of
-                            science</Link> <div className="link-separator">•</div> <Link to="/wiki/en/History_of_China#Imperial_China"
+                            science</Link> <div className="link-separator">•</div> <Link to="/wiki/en/History_of_China"
                                                    title="History of China"
                                                    id="mwPg">Imperial China</Link> <div className="link-separator">•</div> <Link
                             to="/wiki/en/Indian_independence_movement"
@@ -102,11 +102,11 @@ export default function Home() {
                         <Link to="/wiki/en/Sasanian_Empire" title="Sasanian Empire" id="mwRQ">Sasanian Empire</Link> <div className="link-separator">•</div>
                         <Link to="/wiki/en/Seljuk_Empire" title="Seljuk Empire" id="mwRg">Seljuk Empire</Link> <div className="link-separator">•</div>
                         <Link to="/wiki/en/Soviet_Union" title="Soviet Union" id="mwRw">Soviet Union</Link> <div className="link-separator">•</div>
-                        <Link to="/wiki/en/War" title="War" id="mwSA">War</Link></p>
+                        <Link to="/wiki/en/War" title="War" id="mwSA">War</Link></div>
 
                 </section>
                 <section data-mw-section-id="4" id="mwSQ"><h2 id="Sciences">Sciences</h2>
-                    <p id="mwSg"><Link to="/wiki/en/Agriculture" title="Agriculture" id="mwSw">Agriculture</Link> <div className="link-separator">•</div>
+                    <div id="mwSg" style={{marginBottom: 12}}><Link to="/wiki/en/Agriculture" title="Agriculture" id="mwSw">Agriculture</Link> <div className="link-separator">•</div>
                         <Link to="/wiki/en/Applied_mathematics" title="Applied mathematics" id="mwTA">Applied
                             mathematics</Link> <div className="link-separator">•</div> <Link to="/wiki/en/Architecture" title="Architecture"
                                                        id="mwTQ">Architecture</Link> <div className="link-separator">•</div> <Link
@@ -139,11 +139,11 @@ export default function Home() {
                             sciences</Link> <div className="link-separator">•</div> <Link to="/wiki/en/Physics" title="Physics" id="mwXA">Physics</Link> <div className="link-separator">•</div>
                         <Link to="/wiki/en/Social_sciences" title="Social sciences" className="mw-redirect" id="mwXQ">Social
                             sciences</Link>
-                    </p>
+                    </div>
 
                 </section>
                 <section data-mw-section-id="5" id="mwXg"><h2 id="Society">Society</h2>
-                    <p id="mwXw"><Link to="/wiki/en/Biography" title="Biography" id="mwYA">Biography</Link> <div className="link-separator">•</div>
+                    <div id="mwXw" style={{marginBottom: 12}}><Link to="/wiki/en/Biography" title="Biography" id="mwYA">Biography</Link> <div className="link-separator">•</div>
                         <Link to="/wiki/en/Community" title="Community" id="mwYQ">Community</Link> <div className="link-separator">•</div> <Link
                             to="/wiki/en/Culture"
                             title="Culture"
@@ -164,11 +164,11 @@ export default function Home() {
                             title="Religion"
                             id="mwaw">Religion</Link> <div className="link-separator">•</div>
                         <Link to="/wiki/en/Social_movement" title="Social movement" id="mwbA">Social movements</Link>
-                    </p>
+                    </div>
                 </section>
 
                 <section data-mw-section-id="6" id="mwbQ"><h2 id="Sports">Sports</h2>
-                    <p id="mwbg"><Link to="/wiki/en/Asian_Games" title="Asian Games" id="mwbw">Asian Games</Link> <div className="link-separator">•</div>
+                    <div id="mwbg" style={{marginBottom: 12}}><Link to="/wiki/en/Asian_Games" title="Asian Games" id="mwbw">Asian Games</Link> <div className="link-separator">•</div>
                         <Link to="/wiki/en/Commonwealth_Games" title="Commonwealth Games" id="mwcA">Commonwealth
                             Games</Link> <div className="link-separator">•</div> <Link to="/wiki/en/Olympics" title="Olympics" className="mw-redirect"
                                                  id="mwcQ">Olympics</Link> <div className="link-separator">•</div> <Link to="/wiki/en/Paralympics"
@@ -201,11 +201,11 @@ export default function Home() {
                             to="/wiki/en/Tennis"
                             title="Tennis"
                             id="mwgQ">Tennis</Link>
-                    </p>
+                    </div>
                 </section>
 
                 <section data-mw-section-id="7" id="mwgg"><h2 id="Technology">Technology</h2>
-                    <p id="mwgw"><Link to="/wiki/en/Agriculture" title="Agriculture" id="mwhA">Agriculture</Link> <div className="link-separator">•</div>
+                    <div id="mwgw" style={{marginBottom: 12}}><Link to="/wiki/en/Agriculture" title="Agriculture" id="mwhA">Agriculture</Link> <div className="link-separator">•</div>
                         <Link to="/wiki/en/Astronomy" title="Astronomy" id="mwhQ">Astronomy</Link> <div className="link-separator">•</div> <Link
                             to="/wiki/en/Aviation"
                             title="Aviation"
@@ -239,7 +239,7 @@ export default function Home() {
                                                                                         className="mw-redirect"
                                                                                         id="mwlw">Trains</Link> <div className="link-separator">•</div>
                         <Link to="/wiki/en/Transport" title="Transport" id="mwmA">Transport</Link>
-                    </p>
+                    </div>
 
                 </section>
 
@@ -255,18 +255,18 @@ export default function Home() {
                                                                                                                   loading="lazy"
                                                                                                                   src="data:image/webp;base64,UklGRhwCAABXRUJQVlA4WAoAAAAQAAAAJQAAJQAAQUxQSPsAAAABgFvbtqltf/6+TAXgtwpgA0ZsK7frUBsKzUipbfvh/Lw4FUTEBEDYmT8ys2cRWXvTw3lOKI4MHZDwwVBYhbfviaQfe7xSWdukdCtDouKVFD+XCVWbpNyoEigxSKNR+E/SA2m9T/zDtUaal52/Okh7K4DAub5TP9BODFuBdQ4rSCCWsWYejRM8xhZ5zO7x2Lniccllj8fOAo/ZcR6jTTwaEnhEscZhGWjj0AIEzvSd+AG062sGAOeKriXnLyQ+6LmL4+8iQ8dnAf6vMtQZlRAtfVb1VALx9E01G2mQ9XQ9yN13eqAwNLAntjsQhGJHzuDUrkFk7EwOZjsgDABWUDgg+gAAAFAHAJ0BKiYAJgA+qT6XS6YjIiG8aADAFQlpAARBbyGfNxVj/rm+uCtFuXwrJbPjnt8jWrgNVU30a393CepzbMCxAwAA/vlpgntwqp//0QvbnZmS5Sa53XP4Vx/UjLn6HQOp2ocDR3OEwfXrXRgXVaaqRMdo37lF9aGAwJArfP0VSy2kN+oimOjvZyuzG6kQKRQUUP3F1miOuM3grfm6/oNlptDqNhLPaz3TdR80c/1RcWG70v+6Gk5q5cePVvtWvhkeDh5kqtFoN/56IGe9689qi6oIAFQg8FXKiW4ETpsjjpdz6ju6q7BFrxYODQUT4BTg62XT2mAAAAA="/></span></span> Wikipedia
                 </h2>
-                    <p id="mwrQ"><b id="mwrg">Wikipedia</b> is a free <Link to="/wiki/en/Online_encyclopedia"
+                    <div id="mwrQ" style={{marginBottom: 12}}><b id="mwrg">Wikipedia</b> is a free <Link to="/wiki/en/Online_encyclopedia"
                                                                             title="Online encyclopedia" id="mwrw">online
                         encyclopedia</Link> that allows its users to edit almost any article. Wikipedia is the largest
                         and
                         most popular general <Link to="/wiki/en/Reference_work" title="Reference work" id="mwsA">reference
                             work</Link> on the Internet and is ranked among the ten most popular websites. Wikipedia is
                         owned by the nonprofit <Link to="/wiki/en/Wikimedia_Foundation" title="Wikimedia Foundation"
-                                                     id="mwsQ">Wikimedia Foundation</Link>.</p>
+                                                     id="mwsQ">Wikimedia Foundation</Link>.</div>
 
-                    <p id="mwsg"><Link to="/wiki/en/English_Wikipedia" title="English Wikipedia" id="mwsw">English
+                    <div id="mwsg" style={{marginBottom: 12}}><Link to="/wiki/en/English_Wikipedia" title="English Wikipedia" id="mwsw">English
                         Wikipedia</Link> is the largest out of more than 290 versions of encyclopedias on Wikipedia.
-                        Overall, Wikipedia consists of more than 40 million articles.</p>
+                        Overall, Wikipedia consists of more than 40 million articles.</div>
 
 
                     <meta property="mw:PageProp/notoc" id="mwtA"/>
