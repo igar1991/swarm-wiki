@@ -105,6 +105,7 @@ app.post('/recover', async (req, res, next) => {
         return next(`Page name is empty`);
     }
 
+    // todo check this file or `A/A%2f${pageName}` for exceptions
     const pageFilePath = outputDir + 'A/' + pageName
     if (!fs.existsSync(pageFilePath)) {
         return next(`Page file does not exist`);
