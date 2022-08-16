@@ -16,6 +16,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "deploy": "react-scripts build && swarm-cli feed upload build --topic-string \"index\" --index-document \"index.html\" -v",
+    "deploy-gateway": "react-scripts build && swarm-cli feed upload build --topic-string \"index\" --index-document \"index.html\" --stamp \"0000000000000000000000000000000000000000000000000000000000000000\" --bee-api-url \"https://api.gateway.ethswarm.org\" -v",
     "deploy-local": "react-scripts build && rm -rf /var/www/bzzwiki.xyz/ && mv ./build /var/www/bzzwiki.xyz",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
