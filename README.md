@@ -10,6 +10,10 @@ and without Bee node
 
 `https://bzzwiki.bzz.link/`
 
+If you are interested in reading about each service individually and in general about my experience in developing these services, then I recommend that you look into the experience I described. It describes not only the development process, but also future approaches to make data access on SWARM more convenient.
+
+https://docs.google.com/document/d/1ABMRlWgaz3N41ARn2K34OuEyZ48OEOW1j6vukBD3SYQ/edit
+
 # How to deploy the project?
 
 Before you follow the instructions for deploying the project, you can watch a video with all the steps: https://www.youtube.com/watch?v=YkUr01lAykQ
