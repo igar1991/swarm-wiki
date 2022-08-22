@@ -2,6 +2,8 @@
 
 Swarm Wiki - project for uploading wikipedia pages to the Swarm decentralized network. The project uses ZIM archives with articles as a data source, forms pages ready for viewing in a browser, and uploads them to the network using Bee node.
 
+Demo: https://bzzwiki.xyz/
+
 Project web interface is accessible locally (after running [Bee node](https://github.com/ethersphere/bee) or [Swarm Desktop](https://desktop.ethswarm.org/)) by the url
 
 `http://bzzwiki.eth.swarm.localhost:1633/`
