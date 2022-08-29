@@ -4,6 +4,8 @@ Swarm Wiki - project for uploading wikipedia pages to the Swarm decentralized ne
 
 Demo: https://bzzwiki.xyz/
 
+Video demo: https://youtu.be/tCx_UVl90As
+
 Project web interface is accessible locally (after running [Bee node](https://github.com/ethersphere/bee) or [Swarm Desktop](https://desktop.ethswarm.org/)) by the url
 
 `http://bzzwiki.eth.swarm.localhost:1633/`
