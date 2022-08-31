@@ -196,6 +196,10 @@ Redis database management tool. With it, you can search, view, delete and edit a
 
 ## Experimental
 
+The first approach uploads data using many nodes, and this experimental approach is used to upload data using 1 large and powerful server, in which all data is retrieved and ready to upload.
+
+This approach can be useful for optimizing data upload costs. In some cases, buying 1 powerful server can be cheaper than buying many small ones.
+
 To run an extractor-2 that works on the full set of pre-extracted data, use command
 
 `docker compose -f docker-compose-v2.yml up -d`
