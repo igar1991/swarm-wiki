@@ -2,6 +2,10 @@
 
 Swarm Wiki - project for uploading wikipedia pages to the Swarm decentralized network. The project uses ZIM archives with articles as a data source, forms pages ready for viewing in a browser, and uploads them to the network using Bee node.
 
+The main objective of this project is to build a solution with an architecture that allows not only uploading a static Wikipedia to swarm. This solution allows third-party contributors to make changes to certain articles without downloading gigabytes of data. Such changes will be stored and managed in the contributor's address space.
+
+After creating an interface for such actions, this solution can be used to build a complete analogue of Wikipedia with contributors and alternative opinions on various articles. With this approach, you can switch between different viewpoints easily.
+
 Demo: https://bzzwiki.xyz/
 
 Video demo: https://youtu.be/tCx_UVl90As
