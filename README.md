@@ -6,6 +6,8 @@ The main objective of this project is to build a solution with an architecture t
 
 After creating an interface for such actions, this solution can be used to build a complete analogue of Wikipedia with contributors and alternative opinions on various articles. With this approach, you can switch between different viewpoints easily.
 
+![Demo](/img/demo.png)
+
 Demo: https://bzzwiki.xyz/
 
 Video demo: https://youtu.be/tCx_UVl90As
