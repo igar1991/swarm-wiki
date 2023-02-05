@@ -3,7 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@bzzwiki/wiki-search": "^1.4.0",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@ethersphere/bee-js": "^4.1.1",
+    "@mui/material": "^5.11.7",
     "bootstrap": "^5.2.0",
     "node-html-parser": "^5.3.3",
     "react": "^18.2.0",

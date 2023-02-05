@@ -1,9 +1,14 @@
 import {Link} from "react-router-dom";
+import Suggest from '../Suggest/Suggest';
 
 export default function Home() {
     return (
         <div className="Home container py-3">
             <div id="mw-content-text">
+                <div style={{marginBottom: 18}}>
+                    <Suggest/>
+                </div>
+
                 <section data-mw-section-id="0" id="mwAQ">
                     <meta property="mw:PageProp/displaytitle" content="Welcome" id="mwAg"/>
                     <div id="mwCA" style={{marginBottom: 12}}>
