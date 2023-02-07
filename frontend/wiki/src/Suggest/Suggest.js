@@ -32,17 +32,21 @@ export default function Suggest() {
       return;
     }
 
-    searchClient.suggest(process.env.REACT_APP_SUGGEST_DB_ID, inputValue).
-        then(info => {
-          const suggestions = info.result.map(item => {
-            return {
-              label: item.page.relativeUrl,
-              title: item.page.relativeUrl,
-            };
-          });
+    const delayDebounceFn = setTimeout(() => {
+      searchClient.suggest(process.env.REACT_APP_SUGGEST_DB_ID, inputValue).
+          then(info => {
+            const suggestions = info.result.map(item => {
+              return {
+                label: item.page.relativeUrl,
+                title: item.page.relativeUrl,
+              };
+            });
 
-          setSuggestions(suggestions);
-        })
+            setSuggestions(suggestions);
+          })
+    }, 500)
+
+    return () => clearTimeout(delayDebounceFn)
   }, [inputValue]);
 
   return (
