@@ -6,12 +6,15 @@ import {Link, useNavigate} from 'react-router-dom';
 export const SUGGEST_URL_KEY = 'suggest_url';
 
 export default function Suggest() {
-  const [options, setOptions] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
   const [inputValue, setInputValue] = useState('');
-  const [loading, setLoading] = useState(false);
   const [suggestUrl, setSuggestUrl] = useState('');
   let searchClient = new SearchClient(suggestUrl);
   const navigate = useNavigate();
+
+  const filterOptions = (options) => {
+    return options
+  };
 
   useEffect(() => {
     const url = localStorage.getItem(SUGGEST_URL_KEY);
@@ -29,7 +32,6 @@ export default function Suggest() {
       return;
     }
 
-    setLoading(true);
     searchClient.suggest(process.env.REACT_APP_SUGGEST_DB_ID, inputValue).
         then(info => {
           const suggestions = info.result.map(item => {
@@ -39,16 +41,15 @@ export default function Suggest() {
             };
           });
 
-          setOptions(suggestions);
-        }).
-        then(() => setLoading(false));
+          setSuggestions(suggestions);
+        })
   }, [inputValue]);
 
   return (
       <>
         <Autocomplete
-            options={options}
-            loading={loading}
+            filterOptions={filterOptions}
+            options={suggestions}
             freeSolo
             onChange={(event, value) => {
               if (!value) {
