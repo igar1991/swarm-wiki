@@ -3,6 +3,7 @@ import cors from 'cors';
 import fs from 'fs';
 import {getList, insertImagesToPage, isCorrectMode, processContent, uploadContent} from "./utils.js";
 import {parse} from "node-html-parser";
+import path from 'path';
 
 const app = express();
 
@@ -100,27 +101,46 @@ app.post('/extract', async (req, res, next) => {
 app.post('/recover', async (req, res, next) => {
     const {pageName} = req.body;
 
-    console.log('received pageName', pageName);
-    if (!pageName) {
-        return next(`Page name is empty`);
-    }
+    try {
+        console.log('received pageName', pageName);
+        if (!pageName) {
+            return next(`Page name is empty`);
+        }
 
-    // todo check this file or `A/A%2f${pageName}` for exceptions
-    const pageFilePath = outputDir + 'A/' + pageName
-    if (!fs.existsSync(pageFilePath)) {
-        return next(`Page file does not exist`);
-    }
+        let realPath = ''
+        const pageFilePath = path.join(outputDir, `A/${pageName}`);
+        const exceptionFilePath = path.join(outputDir, '_exceptions', `A%2f${pageName}`)
+        if (fs.existsSync(exceptionFilePath)) {
+            realPath = exceptionFilePath
+        } else if(fs.existsSync(pageFilePath)){
+            realPath = pageFilePath
+        }
 
-    const page = fs.readFileSync(pageFilePath, {encoding: 'utf8'});
-    const parsed = parse(page)
-    const preparedPage = await insertImagesToPage(parsed, outputDir)
-    res.send(preparedPage);
-    console.log('content prepared, send to uploader', pageName);
-    const saveKey = `wiki_page_en_${pageName}`
-    const cacheFileName = `${outputDir}cache/${pageName}`
-    console.log('content for pageName uploading', saveKey);
-    await uploadContent(uploaderUrl, saveKey, cacheFileName, preparedPage)
-    console.log('content for pageName uploaded', saveKey);
+        if(!realPath){
+            return next(`Page file does not exists in main dir and exceptions`);
+        }
+
+        try {
+            fs.statSync(pageFilePath);
+        } catch (e) {
+            const message = `path "${pageFilePath}" exists, but this is not a file`
+            console.log(message);
+            return next(message)
+        }
+
+        const page = fs.readFileSync(pageFilePath, {encoding: 'utf8'});
+        const parsed = parse(page);
+        const preparedPage = await insertImagesToPage(parsed, outputDir);
+        res.send(preparedPage);
+        console.log('content prepared, send to uploader', pageName);
+        const saveKey = `wiki_page_en_${pageName}`;
+        const cacheFileName = `${outputDir}cache/${pageName}`;
+        console.log('content for pageName uploading', saveKey);
+        await uploadContent(uploaderUrl, saveKey, cacheFileName, preparedPage);
+        console.log('content for pageName uploaded', saveKey);
+    } catch (e) {
+        console.log(`error on recovering (${pageName}): ${e.message}`);
+    }
 });
 
 export default app;
