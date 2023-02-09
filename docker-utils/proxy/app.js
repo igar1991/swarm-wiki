@@ -50,7 +50,7 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
     // todo get address from config
     const allowedAddress = 'fffffA46f2883920e6f4976CF2F2E905523d80E6'
     const {address, chunk} = req.params;
-    const {pageName} = req.query;
+    const {pageName, force} = req.query;
 
     if (!isCorrectChunkLength(chunk.length)) {
         return next('Incorrect length of chunk');
@@ -62,6 +62,12 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
 
     if (address.toLowerCase() !== allowedAddress.toLowerCase()) {
         return next('Address is not allowed');
+    }
+
+    if (force === '1' && pageName){
+        await recoverPageWeb(res, next, pageName);
+
+        return
     }
 
     let feedFetchResponse = null
