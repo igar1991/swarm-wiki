@@ -108,7 +108,10 @@ export async function processContent(options) {
 
         const rawKeyTrimmed = rawKey.trim()
         const isException = index < exceptionLength
-        console.log(`item ${index + 1} (${isException ? 'exception' : 'article'}) of ${totalLength}`);
+        if ((index + 1) % 10000 === 0) {
+            console.log(`extractor-2 checking item ${index + 1} (${isException ? 'exception' : 'article'}) of ${totalLength}`);
+        }
+
         const key = isException ? extractKeyFromExceptionItem(rawKeyTrimmed) : rawKeyTrimmed
         if (!key) {
             console.log('empty key');
