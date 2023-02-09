@@ -32,6 +32,17 @@ function isCorrectAddressLength(addressLength) {
 // const {result0, result1, result2} = getAllPages(outputDir, articlesFile, 'topic_pagename_cache')
 // console.log('got all pages');
 
+async function recoverPage(res, pageName){
+    console.log(`trying to recover the page: ${pageName}`);
+    try {
+        const cache = await recoverPage(extractor2Url, pageName);
+        res.send({cache});
+    } catch (e) {
+        console.log(`recovering failed: ${e.message}`);
+        return next('Data is not available');
+    }
+}
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -62,9 +73,13 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
         feedFetchResponse = await fetch(url)
         feedResponseData = await feedFetchResponse.json();
         console.log('feed response from bee node', feedResponseData)
-        if (!feedResponseData.code) {
+        if (feedResponseData.code) {
+            console.log('feed response data contains a code, recover...');
+            await recoverPage(res, pageName);
+        } else {
             console.log('fetching feed reference content...');
-            feedReferenceData = await (await fetch(`${beeUrl}bytes/${feedResponseData.reference}`)).text();
+            feedReferenceData = await (await fetch(
+                `${beeUrl}bytes/${feedResponseData.reference}`)).text();
             // check that content is not json (with error for example)
             let parsed;
             try {
@@ -73,10 +88,12 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
 
             }
 
-            if (parsed && parsed.code){
-                throw new Error(`parsed content data is json with error code: ${JSON.stringify(parsed)}`)
+            if (parsed && parsed.code) {
+                throw new Error(
+                    `parsed content data is json with error code: ${JSON.stringify(
+                        parsed)}`);
             }
-            console.log('successfully fetched from bee node', url)
+            console.log('successfully fetched from bee node', url);
         }
 
         // if context exists in node - response the same as node
@@ -96,15 +113,8 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
         return next('Page content not found in swarm and in cache');
     }
 
-    console.log(`trying to recover the page: ${pageName}`);
     // in other case - get cached data and return it
-    try {
-        feedReferenceData = await recoverPage(extractor2Url, pageName);
-        res.send({cache: feedReferenceData});
-    } catch (e) {
-        console.log(`recovering failed: ${e.message}`);
-        return next('Data is not available');
-    }
+    await recoverPage(res, pageName)
 });
 
 app.get('/bytes/:chunk', async (req, res, next) => {

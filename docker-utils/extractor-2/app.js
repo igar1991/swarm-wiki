@@ -116,7 +116,6 @@ app.post('/recover', async (req, res, next) => {
     const preparedPage = await insertImagesToPage(parsed, outputDir)
     res.send(preparedPage);
     console.log('content prepared, send to uploader', pageName);
-    // todo make language as changable param
     const saveKey = `wiki_page_en_${pageName}`
     const cacheFileName = `${outputDir}cache/${pageName}`
     console.log('content for pageName uploading', saveKey);
