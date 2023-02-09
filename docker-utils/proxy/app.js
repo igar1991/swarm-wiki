@@ -76,10 +76,16 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
         if (feedResponseData.code) {
             console.log('feed response data contains a code, recover...');
             await recoverPageWeb(res, next, pageName);
+
+            return
         } else {
             console.log('fetching feed reference content...');
             feedReferenceData = await (await fetch(
                 `${beeUrl}bytes/${feedResponseData.reference}`)).text();
+            if (!feedReferenceData){
+                throw new Error('empty content of feed reference data')
+            }
+
             // check that content is not json (with error for example)
             let parsed;
             try {
