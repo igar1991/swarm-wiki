@@ -1,4 +1,4 @@
-import fetch, {FormData} from "node-fetch";
+import fetch from "node-fetch";
 import fs from 'fs'
 
 /**
@@ -24,7 +24,7 @@ export function getList(path) {
 }
 
 export function getAllPages(workingDirectory, articlesFile, identity) {
-    // su many results because of limits in js for more than 8 millions
+    // js limit for 8 million key for an object
     let result0 = {}
     let result1 = {}
     let result2 = {}

@@ -53,52 +53,47 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
         return next('Address is not allowed');
     }
 
-    let feedJson = null
-    let data = null
-    let feedResponse = null
+    let feedFetchResponse = null
+    let feedResponseData = null
+    let feedReferenceData = null
     try {
         const url = `${beeUrl}feeds/${address}/${chunk}?type=sequence`
         console.log('fetching from bee node...', url)
-        feedResponse = await fetch(url)
-        feedJson = await feedResponse.json();
-        console.log('feed response from bee node', feedJson)
-        if (!feedJson.code) {
-            data = await (await fetch(`${beeUrl}bytes/${feedJson.reference}`)).text();
+        feedFetchResponse = await fetch(url)
+        feedResponseData = await feedFetchResponse.json();
+        console.log('feed response from bee node', feedResponseData)
+        if (!feedResponseData.code) {
+            console.log('fetching feed reference content...');
+            feedReferenceData = await (await fetch(`${beeUrl}bytes/${feedResponseData.reference}`)).text();
             console.log('successfully fetched from bee node', url)
         }
-    } catch (e) {
 
-    }
-
-    // if context exists in node - response the same as node
-    if (feedJson && data) {
-        const headers = feedResponse.headers
+        // if context exists in node - response the same as node
+        const headers = feedFetchResponse.headers
         res.set({
             'swarm-feed-index': headers.get('swarm-feed-index'),
             'swarm-feed-index-next': headers.get('swarm-feed-index-next'),
             'access-control-expose-headers': headers.get('access-control-expose-headers'),
         })
 
-        return res.send(feedJson);
+        return res.send(feedResponseData);
+    } catch (e) {
+        console.log(`error on fetching data: ${e.message}`);
     }
 
     if (!pageName) {
         return next('Page content not found in swarm and in cache');
     }
 
-    console.log('found page name', pageName);
+    console.log(`trying to recover the page: ${pageName}`);
     // in other case - get cached data and return it
     try {
-        data = await recoverPage(extractor2Url, pageName);
+        feedReferenceData = await recoverPage(extractor2Url, pageName);
+        res.send({cache: feedReferenceData});
     } catch (e) {
-
-    }
-
-    if (!data) {
+        console.log(`recovering failed: ${e.message}`);
         return next('Data is not available');
     }
-
-    res.send({cache: data});
 });
 
 app.get('/bytes/:chunk', async (req, res, next) => {
