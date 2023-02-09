@@ -44,14 +44,21 @@ export default function Suggest() {
 
             setSuggestions(suggestions);
           })
-    }, 500)
+    }, 300)
 
     return () => clearTimeout(delayDebounceFn)
   }, [inputValue]);
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+    }
+  };
+
   return (
       <>
         <Autocomplete
+            onKeyDown={handleKeyDown}
             filterOptions={filterOptions}
             options={suggestions}
             freeSolo
@@ -60,6 +67,9 @@ export default function Suggest() {
                 return;
               }
 
+              if (!value.label){
+                return
+              }
               navigate(`/wiki/en/${value.label}`);
             }}
             getOptionLabel={(option) => option.title ?? ''}
