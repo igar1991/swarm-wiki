@@ -32,7 +32,7 @@ function isCorrectAddressLength(addressLength) {
 // const {result0, result1, result2} = getAllPages(outputDir, articlesFile, 'topic_pagename_cache')
 // console.log('got all pages');
 
-async function recoverPageWeb(res, pageName){
+async function recoverPageWeb(res, next, pageName){
     console.log(`trying to recover the page: ${pageName}`);
     try {
         const cache = await recoverPage(extractor2Url, pageName);
@@ -75,7 +75,7 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
         console.log('feed response from bee node', feedResponseData)
         if (feedResponseData.code) {
             console.log('feed response data contains a code, recover...');
-            await recoverPageWeb(res, pageName);
+            await recoverPageWeb(res, next, pageName);
         } else {
             console.log('fetching feed reference content...');
             feedReferenceData = await (await fetch(
@@ -114,7 +114,7 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
     }
 
     // in other case - get cached data and return it
-    await recoverPageWeb(res, pageName)
+    await recoverPageWeb(res, next, pageName)
 });
 
 app.get('/bytes/:chunk', async (req, res, next) => {
