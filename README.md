@@ -88,6 +88,10 @@ Done! You can start all services in background with command
 
 `docker compose up -d`
 
+or for experimental packages
+
+`docker compose -f docker-compose-v2.yml up -d`
+
 You can check logs with command
 
 `docker compose logs -f --tail 100`

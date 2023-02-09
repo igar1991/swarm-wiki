@@ -65,6 +65,17 @@ app.get('/feeds/:address/:chunk', async (req, res, next) => {
         if (!feedResponseData.code) {
             console.log('fetching feed reference content...');
             feedReferenceData = await (await fetch(`${beeUrl}bytes/${feedResponseData.reference}`)).text();
+            // check that content is not json (with error for example)
+            let parsed;
+            try {
+                parsed = JSON.parse(feedReferenceData);
+            } catch (e) {
+
+            }
+
+            if (parsed && parsed.code){
+                throw new Error(`parsed content data is json with error code: ${JSON.stringify(parsed)}`)
+            }
             console.log('successfully fetched from bee node', url)
         }
 
