@@ -121,14 +121,14 @@ app.post('/recover', async (req, res, next) => {
         }
 
         try {
-            fs.statSync(pageFilePath);
+            fs.statSync(realPath);
         } catch (e) {
-            const message = `path "${pageFilePath}" exists, but this is not a file`
+            const message = `path "${realPath}" exists, but this is not a file`
             console.log(message);
             return next(message)
         }
 
-        const page = fs.readFileSync(pageFilePath, {encoding: 'utf8'});
+        const page = fs.readFileSync(realPath, {encoding: 'utf8'});
         const parsed = parse(page);
         const preparedPage = await insertImagesToPage(parsed, outputDir);
         res.send(preparedPage);
